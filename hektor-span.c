@@ -29,7 +29,8 @@ static inline bool possible_reboot_between(const snapshot_t *begin,
 void span_calculate_between(const snapshot_t *begin, const snapshot_t *end,
                             const plan_t *plan, span_t *span)
 {
-  // Check if snapshots were somehow mixmatched.
+  // Check if the snapshots are mix-matched (this happens inexplicably
+  // sometimes.)
   if (end->snapshot_time < begin->snapshot_time)
     return span_calculate_between(end, begin, plan, span);
 

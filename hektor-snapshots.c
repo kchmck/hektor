@@ -40,8 +40,11 @@ bool snapshots_load(snapshots_t *snapshots) {
     const json_t *json_snapshot = json_array_get(json_snapshots, json_index++);
     if (!json_snapshot) break;
 
+    // Try to load the snapshot (if it isn't corrupted.)
     snapshot_t *current_snapshot = &snapshots->list[snapshots->length];
     if (!snapshot_load(current_snapshot, json_snapshot)) continue;
+
+    // Check if the snapshot is expired.
     if (current_snapshot->snapshot_time < expire_point) continue;
 
     ++snapshots->length;
