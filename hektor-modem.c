@@ -40,7 +40,8 @@ static CURLcode modem_fetch_url(const char *url, void *receive_fn, void *fn_data
 }
 
 bool modem_find_url(const char *page_title, const char *menu_page,
-                    char *url_buffer) {
+                    char *url_buffer)
+{
   // The little bit of text between a page title and its url
   static const char *TITLE_URL_SEP = "\", \"";
   // The little bit of text at the end of a url
