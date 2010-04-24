@@ -30,7 +30,7 @@ enum { MAX_SNAPSHOTS = 250 };
 typedef struct {
   snapshot_t list[MAX_SNAPSHOTS];
   int length;
-  char json_storage_path[MAX_PATH_LENGTH];
+  path_t json_storage_path;
 } snapshots_t;
 
 // Create a list of snapshots from a json file, and prune out any expired or

@@ -26,20 +26,26 @@
 
 enum { MAX_PAGE_SIZE = 1024 * 64 };
 
+// A url type
+typedef path_t url_t;
+
+// A page type
+typedef char page_t[MAX_PAGE_SIZE];
+
 // Dynamically find the url of a page by its page title.
-bool modem_find_url(const char *page_title, const char *menu_page,
-                    char *url_buffer);
+bool modem_find_url(const char *page_title, const page_t menu_page,
+                    url_t url_buffer);
 
 // Get the pep page's url.
-static inline bool modem_find_pep_url(const char *menu_page, char *url_buffer) {
+static inline bool modem_find_pep_url(const page_t menu_page, url_t url_buffer) {
   return modem_find_url("ALL BCB Stats", menu_page, url_buffer);
 }
 
 // Download a page into a buffer.
-size_t modem_fetch_page(const char *url, char *buffer);
+size_t modem_fetch_page(const url_t url, page_t buffer);
 
 // Download the menu page.
-static inline size_t modem_fetch_menu_page(char *buffer) {
+static inline size_t modem_fetch_menu_page(page_t buffer) {
   return modem_fetch_page("/fs/scripts/cat_menu.js", buffer);
 }
 

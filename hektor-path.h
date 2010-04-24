@@ -27,7 +27,10 @@
 
 enum { MAX_PATH_LENGTH = 255 };
 
+// A path type
+typedef char path_t[MAX_PATH_LENGTH];
+
 // Get the absolute path to snapshot storage.
-bool path_make_storage_dir(char *path_buffer);
+bool path_make_storage_dir(path_t path_buffer);
 
 #endif

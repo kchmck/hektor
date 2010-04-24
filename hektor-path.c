@@ -17,11 +17,11 @@
 #include "hektor-path.h"
 
 // Create a new directory and all its parents.
-static bool path_make_dirs(const char *full_path) {
+static bool path_make_dirs(const path_t full_path) {
   enum { MODE_BITS = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH };
 
   // This is required because dirname discards the constness of its argument.
-  char full_path_copy[MAX_PATH_LENGTH] = {0};
+  path_t full_path_copy = {0};
   memcpy(full_path_copy, full_path, MAX_PATH_LENGTH);
 
   const char *parent_dir = dirname(full_path_copy);
@@ -35,7 +35,7 @@ static bool path_make_dirs(const char *full_path) {
   return true;
 }
 
-bool path_make_storage_dir(char *path_buffer) {
+bool path_make_storage_dir(path_t path_buffer) {
   xdgHandle freedesktop_dirs;
   if (!xdgInitHandle(&freedesktop_dirs)) return false;
 

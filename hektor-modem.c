@@ -17,14 +17,14 @@
 #include "hektor-modem.h"
 
 // Append a path to the modem's base url.
-static inline void modem_build_url(const char *url_path, char *url_buffer) {
+static inline void modem_build_url(const url_t url_path, url_t url_buffer) {
   strncat(url_buffer, "http://192.168.0.1", MAX_PATH_LENGTH);
   strncat(url_buffer, url_path, MAX_PATH_LENGTH - strlen(url_buffer));
 }
 
 // Request a url with a callback function.
-static CURLcode modem_fetch_url(const char *url, void *receive_fn, void *fn_data) {
-  char full_url[MAX_PATH_LENGTH] = {0};
+static CURLcode modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
+  url_t full_url = {0};
   modem_build_url(url, full_url);
 
   CURL *curl = curl_easy_init();
@@ -39,8 +39,8 @@ static CURLcode modem_fetch_url(const char *url, void *receive_fn, void *fn_data
   return result;
 }
 
-bool modem_find_url(const char *page_title, const char *menu_page,
-                    char *url_buffer)
+bool modem_find_url(const char *page_title, const page_t menu_page,
+                    url_t url_buffer)
 {
   // The little bit of text between a page title and its url
   static const char *TITLE_URL_SEP = "\", \"";
@@ -89,7 +89,7 @@ static size_t buffer_append_fn(const char *chunk, const size_t item_size,
   return chunk_size;
 }
 
-size_t modem_fetch_page(const char *url, char *buffer) {
+size_t modem_fetch_page(const url_t url, page_t buffer) {
   buffer_append_state_t state = {buffer};
   modem_fetch_url(url, buffer_append_fn, &state);
 

@@ -41,15 +41,15 @@ bool hektor_cmd_remaining(hektor_t *hektor) {
 
 bool hektor_cmd_record(hektor_t *hektor) {
   // Download the whole menu page.
-  char menu_page[MAX_PAGE_SIZE] = {0};
+  page_t menu_page = {0};
   if (!modem_fetch_menu_page(menu_page)) return false;
 
   // Find the url to the pep page.
-  char pep_url[MAX_PATH_LENGTH] = {0};
+  url_t pep_url = {0};
   if (!modem_find_pep_url(menu_page, pep_url)) return false;
 
   // Download the pep page.
-  char pep_page[MAX_PAGE_SIZE] = {0};
+  page_t pep_page = {0};
   if (!modem_fetch_page(pep_url, pep_page)) return false;
 
   // Get the next empty snapshot.
