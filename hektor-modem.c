@@ -74,8 +74,8 @@ typedef struct {
 } buffer_append_state_t;
 
 // Append successive chunks of a page to a buffer.
-size_t buffer_append_fn(const char *chunk, const size_t item_size,
-                        const size_t items, buffer_append_state_t *state)
+static size_t buffer_append_fn(const char *chunk, const size_t item_size,
+                               const size_t items, buffer_append_state_t *state)
 {
   const size_t chunk_size = item_size * items;
   const size_t buffer_remaining = MAX_PAGE_SIZE - state->amount_written;
