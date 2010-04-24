@@ -55,7 +55,7 @@ and [standardized] location. It can be installed in various ways:
 - **Arch Linux**: with the `libxdg-basedir` package from the community
   repos: `sudo pacman -S libxdg-basedir`.
 
-- **Ubuntu** and **Debian**: with the `libxdg-basedir-dev` package: `sudo
+- **Debian** and **Ubuntu**: with the `libxdg-basedir-dev` package: `sudo
   apt-get install libxdg-basedir-dev`.
 
 - **Others**: by [downloading][basedir-dl] and compiling the source.
