@@ -9,7 +9,7 @@ OBJ = hektor-json-snapshots.o \
       hektor-usage.o          \
       hektor.o
 
-CFLAGS += -std=c99 -Wall -pedantic -O2
+CFLAGS += -std=c99 -Wall -O2
 CFLAGS += $(shell pkg-config --cflags libcurl)
 CFLAGS += $(shell pkg-config --cflags jansson)
 CFLAGS += $(shell pkg-config --cflags libxdg-basedir)
