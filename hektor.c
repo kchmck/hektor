@@ -130,10 +130,11 @@ bool hektor_cmd_list(hektor_t *hektor) {
   }
 
   double remaining = plan->threshold;
+  int pair_index = 0;
 
-  for (int i = 1; i < snapshots->length; ++i) {
-    const snapshot_t *begin = &snapshots->list[i - 1];
-    const snapshot_t *end = &snapshots->list[i];
+  while (true) {
+    const snapshot_t *begin, *end;
+    if (!snapshots_get_pair(snapshots, &begin, &end, pair_index++)) break;
 
     char from_time[MAX_TIME_FORMAT_LENGTH] = {0};
     char to_time[MAX_TIME_FORMAT_LENGTH] = {0};
@@ -162,7 +163,7 @@ bool hektor_cmd_list(hektor_t *hektor) {
     printf(" = %6.2f megabytes remaining after\n", remaining / 1000 / 1000);
 
     // Don't print a separator after the last span.
-    if (i != snapshots->length - 1) printf("---\n");
+    if (pair_index != snapshots->length - 1) printf("---\n");
   }
 
   return true;

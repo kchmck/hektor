@@ -80,3 +80,14 @@ snapshot_t *snapshots_next_empty(snapshots_t *snapshots) {
   // Return the absolute last snapshot.
   return &snapshots->list[snapshots->length - 1];
 }
+
+bool snapshots_get_pair(const snapshots_t *snapshots, const snapshot_t **begin,
+                        const snapshot_t **end, const int pair_index)
+{
+  if (pair_index + 1 >= snapshots->length) return false;
+
+  *begin = &snapshots->list[pair_index];
+  *end = &snapshots->list[pair_index + 1];
+
+  return true;
+}

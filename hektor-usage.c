@@ -21,11 +21,12 @@ double usage_calculate(const snapshots_t *snapshots, const plan_t *plan) {
   if (snapshots->length < 2) return plan->threshold;
 
   double remaining = plan->threshold;
+  int pair_index = 0;
 
   // Loop through snapshot pairs.
-  for (int i = 1; i < snapshots->length; ++i) {
-    const snapshot_t *begin = &snapshots->list[i - 1];
-    const snapshot_t *end = &snapshots->list[i];
+  while (true) {
+    const snapshot_t *begin, *end;
+    if (!snapshots_get_pair(snapshots, &begin, &end, pair_index++)) break;
 
     span_t span = {0};
     span_calculate_between(begin, end, plan, &span);

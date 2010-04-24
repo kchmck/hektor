@@ -43,4 +43,9 @@ bool snapshots_save(const snapshots_t *snapshots);
 // Get a new, empty snapshot at the end of the list.
 snapshot_t *snapshots_next_empty(snapshots_t *snapshots);
 
+// Get a pair of snapshots. A pair_index of 0 will set begin to snapshot 0 and
+// end to snapshot 1.
+bool snapshots_get_pair(const snapshots_t *snapshots, const snapshot_t **begin,
+                        const snapshot_t **end, const int pair_index);
+
 #endif
