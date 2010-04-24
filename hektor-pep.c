@@ -16,7 +16,7 @@
 
 #include "hektor-pep.h"
 
-int pep_extract_value(const char *value_name, const char *pep_page) {
+int pep_extract_value(const char *value_name, const page_t pep_page) {
   // The total length of a pep column, including the name, eeparating
   // whitespace, and the value. For example:
   //
