@@ -60,7 +60,7 @@ and [standardized] location. It can be installed in various ways:
 
 - **Others**: by [downloading][basedir-dl] and compiling the source.
 
-[xdg-basedir]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+[standardized]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 [basedir-dl]: http://n.ethz.ch/student/nevillm/download/libxdg-basedir/
 
 ### Configuration
