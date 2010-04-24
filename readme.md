@@ -49,8 +49,8 @@ installed like:
 
 #### xdg-basedir
 
-Hektor uses the [xdg-basedir] library in order to store snapshots in a predictable
-and standardized location. It can be installed in various ways:
+Hektor uses the xdg-basedir library in order to store snapshots in a predictable
+and [standardized] location. It can be installed in various ways:
 
 - **Arch Linux**: with the `libxdg-basedir` package from the community
   repos: `sudo pacman -S libxdg-basedir`.
