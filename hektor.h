@@ -1,10 +1,6 @@
 #ifndef HEKTOR_H
 #define HEKTOR_H
 
-// Your hughesnet plan, which can be one of PLAN_HOME, PLAN_PRO, PLAN_PRO_PLUS,
-// PLAN_ELITE, PLAN_ELITE_PLUS, or PLAN_ELITE_PREMIUM.
-#define HUGHESNET_PLAN PLAN_HOME
-
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -16,6 +12,8 @@
 #include "hektor-snapshot.h"
 #include "hektor-time.h"
 #include "hektor-usage.h"
+
+#include "config.h"
 
 typedef struct {
   int argc;
