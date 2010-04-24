@@ -74,7 +74,7 @@ snapshot_t *snapshots_next_empty(snapshots_t *snapshots) {
     return &snapshots->list[snapshots->length++];
 
   // If the list is completely full, chop a snapshot off the beginning in order
-  // to make room for an new one at the end.
+  // to make room for a new one at the end.
   memmove(&snapshots->list[0], &snapshots->list[1], sizeof(snapshots->list));
 
   // Return the absolute last snapshot.
