@@ -33,7 +33,7 @@ bool hektor_cmd_remaining(hektor_t *hektor);
 bool hektor_cmd_record(hektor_t *hektor);
 
 // Remove a certain amount (default 1) of snapshots off the snapshots list.
-bool hektor_cmd_pop(hektor_t *hektor);
+bool hektor_cmd_drop(hektor_t *hektor);
 
 // Show some statistics about the recorded snapshots.
 bool hektor_cmd_stats(hektor_t *hektor);
@@ -53,7 +53,7 @@ static const struct {
 } hektor_cmds[HEKTOR_CMDS_LENGTH] = {
   {"remaining", hektor_cmd_remaining},
   {"record",    hektor_cmd_record},
-  {"pop",       hektor_cmd_pop},
+  {"drop",      hektor_cmd_drop},
   {"stats",     hektor_cmd_stats},
   {"list",      hektor_cmd_list},
 

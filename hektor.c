@@ -64,7 +64,7 @@ bool hektor_cmd_record(hektor_t *hektor) {
   return hektor_cmd_remaining(hektor);
 }
 
-bool hektor_cmd_pop(hektor_t *hektor) {
+bool hektor_cmd_drop(hektor_t *hektor) {
   // See if the user gave an amount to remove or default to 1.
   const int snapshots_to_remove = hektor->argc > 2 ? atoi(hektor->argv[2]) : 1;
 
