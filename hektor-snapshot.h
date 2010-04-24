@@ -33,7 +33,7 @@ typedef struct {
 } snapshot_t;
 
 // Record a new snapshot.
-bool snapshot_record(snapshot_t *snapshot, const char *pep_url);
+void snapshot_record(snapshot_t *snapshot, const char *pep_url);
 
 // Load a snapshot from its json state.
 bool snapshot_load(snapshot_t *snapshot, const json_t *json_snapshot);

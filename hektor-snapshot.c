@@ -16,12 +16,10 @@
 
 #include "hektor-snapshot.h"
 
-bool snapshot_record(snapshot_t *snapshot, const char *pep_page) {
+void snapshot_record(snapshot_t *snapshot, const char *pep_page) {
   snapshot->snapshot_time = now_local_time();
   snapshot->upload = pep_extract_value("tx_bytes", pep_page);
   snapshot->download = pep_extract_value("rx_bytes", pep_page);
-
-  return true;
 }
 
 bool snapshot_load(snapshot_t *snapshot, const json_t *json_snapshot) {

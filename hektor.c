@@ -51,11 +51,12 @@ bool hektor_cmd_record(hektor_t *hektor) {
   char pep_page[MAX_PAGE_SIZE] = {0};
   if (!modem_fetch_page(pep_url, pep_page)) return false;
 
-  // Try to record a new snapshot...
+  // Get the next empty snapshot.
   snapshot_t *snapshot = snapshots_next_empty(&hektor->snapshots);
-
   if (!snapshot) return false;
-  if (!snapshot_record(snapshot, pep_page)) return false;
+
+  // Record a new snapshot.
+  snapshot_record(snapshot, pep_page);
 
   printf("Recorded a snapshot\n");
 
