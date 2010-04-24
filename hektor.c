@@ -17,13 +17,14 @@
 #include "hektor.h"
 
 bool hektor_cmd_help(hektor_t *hektor) {
-  printf("Usage: %s [COMMAND], where COMMAND is one of:\n"
-         "  remaining  Show the amount of megabytes remaining before the FAP\n"
-         "             is activated (this is the default command.)\n"
-         "     record  Record a new usage snapshot.\n"
-         "        pop  Remove the last recorded snapshot.\n"
-         "      stats  Display snapshot statistics.\n"
-         "       list  Display detailed usage information.\n",
+  printf("Usage: %s [COMMAND=remaining] [ARGS], where COMMAND can be:\n"
+         "  remaining        Show the amount of megabytes remaining\n"
+         "                   before the FAP is activated.\n"
+         "  record           Record a new usage snapshot.\n"
+         "  drop [AMOUNT=1]  Remove a certain AMOUNT of newly-recorded\n"
+         "                   snapshots.\n"
+         "  stats            Display snapshot statistics.\n"
+         "  list             Display detailed usage information.\n",
 
          hektor->argv[0]);
 
