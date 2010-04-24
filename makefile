@@ -18,8 +18,8 @@ LDFLAGS  = $(shell pkg-config --libs libcurl)
 LDFLAGS += $(shell pkg-config --libs jansson)
 LDFLAGS += $(shell pkg-config --libs libxdg-basedir)
 
-PREFIX  ?= /usr/local
-BINDIR   = $(PREFIX)/bin
+PREFIX ?= /usr/local
+BINDIR  = $(PREFIX)/bin
 
 INSTALL ?= install
 
