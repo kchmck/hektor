@@ -51,7 +51,7 @@ bool hektor_cmd_record(hektor_t *hektor) {
   if (!modem_fetch_page(pep_url, pep_page)) return false;
 
   // Try to record a new snapshot...
-  snapshot_t *snapshot = snapshots_next(&hektor->snapshots);
+  snapshot_t *snapshot = snapshots_next_empty(&hektor->snapshots);
 
   if (!snapshot) return false;
   if (!snapshot_record(snapshot, pep_page)) return false;

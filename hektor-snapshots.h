@@ -41,6 +41,6 @@ bool snapshots_load(snapshots_t *snapshots);
 bool snapshots_save(const snapshots_t *snapshots);
 
 // Get a new, empty snapshot at the end of the list.
-snapshot_t *snapshots_next(snapshots_t *snapshots);
+snapshot_t *snapshots_next_empty(snapshots_t *snapshots);
 
 #endif
