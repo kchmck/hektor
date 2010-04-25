@@ -43,11 +43,12 @@ void span_calculate_between(const snapshot_t *begin, const snapshot_t *end,
 
 // Apply a snapshot's usage information to a remaining value and return the
 // result.
-static inline double span_calculate_next(const double remaining,
-                                         const plan_t *plan,
-                                         const span_t *span)
+static inline double span_calculate_remaining(const double currently_remaining,
+                                              const plan_t *plan,
+                                              const span_t *span)
 {
-  return min(remaining + span->refilled - span->counted_usage, plan->threshold);
+  return min(currently_remaining + span->refilled - span->counted_usage,
+             plan->threshold);
 }
 
 #endif

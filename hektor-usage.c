@@ -32,7 +32,7 @@ double usage_calculate_remaining(const snapshots_t *snapshots,
     span_t span = {0};
     span_calculate_between(begin, end, plan, &span);
 
-    remaining = span_calculate_next(remaining, plan, &span);
+    remaining = span_calculate_remaining(remaining, plan, &span);
   }
 
   return remaining;

@@ -165,7 +165,7 @@ bool hektor_cmd_list(hektor_t *hektor) {
            (double)span.counted_usage / 1000 / 1000,
            span.refilled / 1000 / 1000);
 
-    remaining = span_calculate_next(remaining, plan, &span);
+    remaining = span_calculate_remaining(remaining, plan, &span);
 
     printf(" = %6.2f megabytes remaining after\n", remaining / 1000 / 1000);
 
