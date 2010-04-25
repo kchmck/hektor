@@ -133,12 +133,11 @@ bool hektor_cmd_list(hektor_t *hektor) {
   }
 
   double remaining = plan->threshold;
+
   int pair_index = 0;
+  const snapshot_t *begin, *end;
 
-  while (true) {
-    const snapshot_t *begin, *end;
-    if (!snapshots_get_pair(snapshots, &begin, &end, pair_index++)) break;
-
+  while (snapshots_get_pair(snapshots, &begin, &end, pair_index++)) {
     char from_time[MAX_TIME_FORMAT_LENGTH] = {0};
     char to_time[MAX_TIME_FORMAT_LENGTH] = {0};
 
