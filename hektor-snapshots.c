@@ -33,8 +33,8 @@ bool snapshots_load(snapshots_t *snapshots) {
   // If there are no json snapshots, skip what follows.
   if (!array_size) goto finished;
 
-  int json_index = 0;
   const time_t expire_point = now_local_time() - EXPIRE_SNAPSHOTS_AFTER;
+  int json_index = 0;
 
   while (snapshots->length < MAX_SNAPSHOTS) {
     const json_t *json_snapshot = json_array_get(json_snapshots, json_index++);
