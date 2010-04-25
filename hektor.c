@@ -162,7 +162,7 @@ bool hektor_cmd_list(hektor_t *hektor) {
 
            from_time, to_time,
            remaining / 1000 / 1000,
-           (double)span.total_transferred / 1000 / 1000,
+           (double)span.counted_usage / 1000 / 1000,
            span.refilled / 1000 / 1000);
 
     remaining = span_calculate_next(remaining, plan, &span);

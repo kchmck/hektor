@@ -26,14 +26,15 @@
 
 typedef struct {
   time_t elapsed;
+  bool during_fap_free;
 
   int uploaded;
   int downloaded;
 
-  int total_transferred;
-  double refilled;
+  int total_usage;
+  int counted_usage;
 
-  bool during_fap_free;
+  double refilled;
 } span_t;
 
 // Calculate the difference between two snapshots.
@@ -42,7 +43,11 @@ void span_calculate_between(const snapshot_t *begin, const snapshot_t *end,
 
 // Apply a snapshot's usage information to a remaining value and return the
 // result.
-double span_calculate_next(const double remaining, const plan_t *plan,
-                           const span_t *span);
+static inline double span_calculate_next(const double remaining,
+                                         const plan_t *plan,
+                                         const span_t *span)
+{
+  return min(remaining + span->refilled - span->counted_usage, plan->threshold);
+}
 
 #endif
