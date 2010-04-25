@@ -182,9 +182,14 @@ bool hektor_cmd_handle(hektor_t *hektor) {
 
   const char *command_name = hektor->argv[1];
 
-  for (int i = 0; i < HEKTOR_CMDS_LENGTH; ++i)
-    if (strcmp(command_name, hektor_cmds[i].command_name) == 0)
+  for (int i = 0; i < HEKTOR_CMDS_LENGTH; ++i) {
+    const char *current_command = hektor_cmds[i].command_name;
+
+    // Try to match a partial command name, so 'rem' will match 'remaining',
+    // etc.
+    if (strstr(current_command, command_name) == &current_command[0])
       return hektor_cmds[i].command_fn(hektor);
+  }
 
   hektor_cmd_help(hektor);
   printf("'%s' is an invalid command.\n", command_name);
