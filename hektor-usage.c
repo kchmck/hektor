@@ -24,11 +24,11 @@ double usage_calculate_remaining(const snapshots_t *snapshots,
 
   double remaining = plan->threshold;
 
-  int pair_index = 0;
+  int snapshot_pair = 0;
   const snapshot_t *begin, *end;
 
   // Loop through snapshot pairs.
-  while (snapshots_get_pair(snapshots, &begin, &end, pair_index++)) {
+  while (snapshots_get_pair(snapshots, &begin, &end, snapshot_pair++)) {
     span_t span = {0};
     span_calculate_between(begin, end, plan, &span);
 
