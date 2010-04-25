@@ -108,8 +108,8 @@ bool hektor_cmd_stats(hektor_t *hektor) {
   const time_t first = snapshots_get_first(snapshots)->snapshot_time;
   const time_t last = snapshots_get_last(snapshots)->snapshot_time;
 
-  char first_formatted[MAX_TIME_FORMAT_LENGTH] = {0};
-  char last_formatted[MAX_TIME_FORMAT_LENGTH] = {0};
+  time_format_t first_formatted = {0};
+  time_format_t last_formatted = {0};
 
   if (!format_time(&first, first_formatted)
   ||  !format_time(&last, last_formatted))
@@ -143,8 +143,8 @@ bool hektor_cmd_list(hektor_t *hektor) {
   const snapshot_t *begin, *end;
 
   while (snapshots_get_pair(snapshots, &begin, &end, pair_index++)) {
-    char from_time[MAX_TIME_FORMAT_LENGTH] = {0};
-    char to_time[MAX_TIME_FORMAT_LENGTH] = {0};
+    time_format_t from_time = {0};
+    time_format_t to_time = {0};
 
     if (!format_time(&begin->snapshot_time, from_time)
     ||  !format_time(&end->snapshot_time, to_time))
