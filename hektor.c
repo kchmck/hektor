@@ -89,7 +89,7 @@ bool hektor_cmd_drop(hektor_t *hektor) {
 }
 
 bool hektor_cmd_stats(hektor_t *hektor) {
-  const snapshots_t *snapshots = &hektor->snapshots;
+  snapshots_t *snapshots = &hektor->snapshots;
 
   printf("%d %s %s been recorded. ", snapshots->length,
                                      snapshots->length == 1 ? "snapshot"
@@ -105,8 +105,8 @@ bool hektor_cmd_stats(hektor_t *hektor) {
     return true;
   }
 
-  const time_t first = snapshots->list[0].snapshot_time;
-  const time_t last = snapshots->list[snapshots->length - 1].snapshot_time;
+  const time_t first = snapshots_get_first(snapshots)->snapshot_time;
+  const time_t last = snapshots_get_last(snapshots)->snapshot_time;
 
   char first_formatted[MAX_TIME_FORMAT_LENGTH] = {0};
   char last_formatted[MAX_TIME_FORMAT_LENGTH] = {0};
