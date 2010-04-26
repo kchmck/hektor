@@ -47,6 +47,7 @@ static inline double span_calculate_remaining(const double currently_remaining,
                                               const plan_t *plan,
                                               const span_t *span)
 {
+  // The amount refilled never exceeds the plan's bandwidth threshold.
   return min(currently_remaining + span->refilled - span->counted_usage,
              plan->threshold);
 }
