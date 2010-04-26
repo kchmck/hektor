@@ -19,15 +19,17 @@
 
 #include <curl/curl.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "hektor-path.h"
 #include "hektor-common.h"
 
 enum { MAX_PAGE_SIZE = 1024 * 64 };
+enum { MAX_URL_LENGTH = MAX_PATH_LENGTH };
 
 // A url type
-typedef path_t url_t;
+typedef char url_t[MAX_URL_LENGTH];
 
 // A page type
 typedef char page_t[MAX_PAGE_SIZE];

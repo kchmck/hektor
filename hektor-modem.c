@@ -17,9 +17,9 @@
 #include "hektor-modem.h"
 
 // Append a path to the modem's base url.
-static inline void modem_build_url(const url_t url_path, url_t url_buffer) {
-  strncat(url_buffer, "http://192.168.0.1", MAX_PATH_LENGTH);
-  strncat(url_buffer, url_path, MAX_PATH_LENGTH - strlen(url_buffer));
+static inline int modem_build_url(const url_t url, url_t url_buffer) {
+  // Strip off the leading '/'.
+  return snprintf(url_buffer, MAX_URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
 }
 
 // Request a url with a callback function.
