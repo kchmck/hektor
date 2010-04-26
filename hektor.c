@@ -105,25 +105,27 @@ bool hektor_cmd_stats(hektor_t *hektor) {
     return true;
   }
 
-  const time_t first = snapshots_get_first(snapshots)->snapshot_time;
-  const time_t last = snapshots_get_last(snapshots)->snapshot_time;
+  const snapshot_t *first = snapshots_get_first(snapshots);
+  const snapshot_t *last = snapshots_get_last(snapshots);
 
-  time_format_t first_formatted = {0};
-  time_format_t last_formatted = {0};
+  span_t span = {0};
+  span_calculate_between(first, last, &hektor->plan, &span);
 
-  if (!format_time(&first, first_formatted)
-  ||  !format_time(&last, last_formatted))
+  time_format_t first_time = {0};
+  time_format_t last_time = {0};
+
+  if (!format_time(&first->snapshot_time, first_time)
+  ||  !format_time(&last->snapshot_time, last_time))
     return false;
 
-  printf("The earliest was recorded at:\n"
+  printf("The earliest was recorded on:\n"
          "  %s\n"
-         "and the latest at:\n"
-         "  %s\n",
-         first_formatted, last_formatted);
+         "and the latest on:\n"
+         "  %s\n"
+         "That equals %.2f hours of usage history.\n",
 
-  const double diff_hours = difftime(last, first) / 60 / 60;
-
-  printf("That equals %.2f hours of usage history.\n", diff_hours);
+         first_time, last_time,
+         (double)span.elapsed / 60 / 60);
 
   return true;
 }
