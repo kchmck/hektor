@@ -81,7 +81,7 @@ static bool hektor_cmd_record(hektor_t *hektor) {
   // Record a new snapshot.
   snapshot_record(snapshot, pep_page);
 
-  printf("Recorded a snapshot\n");
+  printf("Recorded snapshot number %d.\n", hektor->snapshots.length);
 
   // Show the remaining usage.
   return hektor_cmd_remaining(hektor);
@@ -103,7 +103,8 @@ static bool hektor_cmd_drop(hektor_t *hektor) {
     time_format_t snapshot_time = {0};
     if (!format_time(&snapshot->snapshot_time, snapshot_time)) continue;
 
-    printf("Removed snapshot number %d, recorded %s.\n", snapshots->length, snapshot_time);
+    printf("Removed snapshot number %d, recorded on %s.\n", snapshots->length,
+                                                            snapshot_time);
     snapshots->length -= 1;
   }
 
