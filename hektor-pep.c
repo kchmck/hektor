@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <stdlib.h>
+#include <string.h>
+
+#include "hektor-modem.h"
 #include "hektor-pep.h"
 
 int pep_extract_value(const char *value_name, const page_t pep_page) {

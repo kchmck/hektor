@@ -14,7 +14,21 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#include "hektor.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "hektor-config.h"
+#include "hektor-error.h"
+#include "hektor-modem.h"
+#include "hektor-path.h"
+#include "hektor-plan.h"
+#include "hektor-snapshot.h"
+#include "hektor-snapshots.h"
+#include "hektor-span.h"
+#include "hektor-time.h"
+#include "hektor-usage.h"
 
 typedef struct {
   int argc;

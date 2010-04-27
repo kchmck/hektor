@@ -18,7 +18,6 @@
 #define HEKTOR_PLAN_H
 
 #include <stdbool.h>
-#include <string.h>
 
 typedef enum {
   PLAN_HOME,
@@ -38,29 +37,6 @@ typedef struct {
   // The amount of bytes refilled per second
   double refill_rate;
 } plan_t;
-
-enum { PLANS_LENGTH = 6 };
-
-static const struct {
-  const char *plan_name;
-  const plan_id_t plan_id;
-} plan_ids[PLANS_LENGTH] = {
-  {"home",          PLAN_HOME},
-  {"pro",           PLAN_PRO},
-  {"pro-plus",      PLAN_PRO_PLUS},
-  {"elite",         PLAN_ELITE},
-  {"elite-plus",    PLAN_ELITE_PLUS},
-  {"elite-premium", PLAN_ELITE_PREMIUM}
-};
-
-static const int plans[PLANS_LENGTH] = {
-  [PLAN_HOME]          = 200000000,
-  [PLAN_PRO]           = 300000000,
-  [PLAN_PRO_PLUS]      = 425000000,
-  [PLAN_ELITE]         = 500000000,
-  [PLAN_ELITE_PLUS]    = 500000000,
-  [PLAN_ELITE_PREMIUM] = 500000000
-};
 
 // Load a new plan.
 bool plan_load(const char *plan_name, plan_t *plan);

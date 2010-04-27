@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <errno.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <basedir.h>
+#include <libgen.h>
+#include <sys/stat.h>
+
 #include "hektor-path.h"
 
 // Create a new directory and all its parents.

@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <jansson.h>
+#include <stdbool.h>
+#include <string.h>
+
+#include "hektor-json-snapshots.h"
+#include "hektor-path.h"
+#include "hektor-snapshot.h"
+#include "hektor-time.h"
+
 #include "hektor-snapshots.h"
 
 bool snapshots_load(snapshots_t *snapshots) {

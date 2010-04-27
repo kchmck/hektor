@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <stdbool.h>
+#include <time.h>
+
+#include <jansson.h>
+
+#include "hektor-modem.h"
+#include "hektor-pep.h"
+#include "hektor-time.h"
+
 #include "hektor-snapshot.h"
 
 void snapshot_record(snapshot_t *snapshot, const page_t pep_page) {

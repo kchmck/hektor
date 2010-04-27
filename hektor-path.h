@@ -17,14 +17,7 @@
 #ifndef HEKTOR_PATH_H
 #define HEKTOR_PATH_H
 
-#include <errno.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <basedir.h>
-#include <libgen.h>
-#include <sys/stat.h>
 
 enum { MAX_PATH_LENGTH = 255 };
 

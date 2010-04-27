@@ -17,11 +17,8 @@
 #ifndef HEKTOR_CONFIG_H
 #define HEKTOR_CONFIG_H
 
-#include <lauxlib.h>
 #include <lua.h>
-#include <lualib.h>
 #include <stdbool.h>
-#include <string.h>
 
 #include "hektor-path.h"
 

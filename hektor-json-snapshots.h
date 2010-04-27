@@ -18,7 +18,7 @@
 #define JSON_SNAPSHOTS_H
 
 #include <jansson.h>
-#include <stdio.h>
+#include <stdbool.h>
 
 #include "hektor-path.h"
 

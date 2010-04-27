@@ -23,8 +23,6 @@
 #include <jansson.h>
 
 #include "hektor-modem.h"
-#include "hektor-pep.h"
-#include "hektor-time.h"
 
 typedef struct {
   time_t snapshot_time;

@@ -17,9 +17,6 @@
 #ifndef HEKTOR_PEP_H
 #define HEKTOR_PEP_H
 
-#include <stdlib.h>
-#include <string.h>
-
 #include "hektor-modem.h"
 
 // Get a value from the pep page.

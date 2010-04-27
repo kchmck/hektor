@@ -14,7 +14,14 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <lauxlib.h>
+#include <lualib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <stdio.h>
+
 #include "hektor-config.h"
+#include "hektor-path.h"
 
 static bool write_default_config(const config_t *config) {
   static const char DEFAULT_CONFIG[] =

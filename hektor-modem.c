@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <curl/curl.h>
+
 #include "hektor-modem.h"
 
 // Append a path to the modem's base url.

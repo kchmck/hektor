@@ -17,10 +17,7 @@
 #ifndef HEKTOR_MODEM_H
 #define HEKTOR_MODEM_H
 
-#include <curl/curl.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "hektor-path.h"
 #include "hektor-common.h"

@@ -14,7 +14,12 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <jansson.h>
+#include <stdbool.h>
+#include <stdio.h>
+
 #include "hektor-json-snapshots.h"
+#include "hektor-path.h"
 
 json_t *json_snapshots_load(const path_t filename) {
   FILE *snapshots_file = fopen(filename, "r");

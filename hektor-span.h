@@ -17,7 +17,6 @@
 #ifndef HEKTOR_SPAN_H
 #define HEKTOR_SPAN_H
 
-#include <stdbool.h>
 #include <time.h>
 
 #include "hektor-common.h"

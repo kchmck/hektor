@@ -18,12 +18,9 @@
 #define HEKTOR_SNAPSHOTS_H
 
 #include <stdbool.h>
-#include <jansson.h>
 
-#include "hektor-json-snapshots.h"
 #include "hektor-path.h"
 #include "hektor-snapshot.h"
-#include "hektor-time.h"
 
 enum { MAX_SNAPSHOTS = 250 };
 

@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <stdbool.h>
+#include <time.h>
+
+#include "hektor-plan.h"
+#include "hektor-snapshot.h"
+
 #include "hektor-span.h"
 
 // Guess if there was a reboot between two snapshots. When the modem reboots, it
