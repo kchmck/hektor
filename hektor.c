@@ -259,12 +259,12 @@ static bool hektor_main(int argc, char **argv) {
   if (!snapshots_load(&hektor.snapshots))
     return hektor_error_loading_snapshots(&hektor.snapshots);
 
-  const bool success = hektor_cmd_handle(&hektor);
+  const bool cmd_result = hektor_cmd_handle(&hektor);
 
   if (!snapshots_save(&hektor.snapshots))
     return hektor_error_saving_snapshots(&hektor.snapshots);
 
-  return success;
+  return cmd_result;
 }
 
 int main(int argc, char **argv) {
