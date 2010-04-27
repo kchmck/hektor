@@ -25,8 +25,8 @@
 
 #include "hektor-path.h"
 
-// Create a new directory and all its parents.
-static bool make_dir(const path_t full_path) {
+// Create a new directory and any of its parents, if necessary.
+static bool make_dir_and_parents(const path_t full_path) {
   enum { MODE_BITS = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH };
 
   // This is required because dirname discards the constness of its argument.
@@ -38,15 +38,31 @@ static bool make_dir(const path_t full_path) {
   if (strcmp(full_path, parent_dir) == 0) return true;
 
   // ...else recursively make any parents.
-  if (!make_dir(parent_dir)) return false;
+  if (!make_dir_and_parents(parent_dir)) return false;
   if (mkdir(full_path, MODE_BITS) == -1 && errno != EEXIST) return false;
 
   return true;
 }
 
-typedef bool (*xdg_make_dir_fn_t)(path_t, xdgHandle *);
+typedef bool (*xdg_dir_fn_t)(path_t, xdgHandle *);
 
-static bool make_xdg_dir(xdg_make_dir_fn_t fn, path_t path_buffer) {
+// Append the hektor subdir onto a path.
+static inline bool xdg_hektor_dir(path_t path_buffer, const char *xdg_dir) {
+  return snprintf(path_buffer, MAX_PATH_LENGTH, "%s/hektor", xdg_dir);
+}
+
+// Find the path to hektor's general data storage dir.
+static inline bool xdg_data_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
+  return xdg_hektor_dir(path_buffer, xdgDataHome(xdg_dirs));
+}
+
+// Same as above, but for the config dir.
+static inline bool xdg_config_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
+  return xdg_hektor_dir(path_buffer, xdgConfigHome(xdg_dirs));
+}
+
+// Use fn to get a dir's path, then create it.
+static bool make_xdg_dir(xdg_dir_fn_t fn, path_t path_buffer) {
   xdgHandle xdg_dirs;
   if (!xdgInitHandle(&xdg_dirs)) return false;
 
@@ -54,25 +70,15 @@ static bool make_xdg_dir(xdg_make_dir_fn_t fn, path_t path_buffer) {
 
   xdgWipeHandle(&xdg_dirs);
 
-  return success && make_dir(path_buffer);
+  return success && make_dir_and_parents(path_buffer);
 }
 
-static inline bool xdg_hektor_dir(path_t path_buffer, const char *xdg_dir) {
-  return snprintf(path_buffer, MAX_PATH_LENGTH, "%s/hektor", xdg_dir);
-}
-
-static inline bool xdg_data_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
-  return xdg_hektor_dir(path_buffer, xdgDataHome(xdg_dirs));
-}
-
+// Same as above, and also create any needed dirs.
 static inline bool make_data_dir(path_t path_buffer) {
   return make_xdg_dir(xdg_data_dir, path_buffer);
 }
 
-static inline bool xdg_config_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
-  return xdg_hektor_dir(path_buffer, xdgConfigHome(xdg_dirs));
-}
-
+// Same as make_data_dir, but for the config dir.
 static inline bool make_config_dir(path_t path_buffer) {
   return make_xdg_dir(xdg_config_dir, path_buffer);
 }
