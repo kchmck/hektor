@@ -1,4 +1,5 @@
 OBJ = hektor-json-snapshots.o \
+      hektor-config.o         \
       hektor-modem.o          \
       hektor-path.o           \
       hektor-pep.o            \
@@ -13,10 +14,12 @@ CFLAGS += -std=c99 -Wall -O2
 CFLAGS += $(shell pkg-config --cflags libcurl)
 CFLAGS += $(shell pkg-config --cflags jansson)
 CFLAGS += $(shell pkg-config --cflags libxdg-basedir)
+CFLAGS += $(shell pkg-config --cflags lua)
 
 LDFLAGS  = $(shell pkg-config --libs libcurl)
 LDFLAGS += $(shell pkg-config --libs jansson)
 LDFLAGS += $(shell pkg-config --libs libxdg-basedir)
+LDFLAGS += $(shell pkg-config --libs lua)
 
 PREFIX ?= /usr/local
 BINDIR  = $(PREFIX)/bin

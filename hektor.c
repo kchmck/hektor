@@ -16,7 +16,15 @@
 
 #include "hektor.h"
 
-bool hektor_cmd_help(hektor_t *hektor) {
+typedef struct {
+  int argc;
+  char **argv;
+
+  snapshots_t snapshots;
+  plan_t plan;
+} hektor_t;
+
+static bool hektor_cmd_help(hektor_t *hektor) {
   printf("Usage: %s [COMMAND=remaining] [ARGS], where COMMAND can be:\n"
          "  remaining        Show the amount of megabytes remaining\n"
          "                   before the FAP is activated.\n"
@@ -31,7 +39,7 @@ bool hektor_cmd_help(hektor_t *hektor) {
   return true;
 }
 
-bool hektor_cmd_remaining(hektor_t *hektor) {
+static bool hektor_cmd_remaining(hektor_t *hektor) {
   printf("%.2f megabytes remaining\n",
     usage_calculate_remaining(&hektor->snapshots,
                               &hektor->plan) / 1000 / 1000);
@@ -39,7 +47,7 @@ bool hektor_cmd_remaining(hektor_t *hektor) {
   return true;
 }
 
-bool hektor_cmd_record(hektor_t *hektor) {
+static bool hektor_cmd_record(hektor_t *hektor) {
   // Download the whole menu page.
   page_t menu_page = {0};
   if (!modem_fetch_menu_page(menu_page)) return false;
@@ -65,7 +73,7 @@ bool hektor_cmd_record(hektor_t *hektor) {
   return hektor_cmd_remaining(hektor);
 }
 
-bool hektor_cmd_drop(hektor_t *hektor) {
+static bool hektor_cmd_drop(hektor_t *hektor) {
   snapshots_t *snapshots = &hektor->snapshots;
 
   // See if the user gave an amount to remove or default to 1.
@@ -88,7 +96,7 @@ bool hektor_cmd_drop(hektor_t *hektor) {
   return true;
 }
 
-bool hektor_cmd_stats(hektor_t *hektor) {
+static bool hektor_cmd_stats(hektor_t *hektor) {
   snapshots_t *snapshots = &hektor->snapshots;
 
   printf("%d %s %s been recorded. ", snapshots->length,
@@ -130,7 +138,7 @@ bool hektor_cmd_stats(hektor_t *hektor) {
   return true;
 }
 
-bool hektor_cmd_list(hektor_t *hektor) {
+static bool hektor_cmd_list(hektor_t *hektor) {
   const snapshots_t *snapshots = &hektor->snapshots;
   const plan_t *plan = &hektor->plan;
 
@@ -178,7 +186,27 @@ bool hektor_cmd_list(hektor_t *hektor) {
   return true;
 }
 
-bool hektor_cmd_handle(hektor_t *hektor) {
+typedef bool (*hektor_cmd_fn_t)(hektor_t *);
+
+// The list of commands
+enum { HEKTOR_CMDS_LENGTH = 8 };
+
+static const struct {
+  const char *command_name;
+  const hektor_cmd_fn_t command_fn;
+} hektor_cmds[HEKTOR_CMDS_LENGTH] = {
+  {"remaining", hektor_cmd_remaining},
+  {"record",    hektor_cmd_record},
+  {"drop",      hektor_cmd_drop},
+  {"stats",     hektor_cmd_stats},
+  {"list",      hektor_cmd_list},
+
+  {"-h",        hektor_cmd_help},
+  {"--help",    hektor_cmd_help},
+  {"help",      hektor_cmd_help}
+};
+
+static bool hektor_cmd_handle(hektor_t *hektor) {
   // Run the default command if no other command was given.
   if (hektor->argc < 2) return hektor_cmd_remaining(hektor);
 
@@ -194,20 +222,37 @@ bool hektor_cmd_handle(hektor_t *hektor) {
   }
 
   hektor_cmd_help(hektor);
-  printf("'%s' is an invalid command.\n", command_name);
 
-  return false;
+  return hektor_error_invalid_command(command_name);
+}
+
+static bool hektor_main(int argc, char **argv) {
+  hektor_t hektor = {argc, argv};
+
+  config_t config = {0};
+  if (!config_load(&config))
+    return hektor_error_loading_config(&config);
+
+  config_string_t plan_name = {0};
+  if (!config_get_string("usage_plan", plan_name, &config))
+    return hektor_error_loading_plan(&config);
+
+  config_close(&config);
+
+  if (!plan_load(plan_name, &hektor.plan))
+    return hektor_error_invalid_plan(plan_name);
+
+  if (!snapshots_load(&hektor.snapshots))
+    return hektor_error_loading_snapshots(&hektor.snapshots);
+
+  const bool success = hektor_cmd_handle(&hektor);
+
+  if (!snapshots_save(&hektor.snapshots))
+    return hektor_error_saving_snapshots(&hektor.snapshots);
+
+  return success;
 }
 
 int main(int argc, char **argv) {
-  hektor_t hektor = {argc, argv};
-
-  if (!plan_load(&hektor.plan, HUGHESNET_PLAN)
-  ||  !snapshots_load(&hektor.snapshots))
-    return 1;
-
-  const bool success = hektor_cmd_handle(&hektor);
-  if (!snapshots_save(&hektor.snapshots)) return 1;
-
-  return success ? 0 : 1;
+  return hektor_main(argc, argv) ? 0 : 1;
 }

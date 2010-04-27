@@ -18,6 +18,7 @@
 #define HEKTOR_PLAN_H
 
 #include <stdbool.h>
+#include <string.h>
 
 typedef enum {
   PLAN_HOME,
@@ -29,12 +30,30 @@ typedef enum {
 } plan_id_t;
 
 typedef struct {
+  plan_id_t plan_id;
+  const char *plan_name;
+
   // The rolling, 24-hour bandwidth threshold of a plan in bytes
   int threshold;
+  // The amount of bytes refilled per second
   double refill_rate;
 } plan_t;
 
-static const int plans[] = {
+enum { PLANS_LENGTH = 6 };
+
+static const struct {
+  const char *plan_name;
+  const plan_id_t plan_id;
+} plan_ids[PLANS_LENGTH] = {
+  {"home",          PLAN_HOME},
+  {"pro",           PLAN_PRO},
+  {"pro-plus",      PLAN_PRO_PLUS},
+  {"elite",         PLAN_ELITE},
+  {"elite-plus",    PLAN_ELITE_PLUS},
+  {"elite-premium", PLAN_ELITE_PREMIUM}
+};
+
+static const int plans[PLANS_LENGTH] = {
   [PLAN_HOME]          = 200000000,
   [PLAN_PRO]           = 300000000,
   [PLAN_PRO_PLUS]      = 425000000,
@@ -43,17 +62,7 @@ static const int plans[] = {
   [PLAN_ELITE_PREMIUM] = 500000000
 };
 
-// Get the bandwidth threshold of a plan.
-static inline int plan_threshold(const plan_id_t plan_id) {
-  return plans[plan_id] ? plans[plan_id] : 0;
-}
-
-// Get the refill rate of a plan in bytes per second.
-static inline double plan_refill_rate(const int threshold) {
-  return (double)threshold / 24 / 60 / 60;
-}
-
 // Load a new plan.
-bool plan_load(plan_t *plan, const plan_id_t plan_id);
+bool plan_load(const char *plan_name, plan_t *plan);
 
 #endif

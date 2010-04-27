@@ -17,7 +17,7 @@
 #include "hektor-path.h"
 
 // Create a new directory and all its parents.
-static bool path_make_dirs(const path_t full_path) {
+static bool make_dir(const path_t full_path) {
   enum { MODE_BITS = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH };
 
   // This is required because dirname discards the constness of its argument.
@@ -29,26 +29,55 @@ static bool path_make_dirs(const path_t full_path) {
   if (strcmp(full_path, parent_dir) == 0) return true;
 
   // ...else recursively make any parents.
-  if (!path_make_dirs(parent_dir)) return false;
+  if (!make_dir(parent_dir)) return false;
   if (mkdir(full_path, MODE_BITS) == -1 && errno != EEXIST) return false;
 
   return true;
 }
 
-bool path_make_storage_dir(path_t path_buffer) {
-  xdgHandle freedesktop_dirs;
-  if (!xdgInitHandle(&freedesktop_dirs)) return false;
+typedef bool (*xdg_make_dir_fn_t)(path_t, xdgHandle *);
 
-  // Get the data dir.
-  strncat(path_buffer, xdgDataHome(&freedesktop_dirs), MAX_PATH_LENGTH);
-  xdgWipeHandle(&freedesktop_dirs);
+static bool make_xdg_dir(xdg_make_dir_fn_t fn, path_t path_buffer) {
+  xdgHandle xdg_dirs;
+  if (!xdgInitHandle(&xdg_dirs)) return false;
 
-  // Add hektor's subdir and try to create it.
-  strncat(path_buffer, "/hektor/", MAX_PATH_LENGTH - strlen(path_buffer));
-  if (!path_make_dirs(path_buffer)) return false;
+  const bool success = fn(path_buffer, &xdg_dirs);
 
-  // Add the snapshots' filename.
-  strncat(path_buffer, "snapshots.json", MAX_PATH_LENGTH - strlen(path_buffer));
+  xdgWipeHandle(&xdg_dirs);
 
-  return true;
+  return success && make_dir(path_buffer);
+}
+
+static inline bool xdg_hektor_dir(path_t path_buffer, const char *xdg_dir) {
+  return snprintf(path_buffer, MAX_PATH_LENGTH, "%s/hektor", xdg_dir);
+}
+
+static inline bool xdg_data_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
+  return xdg_hektor_dir(path_buffer, xdgDataHome(xdg_dirs));
+}
+
+static inline bool make_data_dir(path_t path_buffer) {
+  return make_xdg_dir(xdg_data_dir, path_buffer);
+}
+
+static inline bool xdg_config_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
+  return xdg_hektor_dir(path_buffer, xdgConfigHome(xdg_dirs));
+}
+
+static inline bool make_config_dir(path_t path_buffer) {
+  return make_xdg_dir(xdg_config_dir, path_buffer);
+}
+
+bool path_make_snapshots_storage(path_t path_buffer) {
+  path_t data_dir = {0};
+  if (!make_data_dir(data_dir)) return false;
+
+  return snprintf(path_buffer, MAX_PATH_LENGTH, "%s/snapshots.json", data_dir);
+}
+
+bool path_make_config_storage(path_t path_buffer) {
+  path_t config_dir = {0};
+  if (!make_config_dir(config_dir)) return false;
+
+  return snprintf(path_buffer, MAX_PATH_LENGTH, "%s/config.lua", config_dir);
 }

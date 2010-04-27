@@ -22,10 +22,10 @@ bool snapshots_load(snapshots_t *snapshots) {
   enum { EXPIRE_SNAPSHOTS_AFTER = 24 * 60 * 60 };
 
   // Find (and create if necessary) the path to the json snapshots.
-  if (!path_make_storage_dir(snapshots->json_storage_path)) return false;
+  if (!path_make_snapshots_storage(snapshots->storage_path)) return false;
 
   // Try to load the snapshots.
-  json_t *json_snapshots = json_snapshots_load(snapshots->json_storage_path);
+  json_t *json_snapshots = json_snapshots_load(snapshots->storage_path);
   if (!json_snapshots) return false;
 
   const int array_size = json_array_size(json_snapshots);
@@ -63,7 +63,7 @@ bool snapshots_save(const snapshots_t *snapshots) {
   for (int i = 0; i < snapshots->length; ++i)
     snapshot_save(&snapshots->list[i], json_snapshots);
 
-  json_snapshots_save(json_snapshots, snapshots->json_storage_path);
+  json_snapshots_save(json_snapshots, snapshots->storage_path);
   json_decref(json_snapshots);
 
   return true;
