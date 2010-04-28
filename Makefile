@@ -1,5 +1,5 @@
-OBJ = hektor-json-snapshots.o \
-      hektor-config.o         \
+OBJ = hektor-config.o         \
+      hektor-json-snapshots.o \
       hektor-modem.o          \
       hektor-path.o           \
       hektor-pep.o            \
