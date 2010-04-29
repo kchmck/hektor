@@ -17,8 +17,8 @@
 #include <lauxlib.h>
 #include <lualib.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "hektor-config.h"
 #include "hektor-path.h"

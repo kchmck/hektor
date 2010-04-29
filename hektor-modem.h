@@ -19,8 +19,8 @@
 
 #include <stdbool.h>
 
-#include "hektor-path.h"
 #include "hektor-common.h"
+#include "hektor-path.h"
 
 enum { MAX_PAGE_SIZE = 1024 * 64 };
 enum { MAX_URL_LENGTH = MAX_PATH_LENGTH };
