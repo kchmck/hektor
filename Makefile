@@ -26,8 +26,6 @@ LDFLAGS += $(shell pkg-config --libs lua)
 PREFIX ?= /usr/local
 BINDIR  = $(PREFIX)/bin
 
-INSTALL ?= install
-
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ)
@@ -37,7 +35,7 @@ $(EXECUTABLE): $(OBJ)
 	$(CC) $(CFLAGS) -c $<
 
 install: all
-	$(INSTALL) -Ds $(EXECUTABLE) $(DESTDIR)$(BINDIR)/$(EXECUTABLE)
+	install -Ds $(EXECUTABLE) $(DESTDIR)$(BINDIR)/$(EXECUTABLE)
 
 clean:
 	rm $(OBJ)
