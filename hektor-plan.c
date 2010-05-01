@@ -51,7 +51,7 @@ static inline double plan_calc_refill_rate(const long threshold) {
 }
 
 bool plan_find_id(const char *plan_name, plan_id_t *plan_id) {
-  for (int i = 0; i < PLANS_LENGTH; ++i) {
+  for (int i = 0; i < PLANS_LENGTH; i += 1) {
     if (strcmp(plan_name, plan_ids[i].plan_name) == 0) {
       *plan_id = plan_ids[i].plan_id;
       return true;

@@ -97,7 +97,7 @@ static bool hektor_cmd_drop(hektor_t *hektor) {
   if (snapshots->length < snapshots_to_remove || snapshots_to_remove <= 0)
     return false;
 
-  for (int i = 0; i < snapshots_to_remove; ++i) {
+  for (int i = 0; i < snapshots_to_remove; i += 1) {
     const snapshot_t *snapshot = snapshots_get_last(snapshots);
 
     time_format_t snapshot_time = {0};
@@ -227,7 +227,7 @@ static bool hektor_cmd_handle(hektor_t *hektor) {
 
   const char *command_name = hektor->argv[1];
 
-  for (int i = 0; i < HEKTOR_CMDS_LENGTH; ++i) {
+  for (int i = 0; i < HEKTOR_CMDS_LENGTH; i += 1) {
     const char *current_command = hektor_cmds[i].command_name;
 
     // Try to match a partial command name, so 'rem' will match 'remaining',

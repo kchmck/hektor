@@ -56,7 +56,7 @@ bool snapshots_load(snapshots_t *snapshots) {
     // Check if the snapshot is expired.
     if (current_snapshot->snapshot_time < expire_point) continue;
 
-    ++snapshots->length;
+    snapshots->length += 1;
   }
 
 finished:
@@ -69,7 +69,7 @@ bool snapshots_save(const snapshots_t *snapshots) {
   json_t *json_snapshots = json_snapshots_empty();
   if (!json_snapshots) return false;
 
-  for (int i = 0; i < snapshots->length; ++i)
+  for (int i = 0; i < snapshots->length; i += 1)
     snapshot_save(&snapshots->list[i], json_snapshots);
 
   json_snapshots_save(json_snapshots, snapshots->storage_path);
