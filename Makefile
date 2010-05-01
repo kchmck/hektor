@@ -10,6 +10,8 @@ OBJ = hektor-config.o         \
       hektor-usage.o          \
       hektor.o
 
+EXECUTABLE = hektor
+
 CFLAGS += -std=c99 -Wall -O2
 CFLAGS += $(shell pkg-config --cflags libcurl)
 CFLAGS += $(shell pkg-config --cflags jansson)
@@ -26,16 +28,16 @@ BINDIR  = $(PREFIX)/bin
 
 INSTALL ?= install
 
-all: hektor
+all: $(EXECUTABLE)
 
-hektor: $(OBJ)
+$(EXECUTABLE): $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 
 install: all
-	$(INSTALL) -Ds hektor $(DESTDIR)$(BINDIR)/hektor
+	$(INSTALL) -Ds $(EXECUTABLE) $(DESTDIR)$(BINDIR)/$(EXECUTABLE)
 
 clean:
 	rm $(OBJ)
