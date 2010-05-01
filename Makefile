@@ -38,4 +38,4 @@ install: all
 	$(INSTALL) -Ds hektor $(DESTDIR)$(BINDIR)/hektor
 
 clean:
-	rm *.o
+	rm $(OBJ)
