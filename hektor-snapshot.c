@@ -40,9 +40,9 @@ bool snapshot_load(snapshot_t *snapshot, const json_t *json_snapshot) {
 
   if (!snapshot_time || !upload || !download) return false;
 
-  snapshot->snapshot_time = json_integer_value(snapshot_time);
-  snapshot->upload = json_integer_value(upload);
-  snapshot->download = json_integer_value(download);
+  snapshot->snapshot_time = json_real_value(snapshot_time);
+  snapshot->upload = json_real_value(upload);
+  snapshot->download = json_real_value(download);
 
   return true;
 }
@@ -51,9 +51,9 @@ bool snapshot_save(const snapshot_t *snapshot, json_t *snapshots) {
   json_t *snapshot_object = json_object();
   if (!snapshot_object) return false;
 
-  json_t *snapshot_time = json_integer(snapshot->snapshot_time);
-  json_t *upload = json_integer(snapshot->upload);
-  json_t *download = json_integer(snapshot->download);
+  json_t *snapshot_time = json_real(snapshot->snapshot_time);
+  json_t *upload = json_real(snapshot->upload);
+  json_t *download = json_real(snapshot->download);
 
   if (!snapshot_time || !upload || !download) {
     json_decref(snapshot_time);

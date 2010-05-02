@@ -26,8 +26,8 @@
 
 typedef struct {
   time_t snapshot_time;
-  int upload;
-  int download;
+  long upload;
+  long download;
 } snapshot_t;
 
 // Record a new snapshot.

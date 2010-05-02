@@ -33,7 +33,7 @@ typedef struct {
   const char *plan_name;
 
   // The rolling, 24-hour bandwidth threshold of a plan in bytes
-  int threshold;
+  long threshold;
   // The amount of bytes refilled per second
   double refill_rate;
 } plan_t;

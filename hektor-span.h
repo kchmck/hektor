@@ -27,11 +27,11 @@ typedef struct {
   time_t elapsed;
   bool during_fap_free;
 
-  int uploaded;
-  int downloaded;
+  long uploaded;
+  long downloaded;
 
-  int total_usage;
-  int counted_usage;
+  long total_usage;
+  long counted_usage;
 
   double refilled;
 } span_t;

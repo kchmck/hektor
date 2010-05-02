@@ -20,7 +20,7 @@
 #include "hektor-modem.h"
 #include "hektor-pep.h"
 
-int pep_extract_value(const char *value_name, const page_t pep_page) {
+long pep_extract_value(const char *value_name, const page_t pep_page) {
   // The total length of a pep column, including the name, eeparating
   // whitespace, and the value. For example:
   //
@@ -41,5 +41,5 @@ int pep_extract_value(const char *value_name, const page_t pep_page) {
   char buffer[remaining_length];
   memcpy(buffer, &pep_page[value_name_end], remaining_length);
 
-  return atoi(buffer);
+  return atol(buffer);
 }

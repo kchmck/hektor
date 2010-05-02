@@ -31,7 +31,7 @@ static const struct {
   {"elite-premium", PLAN_ELITE_PREMIUM}
 };
 
-static const int plans[PLANS_LENGTH] = {
+static const long plans[PLANS_LENGTH] = {
   [PLAN_HOME]          = 200000000,
   [PLAN_PRO]           = 300000000,
   [PLAN_PRO_PLUS]      = 425000000,
@@ -41,12 +41,12 @@ static const int plans[PLANS_LENGTH] = {
 };
 
 // Get the bandwidth threshold of a plan.
-static inline int plan_find_threshold(const plan_id_t plan_id) {
+static inline long plan_find_threshold(const plan_id_t plan_id) {
   return plans[plan_id];
 }
 
 // Get the refill rate of a plan in bytes per second.
-static inline double plan_calc_refill_rate(const int threshold) {
+static inline double plan_calc_refill_rate(const long threshold) {
   return (double)threshold / 24 / 60 / 60;
 }
 

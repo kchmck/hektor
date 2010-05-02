@@ -20,6 +20,6 @@
 #include "hektor-modem.h"
 
 // Get a value from the pep page.
-int pep_extract_value(const char *value_name, const page_t pep_page);
+long pep_extract_value(const char *value_name, const page_t pep_page);
 
 #endif
