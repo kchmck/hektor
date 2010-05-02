@@ -41,6 +41,6 @@ typedef struct {
 } plan_t;
 
 // Load a new plan.
-bool plan_load(const char *plan_name, plan_t *plan);
+bool plan_load(const char *const plan_name, plan_t *const plan);
 
 #endif

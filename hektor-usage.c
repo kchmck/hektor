@@ -21,8 +21,8 @@
 
 #include "hektor-usage.h"
 
-double usage_calculate_remaining(const snapshots_t *snapshots,
-                                 const plan_t *plan)
+double usage_calculate_remaining(const snapshots_t *const snapshots,
+                                 const plan_t *const plan)
 {
   // At least two snapshots are required for a calculation.
   if (snapshots->length < 2) return plan->threshold;

@@ -30,13 +30,13 @@ typedef struct {
   path_t storage_path;
 } config_t;
 
-bool config_load(config_t *config);
+bool config_load(config_t *const config);
 
-static inline void config_close(config_t *config) {
+static inline void config_close(config_t *const config) {
   lua_close(config->lua);
 }
 
-bool config_get_string(const char *option_name, config_string_t buffer,
-                       const config_t *config);
+bool config_get_string(const char *const option_name, config_string_t buffer,
+                       const config_t *const config);
 
 #endif

@@ -25,18 +25,20 @@
 
 #include "hektor-snapshot.h"
 
-void snapshot_record(snapshot_t *snapshot, const page_t pep_page) {
+void snapshot_record(snapshot_t *const snapshot, const page_t pep_page) {
   snapshot->snapshot_time = now_local_time();
   snapshot->upload = pep_extract_value("tx_bytes", pep_page);
   snapshot->download = pep_extract_value("rx_bytes", pep_page);
 }
 
-bool snapshot_load(snapshot_t *snapshot, const json_t *json_snapshot) {
+bool snapshot_load(snapshot_t *const snapshot,
+                   const json_t *const json_snapshot) 
+{
   if (!json_is_object(json_snapshot)) return false;
 
-  const json_t *snapshot_time = json_object_get(json_snapshot, "time");
-  const json_t *upload = json_object_get(json_snapshot, "upload");
-  const json_t *download = json_object_get(json_snapshot, "download");
+  const json_t *const snapshot_time = json_object_get(json_snapshot, "time");
+  const json_t *const upload = json_object_get(json_snapshot, "upload");
+  const json_t *const download = json_object_get(json_snapshot, "download");
 
   if (!snapshot_time || !upload || !download) return false;
 
@@ -47,13 +49,13 @@ bool snapshot_load(snapshot_t *snapshot, const json_t *json_snapshot) {
   return true;
 }
 
-bool snapshot_save(const snapshot_t *snapshot, json_t *snapshots) {
-  json_t *snapshot_object = json_object();
+bool snapshot_save(const snapshot_t *const snapshot, json_t *const snapshots) {
+  json_t *const snapshot_object = json_object();
   if (!snapshot_object) return false;
 
-  json_t *snapshot_time = json_real(snapshot->snapshot_time);
-  json_t *upload = json_real(snapshot->upload);
-  json_t *download = json_real(snapshot->download);
+  json_t *const snapshot_time = json_real(snapshot->snapshot_time);
+  json_t *const upload = json_real(snapshot->upload);
+  json_t *const download = json_real(snapshot->download);
 
   if (!snapshot_time || !upload || !download) goto error;
 
@@ -72,12 +74,12 @@ error:
   return false;
 }
 
-bool snapshot_during_fap_free(const snapshot_t *snapshot) {
+bool snapshot_during_fap_free(const snapshot_t *const snapshot) {
   // 2am and 7am EST in UTC
   enum { BEGIN_UTC = 6, END_UTC = 11 };
 
   // Get the snapshot time info in UTC.
-  const struct tm *time_info = gmtime(&snapshot->snapshot_time);
+  const struct tm *const time_info = gmtime(&snapshot->snapshot_time);
 
   return time_info->tm_hour >= BEGIN_UTC && time_info->tm_hour < END_UTC;
 }

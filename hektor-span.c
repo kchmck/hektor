@@ -26,14 +26,16 @@
 // resets all usage numbers back to zero. If a later snapshot has lower usage
 // numbers than an earlier one, you can figure the modem probably rebooted at
 // some point between their recordings.
-static inline bool possible_reboot_between(const snapshot_t *begin,
-                                           const snapshot_t *end)
+static inline bool possible_reboot_between(const snapshot_t *const begin,
+                                           const snapshot_t *const end)
 {
   return (end->upload < begin->upload) || (end->download < begin->download);
 }
 
-void span_calculate_between(const snapshot_t *begin, const snapshot_t *end,
-                            const plan_t *plan, span_t *span)
+void span_calculate_between(const snapshot_t *const begin,
+                            const snapshot_t *const end,
+                            const plan_t *const plan,
+                            span_t *const span)
 {
   // Check if the snapshots are mix-matched (this happens inexplicably
   // sometimes.)

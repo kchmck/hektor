@@ -32,25 +32,27 @@ typedef struct {
 
 // Create a list of snapshots from a json file, and prune out any expired or
 // corrupted ones.
-bool snapshots_load(snapshots_t *snapshots);
+bool snapshots_load(snapshots_t *const snapshots);
 
 // Save a list of snapshots to the disk in json format.
-bool snapshots_save(const snapshots_t *snapshots);
+bool snapshots_save(const snapshots_t *const snapshots);
 
 // Get a new, empty snapshot at the end of the list.
-snapshot_t *snapshots_next_empty(snapshots_t *snapshots);
+snapshot_t *snapshots_next_empty(snapshots_t *const snapshots);
 
-static inline snapshot_t *snapshots_get_last(snapshots_t *snapshots) {
+static inline snapshot_t *snapshots_get_last(snapshots_t *const snapshots) {
   return &snapshots->list[snapshots->length - 1];
 }
 
-static inline snapshot_t *snapshots_get_first(snapshots_t *snapshots) {
+static inline snapshot_t *snapshots_get_first(snapshots_t *const snapshots) {
   return &snapshots->list[0];
 }
 
 // Get a pair of snapshots. A pair_index of 0 will set begin to snapshot 0 and
 // end to snapshot 1.
-bool snapshots_get_pair(const snapshots_t *snapshots, const snapshot_t **begin,
-                        const snapshot_t **end, const int snapshot_pair);
+bool snapshots_get_pair(const snapshots_t *const snapshots,
+                        const snapshot_t **begin,
+                        const snapshot_t **end,
+                        const int snapshot_pair);
 
 #endif

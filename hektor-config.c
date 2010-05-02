@@ -23,7 +23,7 @@
 #include "hektor-config.h"
 #include "hektor-path.h"
 
-static bool write_default_config(const config_t *config) {
+static bool write_default_config(const config_t *const config) {
   static const char DEFAULT_CONFIG[] =
     "-- Your Hughesnet usage plan, which can be one of: home, pro, pro-plus,\n"
     "-- elite, elite-plus, or elite-premium.\n"
@@ -32,7 +32,7 @@ static bool write_default_config(const config_t *config) {
   // Strip off the trailing \0.
   enum { DEFAULT_CONFIG_LENGTH = sizeof(DEFAULT_CONFIG) - 1 };
 
-  FILE *config_file = fopen(config->storage_path, "w");
+  FILE *const config_file = fopen(config->storage_path, "w");
   if (!config_file) return false;
 
   const size_t written = fwrite(DEFAULT_CONFIG, sizeof(char),
@@ -42,7 +42,7 @@ static bool write_default_config(const config_t *config) {
   return written == DEFAULT_CONFIG_LENGTH;
 }
 
-bool config_load(config_t *config) {
+bool config_load(config_t *const config) {
   config->lua = lua_open();
   if (!config->lua) return false;
   luaL_openlibs(config->lua);
@@ -60,8 +60,8 @@ bool config_load(config_t *config) {
   return lua_pcall(config->lua, 0, 0, 0) == 0;
 }
 
-bool config_get_string(const char *option_name, config_string_t buffer,
-                       const config_t *config)
+bool config_get_string(const char *const option_name, config_string_t buffer,
+                       const config_t *const config)
 {
   lua_getglobal(config->lua, option_name);
 

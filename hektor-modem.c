@@ -29,11 +29,13 @@ static inline int modem_build_url(const url_t url, url_t url_buffer) {
 }
 
 // Request a url with a callback function.
-static CURLcode modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
+static CURLcode modem_fetch_url(const url_t url, void *const receive_fn,
+                                void *const fn_data) 
+{
   url_t full_url;
   modem_build_url(url, full_url);
 
-  CURL *curl = curl_easy_init();
+  CURL *const curl = curl_easy_init();
 
   curl_easy_setopt(curl, CURLOPT_URL, full_url);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, receive_fn);
@@ -45,16 +47,16 @@ static CURLcode modem_fetch_url(const url_t url, void *receive_fn, void *fn_data
   return result;
 }
 
-bool modem_find_url(const char *page_title, const page_t menu_page,
+bool modem_find_url(const char *const page_title, const page_t menu_page,
                     url_t url_buffer)
 {
   // The little bit of text between a page title and its url
-  static const char *TITLE_URL_SEP = "\", \"";
+  #define TITLE_URL_SEP "\", \""
   // The little bit of text at the end of a url
-  static const char *URL_ENDING = "\"))";
+  #define URL_ENDING    "\"))"
 
   // Try to match the page title.
-  const char *title_match = strstr(menu_page, page_title);
+  const char *const title_match = strstr(menu_page, page_title);
   if (!title_match) return false;
 
   const size_t title_begin = title_match - menu_page;
@@ -62,7 +64,7 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
                          + strlen(page_title)
                          + strlen(TITLE_URL_SEP);
 
-  const char *url_end_match = strstr(&menu_page[url_begin], URL_ENDING);
+  const char *const url_end_match = strstr(&menu_page[url_begin], URL_ENDING);
   if (!url_end_match) return false;
 
   const size_t url_end = url_end_match - menu_page;
@@ -70,18 +72,23 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
 
   strncpy(url_buffer, &menu_page[url_begin], min(url_length, MAX_PATH_LENGTH));
 
+  #undef TITLE_URL_SEP
+  #undef URL_ENDING
+
   return true;
 }
 
 // Used to keep state between chunks.
 typedef struct {
-  char *buffer;
+  char *const buffer;
   size_t amount_written;
 } buffer_append_state_t;
 
 // Append successive chunks of a page to a buffer.
-static size_t buffer_append_fn(const char *chunk, const size_t item_size,
-                               const size_t items, buffer_append_state_t *state)
+static size_t buffer_append_fn(const char *const chunk,
+                               const size_t item_size,
+                               const size_t items,
+                               buffer_append_state_t *const state)
 {
   const size_t chunk_size = item_size * items;
   const size_t buffer_remaining = MAX_PAGE_SIZE - state->amount_written;
