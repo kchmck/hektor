@@ -269,5 +269,5 @@ static bool hektor_main(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) {
-  return hektor_main(argc, argv) ? 0 : 1;
+  return hektor_main(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
