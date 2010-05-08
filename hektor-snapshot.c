@@ -55,20 +55,21 @@ bool snapshot_save(const snapshot_t *snapshot, json_t *snapshots) {
   json_t *upload = json_real(snapshot->upload);
   json_t *download = json_real(snapshot->download);
 
-  if (!snapshot_time || !upload || !download) {
-    json_decref(snapshot_time);
-    json_decref(upload);
-    json_decref(download);
-
-    return false;
-  }
+  if (!snapshot_time || !upload || !download) goto error;
 
   if (json_object_set_new(snapshot_object, "time", snapshot_time) == -1
   ||  json_object_set_new(snapshot_object, "upload", upload) == -1
   ||  json_object_set_new(snapshot_object, "download", download) == -1)
-    return false;
+    goto error;
 
   return json_array_append_new(snapshots, snapshot_object) != -1;
+
+error:
+  json_decref(snapshot_time);
+  json_decref(upload);
+  json_decref(download);
+
+  return false;
 }
 
 bool snapshot_during_fap_free(const snapshot_t *snapshot) {
