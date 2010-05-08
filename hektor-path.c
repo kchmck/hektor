@@ -30,8 +30,8 @@ static bool make_dir_and_parents(const path_t full_path) {
   enum { MODE_BITS = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH };
 
   // This is required because dirname discards the constness of its argument.
-  path_t full_path_copy = {0};
-  memcpy(full_path_copy, full_path, MAX_PATH_LENGTH);
+  path_t full_path_copy;
+  strncpy(full_path_copy, full_path, MAX_PATH_LENGTH);
 
   const char *parent_dir = dirname(full_path_copy);
   // If there are no more parents to create, then finish up...
