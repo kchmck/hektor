@@ -19,9 +19,8 @@
 
 #include <stdbool.h>
 
-enum { MAX_PATH_LENGTH = 255 };
-
 // A path type
+enum { MAX_PATH_LENGTH = 255 };
 typedef char path_t[MAX_PATH_LENGTH];
 
 // Find the path to snapshots storage, create any needed dirs, and write the

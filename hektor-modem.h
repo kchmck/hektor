@@ -22,13 +22,12 @@
 #include "hektor-common.h"
 #include "hektor-path.h"
 
-enum { MAX_PAGE_SIZE = 1024 * 64 };
-enum { MAX_URL_LENGTH = MAX_PATH_LENGTH };
-
 // A url type
+enum { MAX_URL_LENGTH = MAX_PATH_LENGTH };
 typedef char url_t[MAX_URL_LENGTH];
 
 // A page type
+enum { MAX_PAGE_SIZE = 1024 * 64 };
 typedef char page_t[MAX_PAGE_SIZE];
 
 // Dynamically find the url of a page by its page title.
