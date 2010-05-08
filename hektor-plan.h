@@ -25,7 +25,9 @@ typedef enum {
   PLAN_PRO_PLUS,
   PLAN_ELITE,
   PLAN_ELITE_PLUS,
-  PLAN_ELITE_PREMIUM
+  PLAN_ELITE_PREMIUM,
+
+  PLAN_INVALID
 } plan_id_t;
 
 typedef struct {

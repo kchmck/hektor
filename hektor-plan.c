@@ -50,19 +50,17 @@ static inline double plan_calc_refill_rate(const long threshold) {
   return (double)threshold / 24 / 60 / 60;
 }
 
-bool plan_find_id(const char *plan_name, plan_id_t *plan_id) {
-  for (int i = 0; i < PLANS_LENGTH; i += 1) {
-    if (strcmp(plan_name, plan_ids[i].plan_name) == 0) {
-      *plan_id = plan_ids[i].plan_id;
-      return true;
-    }
-  }
+plan_id_t plan_find_id(const char *plan_name) {
+  for (int i = 0; i < PLANS_LENGTH; i += 1)
+    if (strcmp(plan_name, plan_ids[i].plan_name) == 0)
+      return plan_ids[i].plan_id;
 
-  return false;
+  return PLAN_INVALID;
 }
 
 bool plan_load(const char *plan_name, plan_t *plan) {
-  if (!plan_find_id(plan_name, &plan->plan_id)) return false;
+  plan->plan_id = plan_find_id(plan_name);
+  if (plan->plan_id == PLAN_INVALID) return false;
 
   plan->plan_name = plan_name;
   plan->threshold = plan_find_threshold(plan->plan_id);
