@@ -50,13 +50,11 @@ bool config_load(config_t *config) {
   if (!path_make_config_storage(config->storage_path)) return false;
 
   switch (luaL_loadfile(config->lua, config->storage_path)) {
-    case 0:
-      break;
-    case LUA_ERRFILE:
-      // Write a default config and reload the file.
-      return write_default_config(config) && config_load(config);
-    default:
-      return false;
+    case 0:           break;
+    // Write a default config and reload the file.
+    case LUA_ERRFILE: return write_default_config(config)
+                          && config_load(config);
+    default:          return false;
   }
 
   return lua_pcall(config->lua, 0, 0, 0) == 0;
