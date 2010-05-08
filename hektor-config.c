@@ -30,16 +30,16 @@ static bool write_default_config(const config_t *config) {
     "usage_plan = \"home\"\n";
 
   // Strip off the trailing \0.
-  enum { DEFAULT_CONFIG_ITEMS = sizeof(DEFAULT_CONFIG) - 1 };
+  enum { DEFAULT_CONFIG_LENGTH = sizeof(DEFAULT_CONFIG) - 1 };
 
   FILE *config_file = fopen(config->storage_path, "w");
   if (!config_file) return false;
 
   const size_t written = fwrite(DEFAULT_CONFIG, sizeof(char),
-                                DEFAULT_CONFIG_ITEMS, config_file);
+                                DEFAULT_CONFIG_LENGTH, config_file);
   fclose(config_file);
 
-  return written == DEFAULT_CONFIG_ITEMS;
+  return written == DEFAULT_CONFIG_LENGTH;
 }
 
 bool config_load(config_t *config) {
