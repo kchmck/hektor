@@ -30,7 +30,7 @@ static inline int modem_build_url(const url_t url, url_t url_buffer) {
 
 // Request a url with a callback function.
 static CURLcode modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
-  url_t full_url = {0};
+  url_t full_url;
   modem_build_url(url, full_url);
 
   CURL *curl = curl_easy_init();
@@ -68,7 +68,7 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
   const size_t url_end = url_end_match - menu_page;
   const size_t url_length = url_end - url_begin;
 
-  memcpy(url_buffer, &menu_page[url_begin], min(url_length, MAX_PATH_LENGTH));
+  strncpy(url_buffer, &menu_page[url_begin], min(url_length, MAX_PATH_LENGTH));
 
   return true;
 }
@@ -96,6 +96,8 @@ static size_t buffer_append_fn(const char *chunk, const size_t item_size,
 }
 
 size_t modem_fetch_page(const url_t url, page_t buffer) {
+  memset(buffer, 0, sizeof(page_t));
+
   buffer_append_state_t state = {buffer};
   modem_fetch_url(url, buffer_append_fn, &state);
 

@@ -63,15 +63,15 @@ static bool hektor_cmd_remaining(hektor_t *hektor) {
 
 static bool hektor_cmd_record(hektor_t *hektor) {
   // Download the whole menu page.
-  page_t menu_page = {0};
+  page_t menu_page;
   if (!modem_fetch_menu_page(menu_page)) return false;
 
   // Find the url to the pep page.
-  url_t pep_url = {0};
+  url_t pep_url;
   if (!modem_find_pep_url(menu_page, pep_url)) return false;
 
   // Download the pep page.
-  page_t pep_page = {0};
+  page_t pep_page;
   if (!modem_fetch_page(pep_url, pep_page)) return false;
 
   // Get the next empty snapshot.
@@ -100,7 +100,7 @@ static bool hektor_cmd_drop(hektor_t *hektor) {
   for (int i = 0; i < snapshots_to_remove; i += 1) {
     const snapshot_t *snapshot = snapshots_get_last(snapshots);
 
-    time_format_t snapshot_time = {0};
+    time_format_t snapshot_time;
     if (!format_time(&snapshot->snapshot_time, snapshot_time)) continue;
 
     printf("Removed snapshot number %d, recorded on %s.\n", snapshots->length,
@@ -131,11 +131,11 @@ static bool hektor_cmd_stats(hektor_t *hektor) {
   const snapshot_t *first = snapshots_get_first(snapshots);
   const snapshot_t *last = snapshots_get_last(snapshots);
 
-  span_t span = {0};
+  span_t span;
   span_calculate_between(first, last, &hektor->plan, &span);
 
-  time_format_t first_time = {0};
-  time_format_t last_time = {0};
+  time_format_t first_time;
+  time_format_t last_time;
 
   if (!format_time(&first->snapshot_time, first_time)
   ||  !format_time(&last->snapshot_time, last_time))
@@ -168,14 +168,14 @@ static bool hektor_cmd_list(hektor_t *hektor) {
   const snapshot_t *begin, *end;
 
   while (snapshots_get_pair(snapshots, &begin, &end, snapshot_pair++)) {
-    time_format_t from_time = {0};
-    time_format_t to_time = {0};
+    time_format_t from_time;
+    time_format_t to_time;
 
     if (!format_time(&begin->snapshot_time, from_time)
     ||  !format_time(&end->snapshot_time, to_time))
       continue;
 
-    span_t span = {0};
+    span_t span;
     span_calculate_between(begin, end, plan, &span);
 
     printf("from %s\n"
@@ -244,11 +244,11 @@ static bool hektor_cmd_handle(hektor_t *hektor) {
 static bool hektor_main(int argc, char **argv) {
   hektor_t hektor = {argc, argv};
 
-  config_t config = {0};
+  config_t config;
   if (!config_load(&config))
     return hektor_error_loading_config(&config);
 
-  config_string_t plan_name = {0};
+  config_string_t plan_name;
   if (!config_get_string("usage_plan", plan_name, &config))
     return hektor_error_loading_plan(&config);
 

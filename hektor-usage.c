@@ -34,7 +34,7 @@ double usage_calculate_remaining(const snapshots_t *snapshots,
 
   // Loop through snapshot pairs.
   while (snapshots_get_pair(snapshots, &begin, &end, snapshot_pair++)) {
-    span_t span = {0};
+    span_t span;
     span_calculate_between(begin, end, plan, &span);
 
     remaining = span_calculate_remaining(remaining, plan, &span);

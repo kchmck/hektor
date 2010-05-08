@@ -84,14 +84,14 @@ static inline bool make_config_dir(path_t path_buffer) {
 }
 
 bool path_make_snapshots_storage(path_t path_buffer) {
-  path_t data_dir = {0};
+  path_t data_dir;
   if (!make_data_dir(data_dir)) return false;
 
   return snprintf(path_buffer, MAX_PATH_LENGTH, "%s/snapshots.json", data_dir);
 }
 
 bool path_make_config_storage(path_t path_buffer) {
-  path_t config_dir = {0};
+  path_t config_dir;
   if (!make_config_dir(config_dir)) return false;
 
   return snprintf(path_buffer, MAX_PATH_LENGTH, "%s/config.lua", config_dir);
