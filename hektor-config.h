@@ -22,7 +22,7 @@
 
 #include "hektor-path.h"
 
-enum { MAX_CONFIG_STRING_LENGTH = 64 };
+enum { MAX_CONFIG_STRING_LENGTH = 32 };
 typedef char config_string_t[MAX_CONFIG_STRING_LENGTH];
 
 typedef struct {
