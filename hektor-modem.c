@@ -53,7 +53,7 @@ bool modem_find_url(const char *const page_title, const page_t menu_page,
   // The little bit of text between a page title and its url
   #define TITLE_URL_SEP "\", \""
   // The little bit of text at the end of a url
-  #define URL_ENDING    "\"))"
+  #define URL_ENDING "\"))"
 
   // Try to match the page title.
   const char *const title_match = strstr(menu_page, page_title);
