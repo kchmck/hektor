@@ -17,7 +17,8 @@ static inline bool hektor_error_loading_config(config_t *const config) {
 
 static inline bool hektor_error_loading_plan(config_t *const config) {
   printf("An error occured while loading a usage plan from the configuration\n"
-         "file. Note that the usage_plan option must be a string.\n");
+         "file. Note that the usage_plan option must be surrounded by "
+         "quotes.\n");
   config_close(config);
 
   return false;
