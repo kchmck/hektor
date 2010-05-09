@@ -18,7 +18,6 @@
 #include "hektor-snapshot.h"
 #include "hektor-snapshots.h"
 #include "hektor-span.h"
-
 #include "hektor-usage.h"
 
 double usage_calculate_remaining(const snapshots_t *const snapshots,
