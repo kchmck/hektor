@@ -55,7 +55,6 @@ void span_calculate_between(const snapshot_t *const begin,
   }
 
   span->total_usage = span->downloaded + span->uploaded;
-  // Hughesnet doesn't count uploads nor any usage inside the fap-free period.
   span->counted_usage = span->during_fap_free ? 0 : span->downloaded;
 
   span->refilled = plan->refill_rate * span->elapsed;

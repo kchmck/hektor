@@ -31,6 +31,7 @@
 #include "hektor-time.h"
 #include "hektor-usage.h"
 
+// Passed to commands
 typedef struct {
   int argc;
   char **argv;
@@ -38,6 +39,9 @@ typedef struct {
   snapshots_t snapshots;
   plan_t plan;
 } hektor_t;
+
+// A command type
+typedef bool (*hektor_cmd_fn_t)(hektor_t *);
 
 static bool hektor_cmd_help(hektor_t *const hektor) {
   printf("Usage: %s [COMMAND=remaining] [ARGS], where COMMAND can be:\n"
@@ -63,11 +67,11 @@ static bool hektor_cmd_remaining(hektor_t *const hektor) {
 }
 
 static bool hektor_cmd_record(hektor_t *const hektor) {
-  // Download the whole menu page.
+  // Download the menu page.
   page_t menu_page;
   if (!modem_fetch_menu_page(menu_page)) return false;
 
-  // Find the url to the pep page.
+  // Find the pep page's url.
   url_t pep_url;
   if (!modem_find_pep_url(menu_page, pep_url)) return false;
 
@@ -75,16 +79,15 @@ static bool hektor_cmd_record(hektor_t *const hektor) {
   page_t pep_page;
   if (!modem_fetch_page(pep_url, pep_page)) return false;
 
-  // Get the next empty snapshot.
+  // Record a new snapshot...
   snapshot_t *const snapshot = snapshots_get_next_empty(&hektor->snapshots);
   if (!snapshot) return false;
 
-  // Record a new snapshot.
   snapshot_record(snapshot, pep_page);
 
   printf("Recorded snapshot number %d.\n", hektor->snapshots.length);
 
-  // Show the remaining usage.
+  // Show the remaining usage afterwards.
   return hektor_cmd_remaining(hektor);
 }
 
@@ -121,7 +124,6 @@ static bool hektor_cmd_stats(hektor_t *const hektor) {
                                      snapshots->length == 1 ? "has"
                                                             : "have");
 
-  // 2 or more snapshots are required for more details.
   if (snapshots->length < 2) {
     printf("Record at least two snapshots for some\n"
            "more details.\n");
@@ -202,9 +204,7 @@ static bool hektor_cmd_list(hektor_t *const hektor) {
   return true;
 }
 
-typedef bool (*hektor_cmd_fn_t)(hektor_t *);
-
-// The list of commands
+// The commands
 enum { HEKTOR_CMDS_LENGTH = 8 };
 
 static const struct {
@@ -222,6 +222,7 @@ static const struct {
   {"help",      hektor_cmd_help}
 };
 
+// Find the appropriate command to run.
 static bool hektor_cmd_handle(hektor_t *const hektor) {
   // Run the default command if no other command was given.
   if (hektor->argc < 2) return hektor_cmd_remaining(hektor);
@@ -231,38 +232,46 @@ static bool hektor_cmd_handle(hektor_t *const hektor) {
   for (int i = 0; i < HEKTOR_CMDS_LENGTH; i += 1) {
     const char *const current_command = hektor_cmds[i].command_name;
 
-    // Try to match a partial command name, so 'rem' will match 'remaining',
-    // etc.
+    // Try to match a partial command name, so 'rec' will match 'record', etc.
     if (string_begins_with(user_command, current_command))
       return hektor_cmds[i].command_fn(hektor);
   }
 
+  // An invalid command was given...
   hektor_cmd_help(hektor);
 
   return hektor_error_invalid_command(user_command);
 }
 
+// Set everything up and run the appropriate command.
 static bool hektor_main(int argc, char **argv) {
   hektor_t hektor = {argc, argv};
 
+  // Load config.
   config_t config;
   if (!config_load(&config))
     return hektor_error_loading_config(&config);
 
+  // Load plan name from config.
   config_string_t plan_name;
   if (!config_get_string("usage_plan", plan_name, &config))
     return hektor_error_loading_plan(&config);
 
+  // Config isn't needed anymore.
   config_close(&config);
 
+  // Load a plan.
   if (!plan_load(plan_name, &hektor.plan))
     return hektor_error_invalid_plan(plan_name);
 
+  // Load snapshots.
   if (!snapshots_load(&hektor.snapshots))
     return hektor_error_loading_snapshots(&hektor.snapshots);
 
+  // Run whatever command.
   const bool cmd_result = hektor_cmd_handle(&hektor);
 
+  // Save snapshots.
   if (!snapshots_save(&hektor.snapshots))
     return hektor_error_saving_snapshots(&hektor.snapshots);
 

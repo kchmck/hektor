@@ -21,7 +21,7 @@
 #include "hektor-pep.h"
 
 long pep_extract_value(const char *const value_name, const page_t pep_page) {
-  // The total length of a pep column, including the name, eeparating
+  // The total length of a pep column, including the name, separating
   // whitespace, and the value. For example:
   //
   // tx_bytes              2147904
@@ -38,8 +38,10 @@ long pep_extract_value(const char *const value_name, const page_t pep_page) {
   const size_t value_name_length = value_name_end - value_name_begin;
   const size_t remaining_length = COLUMN_LENGTH - value_name_length;
 
+  // Copy the separating whitespace and pep value into buffer...
   char buffer[remaining_length];
   memcpy(buffer, &pep_page[value_name_end], remaining_length);
 
+  // ... then extract the pep value.
   return atol(buffer);
 }

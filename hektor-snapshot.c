@@ -81,5 +81,6 @@ bool snapshot_during_fap_free(const snapshot_t *const snapshot) {
   // Get the snapshot time info in UTC.
   const struct tm *const time_info = gmtime(&snapshot->snapshot_time);
 
+  // Check if the snapshot was recorded between the begin and end hours.
   return time_info->tm_hour >= BEGIN_UTC && time_info->tm_hour < END_UTC;
 }

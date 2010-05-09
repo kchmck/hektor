@@ -29,7 +29,7 @@ static bool write_default_config(const config_t *const config) {
     "-- elite, elite-plus, or elite-premium.\n"
     "usage_plan = \"home\"\n";
 
-  // Strip off the trailing \0.
+  // DEFAULT_CONFIG's length, not counting the ending '\0'
   enum { DEFAULT_CONFIG_LENGTH = sizeof(DEFAULT_CONFIG) - 1 };
 
   FILE *const config_file = fopen(config->storage_path, "w");
@@ -43,12 +43,15 @@ static bool write_default_config(const config_t *const config) {
 }
 
 bool config_load(config_t *const config) {
+  // Init lua...
   config->lua = lua_open();
   if (!config->lua) return false;
   luaL_openlibs(config->lua);
 
+  // Get the path to config.
   if (!path_make_config_storage(config->storage_path)) return false;
 
+  // Load the file into lua.
   switch (luaL_loadfile(config->lua, config->storage_path)) {
     // No error
     case 0:           break;
@@ -59,6 +62,7 @@ bool config_load(config_t *const config) {
     default:          return false;
   }
 
+  // Interpret its contents.
   return lua_pcall(config->lua, 0, 0, 0) == 0;
 }
 
@@ -67,6 +71,7 @@ bool config_get_string(const char *const option_name, config_string_t buffer,
 {
   lua_getglobal(config->lua, option_name);
 
+  // In lua, a number is also considered a string, but we don't want that here.
   if (!lua_isstring(config->lua, -1) || lua_isnumber(config->lua, -1))
     return false;
 

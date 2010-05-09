@@ -31,10 +31,11 @@ typedef enum {
 } plan_id_t;
 
 typedef struct {
+  // The plan's computer-readable id
   plan_id_t plan_id;
+  // The plan's human-readable name
   const char *plan_name;
-
-  // The rolling, 24-hour bandwidth threshold of a plan in bytes
+  // The rolling, 24-hour bandwidth threshold of the plan in bytes
   long threshold;
   // The amount of bytes refilled per second
   double refill_rate;

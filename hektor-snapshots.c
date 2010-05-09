@@ -39,9 +39,10 @@ bool snapshots_load(snapshots_t *const snapshots) {
 
   const int array_size = json_array_size(json_snapshots);
 
-  // If there are no json snapshots, skip what follows.
+  // If there are no json snapshots, skip the following loading stuff.
   if (!array_size) goto finished;
 
+  // Any snapshots recorded before this time are expired.
   const time_t expire_point = now_local_time() - EXPIRE_SNAPSHOTS_AFTER;
   int json_index = 0;
 
@@ -50,7 +51,7 @@ bool snapshots_load(snapshots_t *const snapshots) {
                                                        json_index++);
     if (!json_snapshot) break;
 
-    // Try to load the snapshot (if it isn't corrupted.)
+    // Load the snapshot from json
     snapshot_t *const current_snapshot = &snapshots->list[snapshots->length];
     if (!snapshot_load(current_snapshot, json_snapshot)) continue;
 

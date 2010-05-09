@@ -25,7 +25,7 @@
 // Create a new, empty json snapshots array.
 static inline json_t *json_snapshots_empty() { return json_array(); }
 
-// Try to load snapshots from a json file.
+// Load snapshots from a json file.
 json_t *json_snapshots_load(const path_t filename);
 
 // Save snapshots to a json file.

@@ -84,7 +84,7 @@ typedef struct {
   size_t amount_written;
 } buffer_append_state_t;
 
-// Append successive chunks of a page to a buffer.
+// Append succesive chunks of a page to a buffer.
 static size_t buffer_append_fn(const char *const chunk,
                                const size_t item_size,
                                const size_t items,

@@ -24,15 +24,23 @@
 #include "hektor-snapshot.h"
 
 typedef struct {
+  // The seconds elapsed between snapshots
   time_t elapsed;
+  // True if both snapshots were recorded during fap-free
   bool during_fap_free;
 
+  // Total bytes uploaded
   long uploaded;
+  // Total bytes downloaded
   long downloaded;
 
+  // Combined bytes uploaded and downloaded
   long total_usage;
+  // The amount of bytes actually counted against the fap (hughesnet doesn't
+  // count uploads nor any usage inside the fap-free period)
   long counted_usage;
 
+  // Total bytes refilled
   double refilled;
 } span_t;
 

@@ -40,16 +40,17 @@ bool snapshots_save(const snapshots_t *const snapshots);
 // Get a new, empty snapshot at the end of the list.
 snapshot_t *snapshots_get_next_empty(snapshots_t *const snapshots);
 
+// Get the last recorded snapshot.
 static inline snapshot_t *snapshots_get_last(snapshots_t *const snapshots) {
   return &snapshots->list[snapshots->length - 1];
 }
 
+// Get the first recorded snapshot.
 static inline snapshot_t *snapshots_get_first(snapshots_t *const snapshots) {
   return &snapshots->list[0];
 }
 
-// Get a pair of snapshots. A pair_index of 0 will set begin to snapshot 0 and
-// end to snapshot 1.
+// Get a pair of snapshots.
 bool snapshots_get_pair(const snapshots_t *const snapshots,
                         const snapshot_t **begin,
                         const snapshot_t **end,
