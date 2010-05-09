@@ -88,7 +88,7 @@ snapshot_t *snapshots_next_empty(snapshots_t *const snapshots) {
   memmove(&snapshots->list[0], &snapshots->list[1], sizeof(snapshots->list));
 
   // Return the absolute last snapshot.
-  return &snapshots->list[snapshots->length - 1];
+  return snapshots_get_last(snapshots);
 }
 
 bool snapshots_get_pair(const snapshots_t *const snapshots,
