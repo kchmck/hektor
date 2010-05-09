@@ -226,20 +226,20 @@ static bool hektor_cmd_handle(hektor_t *const hektor) {
   // Run the default command if no other command was given.
   if (hektor->argc < 2) return hektor_cmd_remaining(hektor);
 
-  const char *const command_name = hektor->argv[1];
+  const char *const user_command = hektor->argv[1];
 
   for (int i = 0; i < HEKTOR_CMDS_LENGTH; i += 1) {
     const char *const current_command = hektor_cmds[i].command_name;
 
     // Try to match a partial command name, so 'rem' will match 'remaining',
     // etc.
-    if (string_begins_with(command_name, current_command))
+    if (string_begins_with(user_command, current_command))
       return hektor_cmds[i].command_fn(hektor);
   }
 
   hektor_cmd_help(hektor);
 
-  return hektor_error_invalid_command(command_name);
+  return hektor_error_invalid_command(user_command);
 }
 
 static bool hektor_main(int argc, char **argv) {
