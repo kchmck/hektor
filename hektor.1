@@ -47,42 +47,20 @@ apart. A \fBcron daemon\fR can be used to automate that task, since its purpose 
 to do such periodic work. With \fBfcron\fR, an entry like the following will record
 a new snapshot every five minutes (or 300 seconds):
 .
-.IP "" 4
-.
-.nf
-
-@ 300s hektor record
-.
-.fi
-.
-.IP "" 0
+.P
+  @ 300s hektor record
 .
 .SH "TYPICAL USAGE"
 Periodically check the remaining usage:
 .
-.IP "" 4
-.
-.nf
-
-$ hektor
-170.01 megabytes are remaining.
-.
-.fi
-.
-.IP "" 0
+.P
+  $ hektor
+  170.01 megabytes are remaining.
 .
 .P
 and periodically record new snapshots:
 .
-.IP "" 4
-.
-.nf
-
-$ hektor rec
-Snapshot #145 was recorded.
-190.42 megabytes are remaining.
-.
-.fi
-.
-.IP "" 0
-
+.P
+  $ hektor rec
+  Snapshot #145 was recorded.
+  190.42 megabytes are remaining.

@@ -41,17 +41,17 @@ apart. A `cron daemon` can be used to automate that task, since its purpose is
 to do such periodic work. With `fcron`, an entry like the following will record
 a new snapshot every five minutes (or 300 seconds):
 
-    @ 300s hektor record
+  @ 300s hektor record
 
 ## TYPICAL USAGE
 
 Periodically check the remaining usage:
 
-    $ hektor
-    170.01 megabytes are remaining.
+  $ hektor
+  170.01 megabytes are remaining.
 
 and periodically record new snapshots:
 
-    $ hektor rec
-    Snapshot #145 was recorded.
-    190.42 megabytes are remaining.
+  $ hektor rec
+  Snapshot #145 was recorded.
+  190.42 megabytes are remaining.
