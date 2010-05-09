@@ -121,8 +121,7 @@ static bool hektor_cmd_stats(hektor_t *const hektor) {
   printf("%d %s %s been recorded. ", snapshots->length,
                                      snapshots->length == 1 ? "snapshot"
                                                             : "snapshots",
-                                     snapshots->length == 1 ? "has"
-                                                            : "have");
+                                     snapshots->length == 1 ? "has" : "have");
 
   if (snapshots->length < 2) {
     printf("Record at least two snapshots for some\n"
