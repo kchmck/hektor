@@ -131,15 +131,15 @@ static bool hektor_cmd_stats(hektor_t *const hektor) {
   const snapshot_t *const first = snapshots_get_first(snapshots);
   const snapshot_t *const last = snapshots_get_last(snapshots);
 
-  span_t span;
-  span_calculate_between(first, last, &hektor->plan, &span);
-
   time_format_t first_time;
   time_format_t last_time;
 
   if (!format_time(&first->snapshot_time, first_time)
   ||  !format_time(&last->snapshot_time, last_time))
     return false;
+
+  span_t span;
+  span_calculate_between(first, last, &hektor->plan, &span);
 
   printf("The earliest was recorded on:\n"
          "  %s\n"
