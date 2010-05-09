@@ -34,15 +34,6 @@ other words, '`hektor s`' and '`hektor st`' are equivalent to '`hektor stats`'.
  - `l|ist`:
    Display a detailed listing of snapshots.
 
-## SNAPSHOTS
-
-For greatest accuracy, snapshots should be recorded no more than ten minutes
-apart. A `cron daemon` can be used to automate that task, since its purpose is
-to do such periodic work. With `fcron`, an entry like the following will record
-a new snapshot every five minutes (or 300 seconds):
-
-  @ 300s hektor record
-
 ## TYPICAL USAGE
 
 Periodically check the remaining usage:
@@ -55,3 +46,12 @@ and periodically record new snapshots:
   $ hektor rec
   Snapshot #145 was recorded.
   190.42 megabytes are remaining.
+
+## SNAPSHOTS
+
+For greatest accuracy, snapshots should be recorded no more than ten minutes
+apart. A `cron daemon` can be used to automate that task, since its purpose is
+to do such periodic work. With `fcron`, an entry like the following will record
+a new snapshot every five minutes (or 300 seconds):
+
+  @ 300s hektor record
