@@ -55,8 +55,8 @@ static bool hektor_cmd_help(hektor_t *const hektor) {
 
 static bool hektor_cmd_remaining(hektor_t *const hektor) {
   printf("%.2f megabytes remaining\n",
-    usage_calculate_remaining(&hektor->snapshots,
-                              &hektor->plan) / 1000 / 1000);
+         usage_calculate_remaining(&hektor->snapshots,
+                                   &hektor->plan) / 1000 / 1000);
 
   return true;
 }
