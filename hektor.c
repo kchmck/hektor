@@ -59,7 +59,7 @@ static bool hektor_cmd_help(hektor_t *const hektor) {
 }
 
 static bool hektor_cmd_remaining(hektor_t *const hektor) {
-  printf("%.2f megabytes remaining\n",
+  printf("%.2f megabytes are remaining.\n",
          usage_calculate_remaining(&hektor->snapshots,
                                    &hektor->plan) / 1000 / 1000);
 
@@ -85,7 +85,7 @@ static bool hektor_cmd_record(hektor_t *const hektor) {
 
   snapshot_record(snapshot, pep_page);
 
-  printf("Recorded snapshot number %d.\n", hektor->snapshots.length);
+  printf("Snapshot #%d was recorded.\n", hektor->snapshots.length);
 
   // Show the remaining usage afterwards.
   return hektor_cmd_remaining(hektor);
@@ -107,8 +107,8 @@ static bool hektor_cmd_drop(hektor_t *const hektor) {
     time_format_t snapshot_time;
     if (!format_time(&snapshot->snapshot_time, snapshot_time)) continue;
 
-    printf("Removed snapshot number %d, recorded on %s.\n", snapshots->length,
-                                                            snapshot_time);
+    printf("Snapshot #%d, recorded %s, was removed.\n", snapshots->length,
+                                                        snapshot_time);
     snapshots->length -= 1;
   }
 
