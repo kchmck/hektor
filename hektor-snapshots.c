@@ -92,8 +92,8 @@ snapshot_t *snapshots_next_empty(snapshots_t *const snapshots) {
 }
 
 bool snapshots_get_pair(const snapshots_t *const snapshots,
-                        const snapshot_t **begin,
-                        const snapshot_t **end,
+                        const snapshot_t **const begin,
+                        const snapshot_t **const end,
                         const int snapshot_pair)
 {
   if (snapshot_pair + 1 >= snapshots->length) return false;
