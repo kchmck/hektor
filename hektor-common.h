@@ -17,10 +17,19 @@
 #ifndef HEKTOR_COMMON_H
 #define HEKTOR_COMMON_H
 
+#include <string.h>
+
 // Find the minimum of two numbers.
 static inline int min(const int a, const int b) { return a < b ? a : b; }
 
 // Find the maximum of two numbers.
 static inline int max(const int a, const int b) { return a > b ? a : b; }
+
+// Check if a string begins with a substring.
+static inline bool string_begins_with(const char *const substring,
+                                      const char *const string)
+{
+  return strstr(string, substring) == &string[0];
+}
 
 #endif

@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "hektor-common.h"
 #include "hektor-config.h"
 #include "hektor-error.h"
 #include "hektor-modem.h"
@@ -232,7 +233,7 @@ static bool hektor_cmd_handle(hektor_t *const hektor) {
 
     // Try to match a partial command name, so 'rem' will match 'remaining',
     // etc.
-    if (strstr(current_command, command_name) == &current_command[0])
+    if (string_begins_with(command_name, current_command))
       return hektor_cmds[i].command_fn(hektor);
   }
 
