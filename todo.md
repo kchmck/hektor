@@ -1,2 +1,2 @@
 - A readme
-- Main error handlers
+- A manpage
