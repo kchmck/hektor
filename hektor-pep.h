@@ -22,4 +22,14 @@
 // Get a value from the pep page.
 long pep_extract_value(const char *const value_name, const page_t pep_page);
 
+// Get the pep upload (tx_bytes) value.
+static inline long pep_get_upload(const page_t pep_page) {
+  return pep_extract_value("tx_bytes", pep_page);
+}
+
+// Get the pep download (rx_bytes) value.
+static inline long pep_get_download(const page_t pep_page) {
+  return pep_extract_value("rx_bytes", pep_page);
+}
+
 #endif

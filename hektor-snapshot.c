@@ -27,8 +27,8 @@
 
 void snapshot_record(snapshot_t *const snapshot, const page_t pep_page) {
   snapshot->snapshot_time = now_local_time();
-  snapshot->upload = pep_extract_value("tx_bytes", pep_page);
-  snapshot->download = pep_extract_value("rx_bytes", pep_page);
+  snapshot->upload = pep_get_upload(pep_page);
+  snapshot->download = pep_get_download(pep_page);
 }
 
 bool snapshot_load(snapshot_t *const snapshot,
