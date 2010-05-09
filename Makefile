@@ -24,7 +24,7 @@ LDFLAGS += $(shell pkg-config --libs jansson)
 LDFLAGS += $(shell pkg-config --libs libxdg-basedir)
 LDFLAGS += $(shell pkg-config --libs lua)
 
-PREFIX    ?= /usr/local
+PREFIX    ?= /usr
 INSTALLDIR = $(DESTDIR)$(PREFIX)
 BINDIR     = $(INSTALLDIR)/bin
 MANDIR     = $(INSTALLDIR)/share/man/man1
