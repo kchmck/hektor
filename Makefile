@@ -11,6 +11,7 @@ OBJ = hektor-config.o         \
       hektor.o
 
 EXECUTABLE = hektor
+MANPAGE = hektor.1
 
 CFLAGS += -std=c99 -Wall -O2
 CFLAGS += $(shell pkg-config --cflags libcurl)
@@ -23,8 +24,10 @@ LDFLAGS += $(shell pkg-config --libs jansson)
 LDFLAGS += $(shell pkg-config --libs libxdg-basedir)
 LDFLAGS += $(shell pkg-config --libs lua)
 
-PREFIX ?= /usr/local
-BINDIR  = $(PREFIX)/bin
+PREFIX    ?= /usr/local
+INSTALLDIR = $(DESTDIR)$(PREFIX)
+BINDIR     = $(INSTALLDIR)/bin
+MANDIR     = $(INSTALLDIR)/share/man/man1
 
 all: $(EXECUTABLE)
 
@@ -35,7 +38,8 @@ $(EXECUTABLE): $(OBJ)
 	$(CC) $(CFLAGS) -c $<
 
 install: all
-	install -Ds $(EXECUTABLE) $(DESTDIR)$(BINDIR)/$(EXECUTABLE)
+	install -Ds $(EXECUTABLE) $(BINDIR)/$(EXECUTABLE)
+	install -D $(MANPAGE) $(MANDIR)/$(MANPAGE)
 
 clean:
 	rm $(OBJ)
