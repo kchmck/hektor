@@ -72,10 +72,10 @@ bool modem_find_url(const char *const page_title, const page_t menu_page,
 
   strncpy(url_buffer, &menu_page[url_begin], min(url_length, MAX_PATH_LENGTH));
 
+  return true;
+
   #undef TITLE_URL_SEP
   #undef URL_ENDING
-
-  return true;
 }
 
 // Used to keep state between chunks.
