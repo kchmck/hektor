@@ -79,7 +79,7 @@ bool snapshots_save(const snapshots_t *const snapshots) {
   return true;
 }
 
-snapshot_t *snapshots_next_empty(snapshots_t *const snapshots) {
+snapshot_t *snapshots_get_next_empty(snapshots_t *const snapshots) {
   if (snapshots->length < MAX_SNAPSHOTS)
     return &snapshots->list[snapshots->length++];
 

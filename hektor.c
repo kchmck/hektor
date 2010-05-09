@@ -75,7 +75,7 @@ static bool hektor_cmd_record(hektor_t *const hektor) {
   if (!modem_fetch_page(pep_url, pep_page)) return false;
 
   // Get the next empty snapshot.
-  snapshot_t *const snapshot = snapshots_next_empty(&hektor->snapshots);
+  snapshot_t *const snapshot = snapshots_get_next_empty(&hektor->snapshots);
   if (!snapshot) return false;
 
   // Record a new snapshot.
