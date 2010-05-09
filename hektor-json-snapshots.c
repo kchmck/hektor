@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License along with
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#include <jansson.h>
 #include <stdbool.h>
 #include <stdio.h>
+
+#include <jansson.h>
 
 #include "hektor-json-snapshots.h"
 #include "hektor-path.h"
