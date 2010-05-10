@@ -20,7 +20,7 @@ package. Using a tool like [bauerbill], it's as simple as:
 
 Bauerbill will automatically install all of hektor's dependencies. On other
 distros, a few libraries must be installed before hektor can be built;
-instructions for installing them are below.
+instructions for doing so are below.
 
 [arch linux]: http://archlinux.org/
 [hektor-git]: http://aur.archlinux.org/packages.php?ID=37095
@@ -95,7 +95,7 @@ Once installed, the `hektor` command should be available to use!
 
 ## Configuration
 
-Hektor has but one little configuration option: a usage plan. The configuration
+Hektor has just one little configuration option: a usage plan. The configuration
 file is ususally stored at `~/.config/hektor/config.lua` and can be edited with
 your favorite text editor. After hektor's first run, the config file should
 contain:
