@@ -95,13 +95,10 @@ static bool hektor_cmd_drop(hektor_t *const hektor) {
   snapshots_t *const snapshots = &hektor->snapshots;
 
   // See if the user gave an amount to remove or default to 1.
-  const int snapshots_to_remove = hektor->argc > 2 ? atoi(hektor->argv[2]) : 1;
+  const int remove = min(hektor->argc > 2 ? max(atoi(hektor->argv[2]), 0) : 1,
+                         snapshots->length);
 
-  // Check for sanity.
-  if (snapshots->length < snapshots_to_remove || snapshots_to_remove <= 0)
-    return false;
-
-  for (int i = 0; i < snapshots_to_remove; i += 1) {
+  for (int i = 0; i < remove; i += 1) {
     const snapshot_t *const snapshot = snapshots_get_last(snapshots);
 
     time_format_t snapshot_time;
@@ -111,6 +108,9 @@ static bool hektor_cmd_drop(hektor_t *const hektor) {
                                                         snapshot_time);
     snapshots->length -= 1;
   }
+
+  printf("%d %s %s removed.\n", remove, remove == 1 ? "snapshot" : "snapshots",
+                                        remove == 1 ? "was" : "were");
 
   return true;
 }
