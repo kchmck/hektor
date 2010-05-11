@@ -21,8 +21,6 @@
 #include <time.h>
 
 enum { MAX_TIME_FORMAT_LENGTH = 32 };
-
-// A formatted time type
 typedef char time_format_t[MAX_TIME_FORMAT_LENGTH];
 
 // Get the current local time.
