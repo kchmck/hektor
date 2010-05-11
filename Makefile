@@ -1,4 +1,5 @@
 OBJ = hektor-config.o         \
+      hektor-error.o          \
       hektor-json-snapshots.o \
       hektor-modem.o          \
       hektor-path.o           \
