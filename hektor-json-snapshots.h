@@ -23,7 +23,7 @@
 #include "hektor-path.h"
 
 // Create a new, empty json snapshots array.
-static inline json_t *json_snapshots_empty() { return json_array(); }
+static inline json_t *json_snapshots_empty(void) { return json_array(); }
 
 // Load snapshots from a json file.
 json_t *json_snapshots_load(const path_t filename);

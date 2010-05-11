@@ -26,7 +26,7 @@ enum { MAX_TIME_FORMAT_LENGTH = 32 };
 typedef char time_format_t[MAX_TIME_FORMAT_LENGTH];
 
 // Get the current local time.
-static inline time_t now_local_time() { return time(NULL); }
+static inline time_t now_local_time(void) { return time(NULL); }
 
 // Replicate ctime without the static storage problems.
 static inline bool format_time(const time_t *const time, time_format_t buffer) {
