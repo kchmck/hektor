@@ -52,13 +52,8 @@ void span_calculate_between(const snapshot_t *const begin,
 
 // Apply a snapshot's usage information to a remaining value and return the
 // result.
-static inline double span_calculate_remaining(const double currently_remaining,
-                                              const plan_t *const plan,
-                                              const span_t *const span)
-{
-  // The amount refilled never exceeds the plan's bandwidth threshold.
-  return min(currently_remaining + span->refilled - span->counted_usage,
-             plan->threshold);
-}
+double span_calculate_remaining(const double currently_remaining,
+                                const plan_t *const plan,
+                                const span_t *const span);
 
 #endif

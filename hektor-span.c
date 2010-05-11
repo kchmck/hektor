@@ -59,3 +59,12 @@ void span_calculate_between(const snapshot_t *const begin,
 
   span->refilled = plan->refill_rate * span->elapsed;
 }
+
+double span_calculate_remaining(const double currently_remaining,
+                                const plan_t *const plan,
+                                const span_t *const span)
+{
+  // The amount refilled never exceeds the plan's bandwidth threshold.
+  return min(currently_remaining + span->refilled - span->counted_usage,
+             plan->threshold);
+}
