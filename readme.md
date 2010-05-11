@@ -12,11 +12,11 @@ interface:
     100.42 megabytes are remaining.
 
 Hektor works through the use of periodically recorded ‘snapshots’. Each snapshot
-contains the time it was recorded, along with usage numbers extracted from the
-modem. Using a list of these snapshots, hektor can calculate a (rough) rolling
-usage estimate based on the amount of data transferred and refilled between each
-recording. The following sections describe how to get hektor up and running on
-your system.
+contains the time it was recorded, along with upload and download numbers
+extracted from the modem. Using a list of these snapshots, hektor can calculate
+a (rough) rolling usage estimate based on the amount of data transferred and
+refilled between each recording. The following sections describe how to get
+hektor up and running on your system.
 
 [fair access policy]: http://customercare.myhughesnet.com/fap_faqs.htm
 
