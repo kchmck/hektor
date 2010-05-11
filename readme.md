@@ -1,6 +1,6 @@
 # Hektor
 
-Hektor is a calculator for Hughesnet’s ‘[fair access policy]’ — it lets you know
+Hektor is a calculator for Hughesnet’s ‘[fair access policy]’ — it estimates
 the amount of megabytes remaining before the FAP is activated, so you can use
 your Internets wisely. It is small and quick, with a simple command-line
 interface:
