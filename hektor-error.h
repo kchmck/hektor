@@ -49,4 +49,11 @@ static inline bool hektor_error_invalid_command(const char *const command_name) 
   return false;
 }
 
+static inline bool hektor_error_with_modem(void) {
+  printf("An error occured while requesting a page from the modem. Perhaps\n"
+         "the network is down?\n");
+
+  return false;
+}
+
 #endif

@@ -69,15 +69,18 @@ static bool hektor_cmd_remaining(hektor_t *const hektor) {
 static bool hektor_cmd_record(hektor_t *const hektor) {
   // Download the menu page.
   page_t menu_page;
-  if (!modem_fetch_menu_page(menu_page)) return false;
+  if (!modem_fetch_menu_page(menu_page))
+    return hektor_error_with_modem();
 
   // Find the pep page's url.
   url_t pep_url;
-  if (!modem_find_pep_url(menu_page, pep_url)) return false;
+  if (!modem_find_pep_url(menu_page, pep_url))
+    return hektor_error_with_modem();
 
   // Download the pep page.
   page_t pep_page;
-  if (!modem_fetch_page(pep_url, pep_page)) return false;
+  if (!modem_fetch_page(pep_url, pep_page))
+    return hektor_error_with_modem();
 
   // Record a new snapshot...
   snapshot_t *const snapshot = snapshots_get_next_empty(&hektor->snapshots);
