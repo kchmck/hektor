@@ -50,8 +50,8 @@ instructions for doing so are below.
 
 - [cURL] is used to fetch pages and usage information from the modem. **Ubuntu
   users** can install the `libcurl4-openssl-dev` package: `sudo apt-get install
-  libcurl4-openssl-dev`. For **Others**, the library should normally be available
-  from your package manager of choice with a name resembling `curl` or `libcurl`;
+  libcurl4-openssl-dev`. For **Others**, the library should be available from
+  your package manager of choice with a name resembling `curl` or `libcurl`;
   otherwise, download and compile [the latest release][curl-dl].
 
 [cURL]: http://curl.haxx.se/
