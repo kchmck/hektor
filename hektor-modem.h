@@ -35,8 +35,7 @@ bool modem_find_url(const char *const page_title, const page_t menu_page,
                     url_t url_buffer);
 
 // Get the pep page's url.
-static inline bool modem_find_pep_url(const page_t menu_page,
-                                      url_t url_buffer)
+static inline bool modem_find_pep_url(const page_t menu_page, url_t url_buffer)
 {
   return modem_find_url("ALL BCB Stats", menu_page, url_buffer);
 }
