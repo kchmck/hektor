@@ -23,6 +23,7 @@
 #include <libgen.h>
 #include <sys/stat.h>
 
+#include "hektor-common.h"
 #include "hektor-path.h"
 
 // Create a new directory and any of its parents, if necessary.
@@ -35,7 +36,7 @@ static bool make_dir_and_parents(const path_t full_path) {
 
   const char *const parent_dir = dirname(full_path_copy);
   // If there are no more parents to create, then finish up...
-  if (strcmp(full_path, parent_dir) == 0) return true;
+  if (strings_are_equal(full_path, parent_dir)) return true;
 
   // ...else recursively make any parents.
   if (!make_dir_and_parents(parent_dir)) return false;

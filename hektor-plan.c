@@ -15,6 +15,8 @@
 // Hektor. If not, see <http://www.gnu.org/licenses/>.
 
 #include <string.h>
+
+#include "hektor-common.h"
 #include "hektor-plan.h"
 
 enum { PLANS_LENGTH = 6 };
@@ -53,7 +55,7 @@ static inline double plan_calc_refill_rate(const long threshold) {
 // Match a plan name to an id.
 static plan_id_t plan_find_id(const char *const plan_name) {
   for (int i = 0; i < PLANS_LENGTH; i += 1)
-    if (strcmp(plan_name, plan_ids[i].plan_name) == 0)
+    if (strings_are_equal(plan_name, plan_ids[i].plan_name))
       return plan_ids[i].plan_id;
 
   return PLAN_INVALID;

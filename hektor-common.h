@@ -17,6 +17,7 @@
 #ifndef HEKTOR_COMMON_H
 #define HEKTOR_COMMON_H
 
+#include <stdbool.h>
 #include <string.h>
 
 // Find the minimum of two numbers.
@@ -30,6 +31,10 @@ static inline bool string_begins_with(const char *const substring,
                                       const char *const string)
 {
   return strstr(string, substring) == &string[0];
+}
+
+static inline bool strings_are_equal(const char *const a, const char *const b) {
+  return strcmp(a, b) == 0;
 }
 
 #endif
