@@ -49,3 +49,5 @@ install: all
 
 clean:
 	rm $(OBJ)
+
+.PHONY: all manpage install clean
