@@ -20,7 +20,7 @@
 #include "hektor-modem.h"
 #include "hektor-pep.h"
 
-long pep_extract_value(const char *const value_name, const page_t pep_page) {
+long pep_extract_value(const char *value_name, const page_t pep_page) {
   // The total length of a pep column, including the name, separating
   // whitespace, and the value. For example:
   //
@@ -29,7 +29,7 @@ long pep_extract_value(const char *const value_name, const page_t pep_page) {
   // ^----------------------------^ is 30 characters
   enum { COLUMN_LENGTH = 30 };
 
-  const char *const value_name_match = strstr(pep_page, value_name);
+  const char *value_name_match = strstr(pep_page, value_name);
   if (!value_name_match) return 0;
 
   const size_t value_name_begin = value_name_match - pep_page;

@@ -6,7 +6,7 @@
 
 #include "hektor-error.h"
 
-bool hektor_error_loading_config(config_t *const config) {
+bool hektor_error_loading_config(config_t *config) {
   printf("An error occured while loading hektor's configuration: '%s'.\n",
          lua_tostring(config->lua, -1));
 
@@ -15,7 +15,7 @@ bool hektor_error_loading_config(config_t *const config) {
   return false;
 }
 
-bool hektor_error_loading_plan(config_t *const config) {
+bool hektor_error_loading_plan(config_t *config) {
   printf("An error occured while loading a usage plan from the configuration\n"
          "file. Note that usage_plan's value must be surrounded by quotes.\n");
 
@@ -31,21 +31,21 @@ bool hektor_error_invalid_plan(const config_string_t plan_name) {
   return false;
 }
 
-bool hektor_error_loading_snapshots(const snapshots_t *const snapshots) {
+bool hektor_error_loading_snapshots(const snapshots_t *snapshots) {
   printf("An error occured while loading usage snapshots from '%s'.\n",
          snapshots->storage_path);
 
   return false;
 }
 
-bool hektor_error_saving_snapshots(const snapshots_t *const snapshots) {
+bool hektor_error_saving_snapshots(const snapshots_t *snapshots) {
   printf("An error occured while saving usage snapshots to '%s'.\n",
          snapshots->storage_path);
 
   return false;
 }
 
-bool hektor_error_invalid_command(const char *const command_name) {
+bool hektor_error_invalid_command(const char *command_name) {
   printf("'%s' is an invalid command.\n", command_name);
 
   return false;

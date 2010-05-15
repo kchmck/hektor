@@ -25,16 +25,16 @@
 
 #include "hektor-snapshots.h"
 
-bool snapshots_load(snapshots_t *const snapshots) {
+bool snapshots_load(snapshots_t *snapshots) {
   // The fap is calculated on a rolling 24-hour time span, so any snapshots
   // older than 24 hours are expired.
-  enum { EXPIRE_SNAPSHOTS_AFTER = 24 * 60 * 60 };
+  enum { EXPIRE_SNAPSHOTS_AFTER = 48 * 60 * 60 };
 
   // Find (and create if necessary) the path to the json snapshots.
   if (!path_make_snapshots_storage(snapshots->storage_path)) return false;
 
   // Try to load the snapshots.
-  json_t *const json_snapshots = json_snapshots_load(snapshots->storage_path);
+  json_t *json_snapshots = json_snapshots_load(snapshots->storage_path);
   if (!json_snapshots) return false;
 
   const int array_size = json_array_size(json_snapshots);
@@ -47,12 +47,11 @@ bool snapshots_load(snapshots_t *const snapshots) {
   int json_index = 0;
 
   while (snapshots->length < MAX_SNAPSHOTS) {
-    const json_t *const json_snapshot = json_array_get(json_snapshots,
-                                                       json_index++);
+    const json_t *json_snapshot = json_array_get(json_snapshots, json_index++);
     if (!json_snapshot) break;
 
     // Load the snapshot from json
-    snapshot_t *const current_snapshot = &snapshots->list[snapshots->length];
+    snapshot_t *current_snapshot = &snapshots->list[snapshots->length];
     if (!snapshot_load(current_snapshot, json_snapshot)) continue;
 
     // Check if the snapshot is expired.
@@ -67,8 +66,8 @@ finished:
   return true;
 }
 
-bool snapshots_save(const snapshots_t *const snapshots) {
-  json_t *const json_snapshots = json_snapshots_empty();
+bool snapshots_save(const snapshots_t *snapshots) {
+  json_t *json_snapshots = json_snapshots_empty();
   if (!json_snapshots) return false;
 
   for (int i = 0; i < snapshots->length; i += 1)
@@ -80,7 +79,7 @@ bool snapshots_save(const snapshots_t *const snapshots) {
   return true;
 }
 
-snapshot_t *snapshots_get_next_empty(snapshots_t *const snapshots) {
+snapshot_t *snapshots_get_next_empty(snapshots_t *snapshots) {
   if (snapshots->length < MAX_SNAPSHOTS)
     return &snapshots->list[snapshots->length++];
 
@@ -92,10 +91,8 @@ snapshot_t *snapshots_get_next_empty(snapshots_t *const snapshots) {
   return snapshots_get_last(snapshots);
 }
 
-bool snapshots_get_pair(const snapshots_t *const snapshots,
-                        const snapshot_t **const begin,
-                        const snapshot_t **const end,
-                        const int snapshot_pair)
+bool snapshots_get_pair(const snapshots_t *snapshots, const snapshot_t **begin,
+                        const snapshot_t **end, const int snapshot_pair)
 {
   if (snapshot_pair + 1 >= snapshots->length) return false;
 

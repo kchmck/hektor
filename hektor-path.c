@@ -34,7 +34,7 @@ static bool make_dir_and_parents(const path_t full_path) {
   path_t full_path_copy;
   string_copy(full_path, full_path_copy, MAX_PATH_LENGTH);
 
-  const char *const parent_dir = dirname(full_path_copy);
+  const char *parent_dir = dirname(full_path_copy);
   // If there are no more parents to create, then finish up...
   if (strings_are_equal(full_path, parent_dir)) return true;
 
@@ -48,19 +48,19 @@ static bool make_dir_and_parents(const path_t full_path) {
 typedef bool (*xdg_dir_fn_t)(path_t, xdgHandle *);
 
 // Append the hektor subdir onto a path.
-static inline bool xdg_hektor_dir(path_t path_buffer, const char *const xdg_dir)
+static inline bool xdg_hektor_dir(path_t path_buffer, const char *xdg_dir)
 {
   return snprintf(path_buffer, MAX_PATH_LENGTH, "%s/hektor", xdg_dir);
 }
 
 // Find the path to hektor's general data storage dir.
-static inline bool xdg_data_dir(path_t path_buffer, xdgHandle *const xdg_dirs)
+static inline bool xdg_data_dir(path_t path_buffer, xdgHandle *xdg_dirs)
 {
   return xdg_hektor_dir(path_buffer, xdgDataHome(xdg_dirs));
 }
 
 // Same as above, but for the config dir.
-static inline bool xdg_config_dir(path_t path_buffer, xdgHandle *const xdg_dirs)
+static inline bool xdg_config_dir(path_t path_buffer, xdgHandle *xdg_dirs)
 {
   return xdg_hektor_dir(path_buffer, xdgConfigHome(xdg_dirs));
 }

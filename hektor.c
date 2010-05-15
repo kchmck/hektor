@@ -43,7 +43,7 @@ typedef struct {
 // A command type
 typedef bool (*hektor_cmd_fn_t)(hektor_t *);
 
-static bool hektor_cmd_help(hektor_t *const hektor) {
+static bool hektor_cmd_help(hektor_t *hektor) {
   printf("Usage: %s [COMMAND=remaining] [ARGS], where COMMAND can be:\n"
          "  remaining        Show the amount of megabytes remaining\n"
          "                   before the FAP is activated.\n"
@@ -58,7 +58,7 @@ static bool hektor_cmd_help(hektor_t *const hektor) {
   return true;
 }
 
-static bool hektor_cmd_remaining(hektor_t *const hektor) {
+static bool hektor_cmd_remaining(hektor_t *hektor) {
   printf("%.2f megabytes are remaining.\n",
          usage_calculate_remaining(&hektor->snapshots,
                                    &hektor->plan) / 1000 / 1000);
@@ -66,7 +66,7 @@ static bool hektor_cmd_remaining(hektor_t *const hektor) {
   return true;
 }
 
-static bool hektor_cmd_record(hektor_t *const hektor) {
+static bool hektor_cmd_record(hektor_t *hektor) {
   // Download the menu page.
   page_t menu_page;
   if (!modem_fetch_menu_page(menu_page))
@@ -83,7 +83,7 @@ static bool hektor_cmd_record(hektor_t *const hektor) {
     return hektor_error_with_modem();
 
   // Record a new snapshot...
-  snapshot_t *const snapshot = snapshots_get_next_empty(&hektor->snapshots);
+  snapshot_t *snapshot = snapshots_get_next_empty(&hektor->snapshots);
   if (!snapshot) return false;
 
   snapshot_record(snapshot, pep_page);
@@ -94,15 +94,15 @@ static bool hektor_cmd_record(hektor_t *const hektor) {
   return hektor_cmd_remaining(hektor);
 }
 
-static bool hektor_cmd_drop(hektor_t *const hektor) {
-  snapshots_t *const snapshots = &hektor->snapshots;
+static bool hektor_cmd_drop(hektor_t *hektor) {
+  snapshots_t *snapshots = &hektor->snapshots;
 
   // See if the user gave an amount to remove or default to 1.
   const int remove = min(hektor->argc > 2 ? max(atoi(hektor->argv[2]), 0) : 1,
                          snapshots->length);
 
   for (int i = 0; i < remove; i += 1) {
-    const snapshot_t *const snapshot = snapshots_get_last(snapshots);
+    const snapshot_t *snapshot = snapshots_get_last(snapshots);
 
     time_format_t snapshot_time;
     if (!format_time(&snapshot->snapshot_time, snapshot_time)) continue;
@@ -118,8 +118,8 @@ static bool hektor_cmd_drop(hektor_t *const hektor) {
   return true;
 }
 
-static bool hektor_cmd_stats(hektor_t *const hektor) {
-  snapshots_t *const snapshots = &hektor->snapshots;
+static bool hektor_cmd_stats(hektor_t *hektor) {
+  snapshots_t *snapshots = &hektor->snapshots;
 
   printf("%d %s %s been recorded. ", snapshots->length,
                                      snapshots->length == 1 ? "snapshot"
@@ -133,8 +133,8 @@ static bool hektor_cmd_stats(hektor_t *const hektor) {
     return true;
   }
 
-  const snapshot_t *const first = snapshots_get_first(snapshots);
-  const snapshot_t *const last = snapshots_get_last(snapshots);
+  const snapshot_t *first = snapshots_get_first(snapshots);
+  const snapshot_t *last = snapshots_get_last(snapshots);
 
   time_format_t first_time;
   time_format_t last_time;
@@ -158,9 +158,9 @@ static bool hektor_cmd_stats(hektor_t *const hektor) {
   return true;
 }
 
-static bool hektor_cmd_list(hektor_t *const hektor) {
-  const snapshots_t *const snapshots = &hektor->snapshots;
-  const plan_t *const plan = &hektor->plan;
+static bool hektor_cmd_list(hektor_t *hektor) {
+  const snapshots_t *snapshots = &hektor->snapshots;
+  const plan_t *plan = &hektor->plan;
 
   if (snapshots->length < 2) {
     printf("At least two snapshots are required for a listing.\n");
@@ -210,7 +210,7 @@ static bool hektor_cmd_list(hektor_t *const hektor) {
 enum { HEKTOR_CMDS_LENGTH = 8 };
 
 static const struct {
-  const char *const command_name;
+  const char *command_name;
   const hektor_cmd_fn_t command_fn;
 } hektor_cmds[HEKTOR_CMDS_LENGTH] = {
   {"remaining", hektor_cmd_remaining},
@@ -225,14 +225,14 @@ static const struct {
 };
 
 // Find the appropriate command to run.
-static bool hektor_cmd_handle(hektor_t *const hektor) {
+static bool hektor_cmd_handle(hektor_t *hektor) {
   // Run the default command if no other command was given.
   if (hektor->argc < 2) return hektor_cmd_remaining(hektor);
 
-  const char *const user_command = hektor->argv[1];
+  const char *user_command = hektor->argv[1];
 
   for (int i = 0; i < HEKTOR_CMDS_LENGTH; i += 1) {
-    const char *const current_command = hektor_cmds[i].command_name;
+    const char *current_command = hektor_cmds[i].command_name;
 
     // Try to match a partial command name, so 'rec' will match 'record', etc.
     if (string_begins_with(user_command, current_command))

@@ -22,7 +22,7 @@
 enum { PLANS_LENGTH = 6 };
 
 static const struct {
-  const char *const plan_name;
+  const char *plan_name;
   const plan_id_t plan_id;
 } plan_ids[PLANS_LENGTH] = {
   {"home",          PLAN_HOME},
@@ -53,7 +53,7 @@ static inline double plan_calc_refill_rate(const long threshold) {
 }
 
 // Match a plan name to an id.
-static plan_id_t plan_find_id(const char *const plan_name) {
+static plan_id_t plan_find_id(const char *plan_name) {
   for (int i = 0; i < PLANS_LENGTH; i += 1)
     if (strings_are_equal(plan_name, plan_ids[i].plan_name))
       return plan_ids[i].plan_id;
@@ -61,7 +61,7 @@ static plan_id_t plan_find_id(const char *const plan_name) {
   return PLAN_INVALID;
 }
 
-bool plan_load(const char *const plan_name, plan_t *const plan) {
+bool plan_load(const char *plan_name, plan_t *plan) {
   plan->plan_id = plan_find_id(plan_name);
   if (plan->plan_id == PLAN_INVALID) return false;
 

@@ -31,7 +31,7 @@ enum { MAX_PAGE_SIZE = 1024 * 64 };
 typedef char page_t[MAX_PAGE_SIZE];
 
 // Find the url of a page by its menu title.
-bool modem_find_url(const char *const page_title, const page_t menu_page,
+bool modem_find_url(const char *page_title, const page_t menu_page,
                     url_t url_buffer);
 
 // Get the pep page's url.

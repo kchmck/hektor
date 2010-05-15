@@ -29,7 +29,6 @@ static inline json_t *json_snapshots_empty(void) { return json_array(); }
 json_t *json_snapshots_load(const path_t filename);
 
 // Save snapshots to a json file.
-bool json_snapshots_save(const json_t *const json_snapshots,
-                         const path_t filename);
+bool json_snapshots_save(const json_t *json_snapshots, const path_t filename);
 
 #endif

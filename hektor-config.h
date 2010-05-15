@@ -31,15 +31,15 @@ typedef struct {
 } config_t;
 
 // Load lua and config.
-bool config_load(config_t *const config);
+bool config_load(config_t *config);
 
 // Close config and lua.
-static inline void config_close(config_t *const config) {
+static inline void config_close(config_t *config) {
   lua_close(config->lua);
 }
 
 // Get a string option from the config, and copy it into buffer.
-bool config_get_string(const char *const option_name, config_string_t buffer,
-                       const config_t *const config);
+bool config_get_string(const char *option_name, config_string_t buffer,
+                       const config_t *config);
 
 #endif
