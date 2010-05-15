@@ -44,7 +44,7 @@ $(MANPAGE): $(MANPAGE).ronn
 manpage: $(MANPAGE)
 
 install: all
-	install -Ds $(EXECUTABLE) $(BINDIR)/$(EXECUTABLE)
+	install -D $(EXECUTABLE) $(BINDIR)/$(EXECUTABLE)
 	install -D $(MANPAGE) $(MANDIR)/$(MANPAGE)
 
 clean:
