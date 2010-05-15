@@ -47,6 +47,10 @@ install: all
 	install -D $(EXECUTABLE) $(BINDIR)/$(EXECUTABLE)
 	install -D $(MANPAGE) $(MANDIR)/$(MANPAGE)
 
+uninstall:
+	rm -f $(BINDIR)/$(EXECUTABLE)
+	rm -f $(MANDIR)/$(MANPAGE)
+
 clean:
 	rm $(OBJ)
 
