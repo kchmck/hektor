@@ -32,7 +32,7 @@ static bool make_dir_and_parents(const path_t full_path) {
 
   // This is required because dirname discards the constness of its argument.
   path_t full_path_copy;
-  strncpy(full_path_copy, full_path, MAX_PATH_LENGTH);
+  string_copy(full_path, full_path_copy, MAX_PATH_LENGTH);
 
   const char *const parent_dir = dirname(full_path_copy);
   // If there are no more parents to create, then finish up...

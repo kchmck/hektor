@@ -20,6 +20,7 @@
 
 #include <curl/curl.h>
 
+#include "hektor-common.h"
 #include "hektor-modem.h"
 
 // Append a path to the modem's base url.
@@ -70,7 +71,8 @@ bool modem_find_url(const char *const page_title, const page_t menu_page,
   const size_t url_end = url_end_match - menu_page;
   const size_t url_length = url_end - url_begin;
 
-  strncpy(url_buffer, &menu_page[url_begin], min(url_length, MAX_PATH_LENGTH));
+  string_copy(&menu_page[url_begin], url_buffer, min(url_length,
+                                                     MAX_PATH_LENGTH));
 
   return true;
 

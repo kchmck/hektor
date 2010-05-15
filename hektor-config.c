@@ -21,6 +21,7 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
+#include "hektor-common.h"
 #include "hektor-config.h"
 #include "hektor-path.h"
 
@@ -76,7 +77,7 @@ bool config_get_string(const char *const option_name, config_string_t buffer,
   if (!lua_isstring(config->lua, -1) || lua_isnumber(config->lua, -1))
     return false;
 
-  strncpy(buffer, lua_tostring(config->lua, -1), MAX_CONFIG_STRING_LENGTH);
+  string_copy(lua_tostring(config->lua, -1), buffer, MAX_CONFIG_STRING_LENGTH);
 
   return true;
 }
