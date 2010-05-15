@@ -38,8 +38,10 @@ $(EXECUTABLE): $(OBJ)
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 
-manpage: $(MANPAGE).ronn
+$(MANPAGE): $(MANPAGE).ronn
 	ronn -b --manual="HEKTOR MANUAL" $<
+
+manpage: $(MANPAGE)
 
 install: all
 	install -Ds $(EXECUTABLE) $(BINDIR)/$(EXECUTABLE)
