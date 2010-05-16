@@ -45,15 +45,13 @@ typedef struct {
 } span_t;
 
 // Calculate the difference between two snapshots.
-void span_calculate_between(const snapshot_t *const begin,
-                            const snapshot_t *const end,
-                            const plan_t *const plan, 
-                            span_t *const span);
+void span_calculate_between(const snapshot_t *begin, const snapshot_t *end,
+                            const plan_t *plan, span_t *span);
 
 // Apply a snapshot's usage information to a remaining value and return the
 // result.
 double span_calculate_remaining(const double currently_remaining,
-                                const plan_t *const plan,
-                                const span_t *const span);
+                                const plan_t *plan,
+                                const span_t *span);
 
 #endif

@@ -31,18 +31,18 @@ typedef struct {
 } snapshot_t;
 
 // Record a new snapshot.
-void snapshot_record(snapshot_t *const snapshot, const page_t pep_page);
+void snapshot_record(snapshot_t *snapshot, const page_t pep_page);
 
 // Load a snapshot from its json state.
-bool snapshot_load(snapshot_t *const snapshot,
-                   const json_t *const json_snapshot);
+bool snapshot_load(snapshot_t *snapshot,
+                   const json_t *json_snapshot);
 
 // Save a snapshot into its json state and append it to the snapshots array.
-bool snapshot_save(const snapshot_t *const snapshot, json_t *const snapshots);
+bool snapshot_save(const snapshot_t *snapshot, json_t *snapshots);
 
 // Check if a snapshot was recorded during the fap-free period (2am through 7am
 // EST.)
 // TODO: daylight savings time stuff?
-bool snapshot_during_fap_free(const snapshot_t *const snapshot);
+bool snapshot_during_fap_free(const snapshot_t *snapshot);
 
 #endif
