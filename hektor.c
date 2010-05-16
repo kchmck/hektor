@@ -225,7 +225,7 @@ static const struct {
 };
 
 // Find the appropriate command to run.
-static bool hektor_cmd_handle(hektor_t *hektor) {
+static bool hektor_cmd(hektor_t *hektor) {
   // Run the default command if no other command was given.
   if (hektor->argc < 2) return hektor_cmd_remaining(hektor);
 
@@ -268,7 +268,7 @@ static bool hektor_main(int argc, char **argv) {
     return hektor_error_loading_snapshots(&hektor.snapshots);
 
   // Run the command.
-  const bool cmd_result = hektor_cmd_handle(&hektor);
+  const bool cmd_result = hektor_cmd(&hektor);
 
   // Save snapshots.
   if (!snapshots_save(&hektor.snapshots))
