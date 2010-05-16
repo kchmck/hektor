@@ -19,7 +19,7 @@ build() {
   msg "Connecting to git server..."
 
   if [ ! -d $_gitname ]; then
-    git clone $_gitroot $_gitname
+    git clone --depth 1 $_gitroot $_gitname
     cd $_gitname
   else
     cd $_gitname
