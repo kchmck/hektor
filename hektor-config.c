@@ -48,6 +48,7 @@ bool config_load(config_t *config) {
   // Init lua...
   config->lua = lua_open();
   if (!config->lua) return false;
+
   luaL_openlibs(config->lua);
 
   // Get the path to config.
