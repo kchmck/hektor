@@ -231,13 +231,10 @@ static bool hektor_cmd_handle(hektor_t *hektor) {
 
   const char *user_command = hektor->argv[1];
 
-  for (int i = 0; i < HEKTOR_CMDS_LENGTH; i += 1) {
-    const char *current_command = hektor_cmds[i].command_name;
-
-    // Try to match a partial command name, so 'rec' will match 'record', etc.
-    if (string_begins_with(user_command, current_command))
+  // Try to match a partial command name, so 'rec' will match 'record', etc.
+  for (int i = 0; i < HEKTOR_CMDS_LENGTH; i += 1)
+    if (string_begins_with(user_command, hektor_cmds[i].command_name))
       return hektor_cmds[i].command_fn(hektor);
-  }
 
   // An invalid command was given...
   hektor_cmd_help(hektor);
