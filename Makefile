@@ -53,4 +53,4 @@ uninstall:
 clean:
 	rm $(OBJ)
 
-.PHONY: all manpage install clean
+.PHONY: all manpage install uninstall clean
