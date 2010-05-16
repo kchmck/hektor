@@ -23,10 +23,10 @@
 double usage_calculate_remaining(const snapshots_t *snapshots,
                                  const plan_t *plan)
 {
-  // At least two snapshots are required for a calculation.
-  if (snapshots->length < 2) return plan->threshold;
-
   double remaining = plan->threshold;
+
+  // At least two snapshots are required for a calculation.
+  if (snapshots->length < 2) return remaining;
 
   int snapshot_pair = 0;
   const snapshot_t *begin, *end;
