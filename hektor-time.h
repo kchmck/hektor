@@ -1,6 +1,6 @@
 // Copyright 2010 Mick Koch <kchmck@gmail.com>
 //
-// This file is part of Hektor.
+// This file is part of hektor.
 // 
 // Hektor is free software: you can redistribute it and/or modify it under the
 // terms of the GNU General Public License as published by the Free Software
@@ -12,7 +12,7 @@
 // A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 // 
 // You should have received a copy of the GNU General Public License along with
-// Hektor. If not, see <http://www.gnu.org/licenses/>.
+// hektor. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef HEKTOR_TIME_H
 #define HEKTOR_TIME_H
