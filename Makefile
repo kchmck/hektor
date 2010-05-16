@@ -16,7 +16,7 @@ MANPAGE = hektor.1
 
 LIBS = libcurl jansson libxdg-basedir lua
 
-STD_CFLAGS  = -std=c99 -Wall -O2
+STD_CFLAGS  = -pipe -std=c99 -Wall -O2
 STD_CFLAGS += $(shell pkg-config --cflags $(LIBS))
 
 STD_LDFLAGS = $(shell pkg-config --libs $(LIBS))
