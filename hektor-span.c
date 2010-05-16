@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include <time.h>
 
+#include "hektor-common.h"
 #include "hektor-plan.h"
 #include "hektor-snapshot.h"
 

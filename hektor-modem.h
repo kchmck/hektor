@@ -18,8 +18,6 @@
 #define HEKTOR_MODEM_H
 
 #include <stdbool.h>
-
-#include "hektor-common.h"
 #include "hektor-path.h"
 
 // A url type

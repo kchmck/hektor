@@ -22,8 +22,9 @@
 #include <lualib.h>
 
 #include "hektor-common.h"
-#include "hektor-config.h"
 #include "hektor-path.h"
+
+#include "hektor-config.h"
 
 static bool write_default_config(const config_t *config) {
   static const char DEFAULT_CONFIG[] =
