@@ -251,7 +251,7 @@ static bool hektor_main(int argc, char **argv) {
   if (!config_load(&config))
     return hektor_error_loading_config(&config);
 
-  // Load plan name from config.
+  // Load the plan name from config.
   config_string_t plan_name;
   if (!config_get_string("usage_plan", plan_name, &config))
     return hektor_error_loading_plan(&config);
@@ -259,7 +259,7 @@ static bool hektor_main(int argc, char **argv) {
   // Config isn't needed anymore.
   config_close(&config);
 
-  // Load a plan.
+  // Load the plan.
   if (!plan_load(plan_name, &hektor.plan))
     return hektor_error_invalid_plan(plan_name);
 
@@ -267,7 +267,7 @@ static bool hektor_main(int argc, char **argv) {
   if (!snapshots_load(&hektor.snapshots))
     return hektor_error_loading_snapshots(&hektor.snapshots);
 
-  // Run whatever command.
+  // Run the command.
   const bool cmd_result = hektor_cmd_handle(&hektor);
 
   // Save snapshots.
