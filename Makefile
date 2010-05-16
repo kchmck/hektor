@@ -24,7 +24,7 @@ STD_LDFLAGS = $(shell pkg-config --libs $(LIBS))
 ALL_CFLAGS  = $(STD_CFLAGS) $(CFLAGS)
 ALL_LDFLAGS = $(STD_LDFLAGS) $(LDFLAGS)
 
-PREFIX    ?= /usr
+PREFIX     = /usr
 INSTALLDIR = $(DESTDIR)$(PREFIX)
 BINDIR     = $(INSTALLDIR)/bin
 MANDIR     = $(INSTALLDIR)/share/man/man1
