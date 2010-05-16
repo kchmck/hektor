@@ -14,16 +14,19 @@ OBJ = hektor-config.o         \
 EXECUTABLE = hektor
 MANPAGE = hektor.1
 
-CFLAGS += -std=c99 -Wall -O2
-CFLAGS += $(shell pkg-config --cflags libcurl)
-CFLAGS += $(shell pkg-config --cflags jansson)
-CFLAGS += $(shell pkg-config --cflags libxdg-basedir)
-CFLAGS += $(shell pkg-config --cflags lua)
+STD_CFLAGS  = -std=c99 -Wall -O2
+STD_CFLAGS += $(shell pkg-config --cflags libcurl)
+STD_CFLAGS += $(shell pkg-config --cflags jansson)
+STD_CFLAGS += $(shell pkg-config --cflags libxdg-basedir)
+STD_CFLAGS += $(shell pkg-config --cflags lua)
 
-LDFLAGS  = $(shell pkg-config --libs libcurl)
-LDFLAGS += $(shell pkg-config --libs jansson)
-LDFLAGS += $(shell pkg-config --libs libxdg-basedir)
-LDFLAGS += $(shell pkg-config --libs lua)
+STD_LDFLAGS  = $(shell pkg-config --libs libcurl)
+STD_LDFLAGS += $(shell pkg-config --libs jansson)
+STD_LDFLAGS += $(shell pkg-config --libs libxdg-basedir)
+STD_LDFLAGS += $(shell pkg-config --libs lua)
+
+ALL_LDFLAGS = $(STD_LDFLAGS) $(LDFLAGS)
+ALL_CFLAGS = $(STD_CFLAGS) $(CFLAGS)
 
 PREFIX    ?= /usr
 INSTALLDIR = $(DESTDIR)$(PREFIX)
@@ -33,10 +36,10 @@ MANDIR     = $(INSTALLDIR)/share/man/man1
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ)
-	$(CC) $(LDFLAGS) -o $@ $^
+	$(CC) $(ALL_LDFLAGS) -o $@ $^
 
-%.o: %.c %.h
-	$(CC) $(CFLAGS) -c $<
+%.o: %.c
+	$(CC) $(ALL_CFLAGS) -c $<
 
 $(MANPAGE): $(MANPAGE).ronn
 	ronn -b --manual="HEKTOR MANUAL" $<
