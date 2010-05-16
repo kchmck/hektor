@@ -14,19 +14,15 @@ OBJ = hektor-config.o         \
 EXECUTABLE = hektor
 MANPAGE = hektor.1
 
+LIBS = libcurl jansson libxdg-basedir lua
+
 STD_CFLAGS  = -std=c99 -Wall -O2
-STD_CFLAGS += $(shell pkg-config --cflags libcurl)
-STD_CFLAGS += $(shell pkg-config --cflags jansson)
-STD_CFLAGS += $(shell pkg-config --cflags libxdg-basedir)
-STD_CFLAGS += $(shell pkg-config --cflags lua)
+STD_CFLAGS += $(shell pkg-config --cflags $(LIBS))
 
-STD_LDFLAGS  = $(shell pkg-config --libs libcurl)
-STD_LDFLAGS += $(shell pkg-config --libs jansson)
-STD_LDFLAGS += $(shell pkg-config --libs libxdg-basedir)
-STD_LDFLAGS += $(shell pkg-config --libs lua)
+STD_LDFLAGS = $(shell pkg-config --libs $(LIBS))
 
+ALL_CFLAGS  = $(STD_CFLAGS) $(CFLAGS)
 ALL_LDFLAGS = $(STD_LDFLAGS) $(LDFLAGS)
-ALL_CFLAGS = $(STD_CFLAGS) $(CFLAGS)
 
 PREFIX    ?= /usr
 INSTALLDIR = $(DESTDIR)$(PREFIX)
