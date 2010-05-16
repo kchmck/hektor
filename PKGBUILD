@@ -16,7 +16,7 @@ _gitname="hektor"
 
 build() {
   cd "$srcdir"
-  msg "Connecting to git server...."
+  msg "Connecting to git server..."
 
   if [ ! -d $_gitname ]; then
     git clone $_gitroot $_gitname
@@ -25,8 +25,6 @@ build() {
     cd $_gitname
     git pull
   fi
-
-  msg "Git checkout done or server timeout"
 
   make || return 1
   make DESTDIR="$pkgdir" PREFIX=/usr install
