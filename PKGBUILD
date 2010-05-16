@@ -1,8 +1,8 @@
 # Contributer: Mick Koch <kchmck@gmail.com>
 
 pkgname="hektor-git"
-pkgver=200
-pkgrel="1"
+pkgver=20100516
+pkgrel=1
 pkgdesc="Hughesnet 'fair access policy' usage calculator"
 arch=("i686" "x86_64")
 url="http://github.com/kchmck/hektor"
