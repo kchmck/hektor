@@ -29,6 +29,7 @@
 #include "hektor-snapshots.h"
 #include "hektor-span.h"
 #include "hektor-time.h"
+#include "hektor-units.h"
 #include "hektor-usage.h"
 
 // Passed to commands
@@ -60,8 +61,8 @@ static bool hektor_cmd_help(hektor_t *hektor) {
 
 static bool hektor_cmd_remaining(hektor_t *hektor) {
   printf("%.2f megabytes are remaining.\n",
-         usage_calculate_remaining(&hektor->snapshots,
-                                   &hektor->plan) / 1000 / 1000);
+         bytes_to_megabytes(usage_calculate_remaining(&hektor->snapshots,
+                                                      &hektor->plan)));
 
   return true;
 }
@@ -191,13 +192,14 @@ static bool hektor_cmd_list(hektor_t *hektor) {
            " + %6.2f megabytes refilled\n",
 
            from_time, to_time,
-           remaining / 1000 / 1000,
-           (double)span.counted_usage / 1000 / 1000,
-           span.refilled / 1000 / 1000);
+           bytes_to_megabytes(remaining),
+           bytes_to_megabytes(span.counted_usage),
+           bytes_to_megabytes(span.refilled));
 
     remaining = span_calculate_remaining(remaining, plan, &span);
 
-    printf(" = %6.2f megabytes remaining after\n", remaining / 1000 / 1000);
+    printf(" = %6.2f megabytes remaining after\n",
+           bytes_to_megabytes(remaining));
 
     // Don't print a separator after the last span.
     if (snapshot_pair + 1 != snapshots->length) printf("---\n");

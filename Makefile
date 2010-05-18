@@ -8,6 +8,7 @@ OBJ = hektor-config.o         \
       hektor-snapshot.o       \
       hektor-snapshots.o      \
       hektor-span.o           \
+      hektor-units.o          \
       hektor-usage.o          \
       hektor.o
 
