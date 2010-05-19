@@ -1,10 +1,8 @@
+EXECUTABLE = hektor
 OBJ = hektor-fap.o            \
       hektor-modem.o          \
       hektor-units.o          \
       hektor.o
-
-EXECUTABLE = hektor
-MANPAGE = hektor.1
 
 LIBS = libcurl
 
@@ -19,7 +17,6 @@ ALL_LDFLAGS = $(STD_LDFLAGS) $(LDFLAGS)
 PREFIX     = /usr
 INSTALLDIR = $(DESTDIR)$(PREFIX)
 BINDIR     = $(INSTALLDIR)/bin
-MANDIR     = $(INSTALLDIR)/share/man/man1
 
 all: $(EXECUTABLE)
 
@@ -29,20 +26,13 @@ $(EXECUTABLE): $(OBJ)
 %.o: %.c
 	$(CC) $(ALL_CFLAGS) -c $<
 
-$(MANPAGE): $(MANPAGE).ronn
-	ronn -b --manual="HEKTOR MANUAL" $<
-
-manpage: $(MANPAGE)
-
 install: all
 	install -D $(EXECUTABLE) $(BINDIR)/$(EXECUTABLE)
-	install -D $(MANPAGE) $(MANDIR)/$(MANPAGE)
 
 uninstall:
 	rm -f $(BINDIR)/$(EXECUTABLE)
-	rm -f $(MANDIR)/$(MANPAGE)
 
 clean:
 	rm $(OBJ)
 
-.PHONY: all manpage install uninstall clean
+.PHONY: all install uninstall clean
