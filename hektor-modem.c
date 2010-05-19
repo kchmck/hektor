@@ -100,8 +100,6 @@ static size_t buffer_append_fn(const char *chunk, const size_t item_size,
 }
 
 size_t modem_fetch_page(const url_t url, page_t buffer) {
-  memset(buffer, 0, sizeof(page_t));
-
   buffer_append_state_t state = {buffer};
   modem_fetch_url(url, buffer_append_fn, &state);
 
