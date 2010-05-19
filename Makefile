@@ -1,9 +1,5 @@
 EXECUTABLE = hektor
-OBJ = fap.o    \
-      modem.o  \
-      units.o  \
-      hektor.o
-
+OBJS = fap.o modem.o units.o hektor.o
 LIBS = libcurl
 
 STD_CFLAGS  = -pipe -std=c99 -Wall -O2
@@ -20,7 +16,7 @@ BINDIR     = $(INSTALLDIR)/bin
 
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJ)
+$(EXECUTABLE): $(OBJS)
 	$(CC) $(ALL_LDFLAGS) -o $@ $^
 
 %.o: %.c
@@ -33,6 +29,6 @@ uninstall:
 	rm -f $(BINDIR)/$(EXECUTABLE)
 
 clean:
-	rm $(OBJ)
+	rm $(OBJS)
 
 .PHONY: all install uninstall clean
