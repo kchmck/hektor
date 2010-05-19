@@ -71,7 +71,8 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
   const size_t url_end = url_end_match - menu_page;
   const size_t url_length = url_end - url_begin;
 
-  string_copy(&menu_page[url_begin], url_buffer, min(url_length,
+  // Add 1 for null-termination.
+  string_copy(&menu_page[url_begin], url_buffer, min(url_length + 1,
                                                      MAX_PATH_LENGTH));
 
   return true;
