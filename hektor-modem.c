@@ -52,9 +52,11 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
                     url_t url_buffer)
 {
   // The little bit of text between a page title and its url
-  #define TITLE_URL_SEP "\", \""
+  static const char TITLE_URL_SEP[] = "\", \"";
+  enum { TITLE_URL_SEP_LENGTH = sizeof(TITLE_URL_SEP) - 1 };
+
   // The little bit of text at the end of a url
-  #define URL_ENDING "\"))"
+  static const char URL_ENDING[] = "\"))";
 
   // Try to match the page title.
   const char *title_match = strstr(menu_page, page_title);
@@ -63,7 +65,7 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
   const size_t title_begin = title_match - menu_page;
   const size_t url_begin = title_begin
                          + strlen(page_title)
-                         + strlen(TITLE_URL_SEP);
+                         + TITLE_URL_SEP_LENGTH;
 
   const char *url_end_match = strstr(&menu_page[url_begin], URL_ENDING);
   if (!url_end_match) return false;
@@ -76,9 +78,6 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
                                                      MAX_PATH_LENGTH));
 
   return true;
-
-  #undef TITLE_URL_SEP
-  #undef URL_ENDING
 }
 
 // Used to keep state between chunks.
