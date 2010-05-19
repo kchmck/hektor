@@ -20,8 +20,8 @@
 
 #include <curl/curl.h>
 
-#include "hektor-common.h"
-#include "hektor-modem.h"
+#include "common.h"
+#include "modem.h"
 
 // Append a path to the modem's base url.
 static inline int modem_build_url(const url_t url, url_t url_buffer) {

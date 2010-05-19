@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#include "hektor-units.h"
+#include "units.h"
 
 double unit_convert(const double from, const unit_type_t from_type,
                     const unit_type_t to_type)

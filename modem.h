@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEKTOR_MODEM_H
-#define HEKTOR_MODEM_H
+#ifndef MODEM_H
+#define MODEM_H
 
 #include <stdbool.h>
-#include "hektor-common.h"
+#include "common.h"
 
 // A url type
 enum { MAX_URL_LENGTH = 255 };

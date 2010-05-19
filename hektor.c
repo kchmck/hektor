@@ -18,9 +18,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "hektor-modem.h"
-#include "hektor-fap.h"
-#include "hektor-units.h"
+#include "modem.h"
+#include "fap.h"
+#include "units.h"
 
 static bool hektor_main(int argc, char **argv) {
   url_t menu_url;

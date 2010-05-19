@@ -17,10 +17,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "hektor-modem.h"
-#include "hektor-units.h"
+#include "modem.h"
+#include "units.h"
 
-#include "hektor-fap.h"
+#include "fap.h"
 
 // Get a value from the fap page. The page is laid out like:
 //

@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEKTOR_UNITS_H
-#define HEKTOR_UNITS_H
+#ifndef UNITS_H
+#define UNITS_H
 
 typedef enum {
   UNIT_BYTE,

@@ -1,7 +1,7 @@
 EXECUTABLE = hektor
-OBJ = hektor-fap.o            \
-      hektor-modem.o          \
-      hektor-units.o          \
+OBJ = fap.o    \
+      modem.o  \
+      units.o  \
       hektor.o
 
 LIBS = libcurl

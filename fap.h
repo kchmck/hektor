@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEKTOR_FAP_H
-#define HEKTOR_FAP_H
+#ifndef FAP_H
+#define FAP_H
 
-#include "hektor-modem.h"
+#include "modem.h"
 
 // Get the bandwidth limit in bytes.
 long fap_get_limit(const page_t fap_page);

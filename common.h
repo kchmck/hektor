@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEKTOR_COMMON_H
-#define HEKTOR_COMMON_H
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <stdbool.h>
 #include <stdio.h>
