@@ -18,22 +18,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "modem.h"
 #include "fap.h"
+#include "modem.h"
 #include "units.h"
 
 static bool hektor_main(int argc, char **argv) {
   url_t menu_url;
-  modem_get_menu_url(menu_url);
+  if (!modem_get_menu_url(menu_url)) return false;
 
   page_t menu_page;
-  if (!modem_fetch_page(menu_url, menu_page)) return false;
+  if (!modem_fetch_page(menu_page, menu_url)) return false;
 
   url_t fap_url;
-  if (!modem_find_fap_url(menu_page, fap_url)) return false;
+  if (!modem_get_fap_url(fap_url, menu_page)) return false;
 
   page_t fap_page;
-  if (!modem_fetch_page(fap_url, fap_page)) return false;
+  if (!modem_fetch_page(fap_page, fap_url)) return false;
 
   printf("%.2f megabytes are remaining.\n",
          unit_convert(fap_get_remaining(fap_page), UNIT_BYTE, UNIT_MEGABYTE));

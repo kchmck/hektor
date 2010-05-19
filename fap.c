@@ -22,13 +22,12 @@
 
 #include "fap.h"
 
-// Get a value from the fap page. The page is laid out like:
+// Get a value from the fap page. The fap page is laid out like:
 //
-//   |-------------------------------| is the value name
+//   |-------------------------------| is the value_name.
 //   Unthrottle data in current window : 49499 KB 
-//                                       |---| is the value
+//                                       |---| is the integer returned.
 //
-// The value name and value are separated by ' : '.
 static int fap_get_value(const char *value_name, const page_t fap_page) {
   static const char SEPARATOR[] = " : ";
   enum { SEPARATOR_LENGTH = sizeof(SEPARATOR) - 1 };
@@ -59,4 +58,3 @@ int fap_get_refill_time(const page_t fap_page) {
   return unit_convert(fap_get_value("FAP count down timer", fap_page),
                       UNIT_MINUTE, UNIT_SECOND);
 }
-

@@ -27,21 +27,11 @@ static inline int min(const int a, const int b) { return a < b ? a : b; }
 // Find the maximum of two numbers.
 static inline int max(const int a, const int b) { return a > b ? a : b; }
 
-// Check if a string begins with a substring.
-static inline bool string_begins_with(const char *substring, const char *string)
-{
-  return strstr(string, substring) == &string[0];
-}
-
-static inline bool strings_are_equal(const char *a, const char *b) {
-  return strcmp(a, b) == 0;
-}
-
-// Copy source to dest and ensure null-termination.
-static inline void string_copy(const char *source, char *dest,
+// Copy source to dest and ensure null termination.
+static inline bool string_copy(const char *source, char *dest,
                                const size_t max_length)
 {
-  snprintf(dest, max_length, "%s", source);
+  return snprintf(dest, max_length, "%s", source);
 }
 
 #endif

@@ -41,5 +41,5 @@ double unit_convert(const double from, const unit_type_t from_type,
     if (to_type == UNIT_SECOND)   return from * 60;
   }
 
-  return from;
+  return 0;
 }

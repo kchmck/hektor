@@ -26,6 +26,7 @@ typedef enum {
   UNIT_MINUTE,
 } unit_type_t;
 
+// Convert from one unit to another.
 double unit_convert(const double from, const unit_type_t from_type,
                     const unit_type_t to_type);
 
