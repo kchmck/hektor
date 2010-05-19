@@ -7,7 +7,7 @@ pkgdesc="Hughesnet 'fair access policy' usage calculator"
 arch=("i686" "x86_64")
 url="http://github.com/kchmck/hektor"
 license=("GPL3")
-depends=("jansson" "libxdg-basedir" "curl" "lua")
+depends=("curl")
 makedepends=("git" "pkgconfig")
 provides=("hektor")
 

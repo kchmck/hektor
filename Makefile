@@ -1,21 +1,12 @@
-OBJ = hektor-config.o         \
-      hektor-error.o          \
-      hektor-json-snapshots.o \
+OBJ = hektor-fap.o            \
       hektor-modem.o          \
-      hektor-path.o           \
-      hektor-pep.o            \
-      hektor-plan.o           \
-      hektor-snapshot.o       \
-      hektor-snapshots.o      \
-      hektor-span.o           \
       hektor-units.o          \
-      hektor-usage.o          \
       hektor.o
 
 EXECUTABLE = hektor
 MANPAGE = hektor.1
 
-LIBS = libcurl jansson libxdg-basedir lua
+LIBS = libcurl
 
 STD_CFLAGS  = -pipe -std=c99 -Wall -O2
 STD_CFLAGS += $(shell pkg-config --cflags $(LIBS))

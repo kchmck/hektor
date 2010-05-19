@@ -14,20 +14,18 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEKTOR_PATH_H
-#define HEKTOR_PATH_H
+#ifndef HEKTOR_FAP_H
+#define HEKTOR_FAP_H
 
-#include <stdbool.h>
+#include "hektor-modem.h"
 
-// A path type
-enum { MAX_PATH_LENGTH = 255 };
-typedef char path_t[MAX_PATH_LENGTH];
+// Get the bandwidth limit in bytes.
+long fap_get_limit(const page_t fap_page);
 
-// Find the path to snapshots storage, create any needed dirs, and write the
-// absolute path into path_buffer.
-bool path_make_snapshots_storage(path_t path_buffer);
+// Get the remaining usage in bytes.
+long fap_get_remaining(const page_t fap_page);
 
-// Same as above, exept for config storage.
-bool path_make_config_storage(path_t path_buffer);
+// Get the time until the fap is deactivated in seconds.
+int fap_get_refill_time(const page_t fap_page);
 
 #endif

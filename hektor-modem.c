@@ -75,7 +75,7 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
 
   // Add 1 for null-termination.
   string_copy(&menu_page[url_begin], url_buffer, min(url_length + 1,
-                                                     MAX_PATH_LENGTH));
+                                                     MAX_URL_LENGTH));
 
   return true;
 }

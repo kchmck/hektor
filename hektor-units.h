@@ -29,8 +29,4 @@ typedef enum {
 double unit_convert(const double from, const unit_type_t from_type,
                     const unit_type_t to_type);
 
-static inline double bytes_to_megabytes(const double bytes) {
-  return unit_convert(bytes, UNIT_BYTE, UNIT_MEGABYTE);
-}
-
 #endif
