@@ -59,23 +59,20 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
   static const char URL_ENDING[] = "\"))";
 
   // Try to match the page title.
-  const char *title_match = strstr(menu_page, page_title);
-  if (!title_match) return false;
+  const char *title_begin = strstr(menu_page, page_title);
+  if (!title_begin) return false;
 
-  const size_t title_begin = title_match - menu_page;
-  const size_t url_begin = title_begin
-                         + strlen(page_title)
-                         + TITLE_URL_SEP_LENGTH;
+  const char *url_begin = title_begin
+                        + strlen(page_title)
+                        + TITLE_URL_SEP_LENGTH;
 
-  const char *url_end_match = strstr(&menu_page[url_begin], URL_ENDING);
-  if (!url_end_match) return false;
+  const char *url_end = strstr(url_begin, URL_ENDING);
+  if (!url_end) return false;
 
-  const size_t url_end = url_end_match - menu_page;
-  const size_t url_length = url_end - url_begin;
+  const ptrdiff_t url_length = url_end - url_begin;
 
   // Add 1 for null-termination.
-  string_copy(&menu_page[url_begin], url_buffer, min(url_length + 1,
-                                                     MAX_URL_LENGTH));
+  string_copy(url_begin, url_buffer, min(url_length + 1, MAX_URL_LENGTH));
 
   return true;
 }
