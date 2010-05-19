@@ -69,7 +69,7 @@ bool modem_find_url(const char *page_title, const page_t menu_page,
   const char *url_end = strstr(url_begin, URL_ENDING);
   if (!url_end) return false;
 
-  const ptrdiff_t url_length = url_end - url_begin;
+  const int url_length = url_end - url_begin;
 
   // Add 1 for null-termination.
   string_copy(url_begin, url_buffer, min(url_length + 1, MAX_URL_LENGTH));
