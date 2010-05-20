@@ -52,8 +52,8 @@ static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
 //
 //          ┌──────┬─ page_title
 //   [...] "FAP Info", "/cgi/execAdvCom.bin?Command=123&PrintMsg=FAP Info"))
-//                      ├───────────────────────────────────────────────┘
-//                      └─ url copied into url_buffer
+//                      └─┬─────────────────────────────────────────────┘
+//                        └─ url copied into url_buffer
 //
 // The variables below end up like:
 //
