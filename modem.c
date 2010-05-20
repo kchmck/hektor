@@ -58,10 +58,9 @@ static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
 // The variables below end up like:
 //
 //          ┌─ title_begin
-//          │           ┌─ url_begin
+//          │           ┌─ url_begin                           url_end ─┐
 //   [...] "FAP Info", "/cgi/execAdvCom.bin?Command=123&PrintMsg=FAP Info"))
-//          url_length ─┴───────────────────────────────────────────────┤
-//                                                             url_end ─┘
+//          url_length ─┴───────────────────────────────────────────────┘
 //
 static bool menu_find_url(url_t url_buffer, const page_t menu_page,
                           const char *page_title)
