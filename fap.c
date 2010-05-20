@@ -24,10 +24,17 @@
 
 // Get a value from the fap page. The fap page is laid out like:
 //
-//   |-------------------------------| is the value_name.
-//   Unthrottle data in current window : 49499 KB 
-//                                       |---| is the integer returned.
+//   ┌───────────────────────────────┬─ value_name
+//   Unthrottle data in current window : 49499 KB
+//                                       └───┴─ integer returned
 //
+// The variables below end up like:
+//
+//   ┌─ value_name_begin              ┌─ sep_begin
+//   Unthrottle data in current window : 49499 KB
+//                                       └─ value_begin
+//
+// atol does the rest.
 static int fap_get_value(const char *value_name, const page_t fap_page) {
   static const char SEPARATOR[] = " : ";
   enum { SEPARATOR_LENGTH = sizeof(SEPARATOR) - 1 };
