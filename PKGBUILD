@@ -3,7 +3,7 @@
 pkgname="hektor-git"
 pkgver=20100516
 pkgrel=1
-pkgdesc="Hughesnet 'fair access policy' usage calculator"
+pkgdesc="Hughesnet 'fair access policy' tool"
 arch=("i686" "x86_64")
 url="http://github.com/kchmck/hektor"
 license=("GPL3")
