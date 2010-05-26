@@ -24,7 +24,7 @@
 #include "modem.h"
 
 // Append a path to the modem's base url.
-static inline int build_url(url_t url_buffer, const url_t url) {
+static inline bool build_url(url_t url_buffer, const url_t url) {
   // Strip off the leading '/'.
   return snprintf(url_buffer, MAX_URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
 }
