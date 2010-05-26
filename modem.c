@@ -107,7 +107,7 @@ static size_t download_fn(const char *chunk, const size_t item_size,
                           const size_t items, download_fn_state_t *state)
 {
   const size_t chunk_size = item_size * items;
-  const size_t buffer_remaining = MAX_PAGE_SIZE - state->amount_written;
+  const size_t buffer_remaining = MAX_PAGE_LENGTH - state->amount_written;
 
   if (buffer_remaining <= 0) return 0;
 
