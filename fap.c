@@ -22,7 +22,7 @@
 
 #include "fap.h"
 
-// Get a value from the fap page. The fap page is laid out like:
+// Get a value from the FAP page. The FAP page is laid out like:
 //
 //   ┌───────────────────────────────┬─ value_name
 //   Unthrottle data in current window : 49499 KB
