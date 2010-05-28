@@ -16,35 +16,35 @@
 
 #include "units.h"
 
-double unit_convert(const double from, const unit_type_t from_type,
+double unit_convert(const double value, const unit_type_t value_type,
                     const unit_type_t to_type)
 {
-  if (from_type == to_type) return from;
+  if (value_type == to_type) return value;
 
-  switch (from_type) {
+  switch (value_type) {
   case UNIT_BYTE:
-    if (to_type == UNIT_KILOBYTE) return from / 1000;
-    if (to_type == UNIT_MEGABYTE) return from / 1000 / 1000;
+    if (to_type == UNIT_KILOBYTE) return value / 1000;
+    if (to_type == UNIT_MEGABYTE) return value / 1000 / 1000;
 
   case UNIT_KILOBYTE:
-    if (to_type == UNIT_BYTE)     return from * 1000;
-    if (to_type == UNIT_MEGABYTE) return from / 1000;
+    if (to_type == UNIT_BYTE)     return value * 1000;
+    if (to_type == UNIT_MEGABYTE) return value / 1000;
 
   case UNIT_MEGABYTE:
-    if (to_type == UNIT_KILOBYTE) return from * 1000;
-    if (to_type == UNIT_BYTE)     return from * 1000 * 1000;
+    if (to_type == UNIT_KILOBYTE) return value * 1000;
+    if (to_type == UNIT_BYTE)     return value * 1000 * 1000;
 
   case UNIT_SECOND:
-    if (to_type == UNIT_MINUTE)   return from / 60;
-    if (to_type == UNIT_HOUR)     return from / 60 / 60;
+    if (to_type == UNIT_MINUTE)   return value / 60;
+    if (to_type == UNIT_HOUR)     return value / 60 / 60;
 
   case UNIT_MINUTE:
-    if (to_type == UNIT_SECOND)   return from * 60;
-    if (to_type == UNIT_HOUR)     return from / 60;
+    if (to_type == UNIT_SECOND)   return value * 60;
+    if (to_type == UNIT_HOUR)     return value / 60;
 
   case UNIT_HOUR:
-    if (to_type == UNIT_SECOND)   return from * 60 * 60;
-    if (to_type == UNIT_MINUTE)   return from * 60;
+    if (to_type == UNIT_SECOND)   return value * 60 * 60;
+    if (to_type == UNIT_MINUTE)   return value * 60;
   }
 
   return 0;
