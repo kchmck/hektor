@@ -65,3 +65,7 @@ int fap_get_refill_time(const page_t fap_page) {
   return unit_convert(fap_get_value("FAP count down timer", fap_page),
                       UNIT_MINUTE, UNIT_SECOND);
 }
+
+bool fap_is_active(const long remaining) {
+  return remaining == 0;
+}

@@ -36,9 +36,15 @@ double unit_convert(const double from, const unit_type_t from_type,
 
   case UNIT_SECOND:
     if (to_type == UNIT_MINUTE)   return from / 60;
+    if (to_type == UNIT_HOUR)     return from / 60 / 60;
 
   case UNIT_MINUTE:
     if (to_type == UNIT_SECOND)   return from * 60;
+    if (to_type == UNIT_HOUR)     return from / 60;
+
+  case UNIT_HOUR:
+    if (to_type == UNIT_SECOND)   return from * 60 * 60;
+    if (to_type == UNIT_MINUTE)   return from * 60;
   }
 
   return 0;

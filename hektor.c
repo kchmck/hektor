@@ -35,8 +35,14 @@ static bool hektor_main(int argc, char **argv) {
   page_t fap_page;
   if (!modem_fetch_page(fap_page, fap_url)) return false;
 
-  printf("%.2f megabytes are remaining.\n",
-         unit_convert(fap_get_remaining(fap_page), UNIT_BYTE, UNIT_MEGABYTE));
+  const long remaining = fap_get_remaining(fap_page);
+
+  if (fap_is_active(remaining))
+    printf("%.2f hours until the FAP is deactivated.\n",
+           unit_convert(fap_get_refill_time(fap_page), UNIT_SECOND, UNIT_HOUR));
+  else
+    printf("%.2f megabytes are remaining.\n",
+           unit_convert(remaining, UNIT_BYTE, UNIT_MEGABYTE));
 
   return true;
 }

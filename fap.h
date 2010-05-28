@@ -28,4 +28,7 @@ long fap_get_remaining(const page_t fap_page);
 // Get the time until the fap is deactivated in seconds.
 int fap_get_refill_time(const page_t fap_page);
 
+// Check if the FAP is active.
+bool fap_is_active(const long remaining);
+
 #endif

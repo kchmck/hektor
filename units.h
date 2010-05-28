@@ -24,6 +24,7 @@ typedef enum {
 
   UNIT_SECOND,
   UNIT_MINUTE,
+  UNIT_HOUR,
 } unit_type_t;
 
 // Convert from one unit to another.
