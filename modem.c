@@ -50,9 +50,9 @@ static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
 // Search through the menu page for a page title and its associated url. The
 // menu page is laid out like:
 //
-//          ┌──────┬─ page_title
+//          ┌──────┬─ page_title                             URL_ENDING ─┬─┐
 //   [...] "FAP Info", "/cgi/execAdvCom.bin?Command=123&PrintMsg=FAP Info"))
-//                      └─┬─────────────────────────────────────────────┘
+//       SEPARATOR ─┴──┘└─┬─────────────────────────────────────────────┘
 //                        └─ url copied into url_buffer
 //
 // The variables below end up like:
