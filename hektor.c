@@ -22,6 +22,18 @@
 #include "modem.h"
 #include "units.h"
 
+static void hektor_remaining(const long remaining) {
+  printf("%.2f megabytes are remaining.\n",
+         unit_convert(remaining, UNIT_BYTE, UNIT_MEGABYTE));
+}
+
+static void hektor_refill_time(const page_t fap_page) {
+  unit_t refill_time;
+  unit_convert_smart(&refill_time, fap_get_refill_time(fap_page), UNIT_SECOND);
+
+  printf("%s until the FAP is deactivated.\n", unit_string(&refill_time));
+}
+
 static bool hektor_main(int argc, char **argv) {
   url_t menu_url;
   if (!modem_get_menu_url(menu_url)) return false;
@@ -36,13 +48,9 @@ static bool hektor_main(int argc, char **argv) {
   if (!modem_fetch_page(fap_page, fap_url)) return false;
 
   const long remaining = fap_get_remaining(fap_page);
-
-  if (fap_is_active(remaining))
-    printf("%.2f hours until the FAP is deactivated.\n",
-           unit_convert(fap_get_refill_time(fap_page), UNIT_SECOND, UNIT_HOUR));
-  else
-    printf("%.2f megabytes are remaining.\n",
-           unit_convert(remaining, UNIT_BYTE, UNIT_MEGABYTE));
+  
+  if (fap_is_active(remaining)) hektor_refill_time(fap_page);
+  else                          hektor_remaining(remaining);
 
   return true;
 }

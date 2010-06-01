@@ -17,6 +17,8 @@
 #ifndef UNITS_H
 #define UNITS_H
 
+#include <stdbool.h>
+
 typedef enum {
   UNIT_BYTE,
   UNIT_KILOBYTE,
@@ -25,10 +27,39 @@ typedef enum {
   UNIT_SECOND,
   UNIT_MINUTE,
   UNIT_HOUR,
+
+  UNIT_INVALID,
 } unit_type_t;
+
+enum { MAX_UNIT_STRING_LENGTH = 32 };
+typedef char unit_string_t[MAX_UNIT_STRING_LENGTH];
+
+typedef struct {
+  unit_type_t unit_type;
+  double amount;
+  const char *label;
+
+  unit_string_t string;
+} unit_t;
 
 // Convert from one unit to another.
 double unit_convert(const double from, const unit_type_t from_type,
                     const unit_type_t to_type);
+
+
+bool unit_convert_smart(unit_t *unit, const double value,
+                        const unit_type_t value_type);
+
+static inline double unit_amount(const unit_t *unit) {
+  return unit->amount;
+}
+
+static inline const char *unit_label(const unit_t *unit) {
+  return unit->label;
+}
+
+static inline const char *unit_string(const unit_t *unit) {
+  return unit->string;
+}
 
 #endif
