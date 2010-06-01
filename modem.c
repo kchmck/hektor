@@ -114,7 +114,7 @@ static size_t download_fn(const char *chunk, const size_t item_size,
   memcpy(&state->buffer[state->amount_written], chunk, write_size);
   state->amount_written += write_size;
 
-  return chunk_size;
+  return write_size;
 }
 
 size_t modem_fetch_page(page_t buffer, const url_t url) {
