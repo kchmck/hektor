@@ -2,7 +2,7 @@ EXECUTABLE = hektor
 OBJS = fap.o modem.o units.o hektor.o
 LIBS = libcurl
 
-STD_CFLAGS  = -pipe -std=c99 -Wall -O2
+STD_CFLAGS  = -pipe -std=c99 -Wall -Wno-switch-enum -O2
 STD_CFLAGS += $(shell pkg-config --cflags $(LIBS))
 
 STD_LDFLAGS = $(shell pkg-config --libs $(LIBS))
