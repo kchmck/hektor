@@ -25,22 +25,27 @@ double unit_convert(const double value, const unit_type_t value_type,
   case UNIT_BYTE:
     if (to_type == UNIT_KILOBYTE) return value / 1000;
     if (to_type == UNIT_MEGABYTE) return value / 1000 / 1000;
+    else                          break;
 
   case UNIT_KILOBYTE:
     if (to_type == UNIT_BYTE)     return value * 1000;
     if (to_type == UNIT_MEGABYTE) return value / 1000;
+    else                          break;
 
   case UNIT_MEGABYTE:
     if (to_type == UNIT_KILOBYTE) return value * 1000;
     if (to_type == UNIT_BYTE)     return value * 1000 * 1000;
+    else                          break;
 
   case UNIT_SECOND:
     if (to_type == UNIT_MINUTE)   return value / 60;
     if (to_type == UNIT_HOUR)     return value / 60 / 60;
+    else                          break;
 
   case UNIT_MINUTE:
     if (to_type == UNIT_SECOND)   return value * 60;
     if (to_type == UNIT_HOUR)     return value / 60;
+    else                          break;
 
   case UNIT_HOUR:
     if (to_type == UNIT_SECOND)   return value * 60 * 60;
