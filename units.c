@@ -29,27 +29,27 @@ double unit_convert(const double value, const unit_type_t value_type,
   case UNIT_BYTE:
     if (to_type == UNIT_KILOBYTE) return value / 1000;
     if (to_type == UNIT_MEGABYTE) return value / 1000 / 1000;
-    else                          break;
+    break;
 
   case UNIT_KILOBYTE:
     if (to_type == UNIT_BYTE)     return value * 1000;
     if (to_type == UNIT_MEGABYTE) return value / 1000;
-    else                          break;
+    break;
 
   case UNIT_MEGABYTE:
     if (to_type == UNIT_KILOBYTE) return value * 1000;
     if (to_type == UNIT_BYTE)     return value * 1000 * 1000;
-    else                          break;
+    break;
 
   case UNIT_SECOND:
     if (to_type == UNIT_MINUTE)   return value / 60;
     if (to_type == UNIT_HOUR)     return value / 60 / 60;
-    else                          break;
+    break;
 
   case UNIT_MINUTE:
     if (to_type == UNIT_SECOND)   return value * 60;
     if (to_type == UNIT_HOUR)     return value / 60;
-    else                          break;
+    break;
 
   case UNIT_HOUR:
     if (to_type == UNIT_SECOND)   return value * 60 * 60;
@@ -66,27 +66,27 @@ static unit_type_t unit_find_best_type(const double value,
   case UNIT_BYTE:
     if (value >= 1000 * 1000) return UNIT_MEGABYTE;
     if (value >= 1000)        return UNIT_KILOBYTE;
-    else                      break;
+    break;
 
   case UNIT_KILOBYTE:
     if (value >= 1000)        return UNIT_MEGABYTE;
     if (value < 1)            return UNIT_BYTE;
-    else                      break;
+    break;
 
   case UNIT_MEGABYTE:
     if (value * 1000 < 1)     return UNIT_BYTE;
     if (value < 1)            return UNIT_KILOBYTE;
-    else                      break;
+    break;
 
   case UNIT_SECOND:
     if (value >= 60 * 60)     return UNIT_HOUR;
     if (value >= 60)          return UNIT_MINUTE;
-    else                      break;
+    break;
 
   case UNIT_MINUTE:
     if (value >= 60)          return UNIT_HOUR;
     if (value < 1)            return UNIT_SECOND;
-    else                      break;
+    break;
 
   case UNIT_HOUR:
     if (value * 60 < 1)       return UNIT_SECOND;
