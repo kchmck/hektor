@@ -75,7 +75,6 @@ static bool menu_find_url(url_t url_buffer, const page_t menu_page,
   if (!title_begin) return false;
 
   const char *url_begin = title_begin + strlen(page_title) + SEPARATOR_LENGTH;
-
   const char *url_end = strstr(url_begin, URL_ENDING);
   if (!url_end) return false;
 
