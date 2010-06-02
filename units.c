@@ -15,8 +15,8 @@
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "units.h"
 
