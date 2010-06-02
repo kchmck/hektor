@@ -26,7 +26,7 @@
 //
 //   ┌───────────────────────────────┬─ value_name
 //   Unthrottle data in current window : 49499 KB
-//                                       └───┴─ integer returned
+//                         SEPARATOR ─┴─┘└───┴─ integer returned
 //
 // The variables below end up like:
 //
