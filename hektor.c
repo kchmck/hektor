@@ -22,12 +22,12 @@
 #include "modem.h"
 #include "units.h"
 
-static void hektor_remaining(const long remaining) {
+static void hektor_show_remaining(const long remaining) {
   printf("%.2f megabytes are remaining.\n",
          unit_convert(remaining, UNIT_BYTE, UNIT_MEGABYTE));
 }
 
-static void hektor_refill_time(const page_t fap_page) {
+static void hektor_show_refill_time(const page_t fap_page) {
   unit_t refill_time;
   unit_convert_smart(&refill_time, fap_get_refill_time(fap_page), UNIT_SECOND);
 
@@ -49,8 +49,8 @@ static bool hektor_main(int argc, char **argv) {
 
   const long remaining = fap_get_remaining(fap_page);
   
-  if (fap_is_active(remaining)) hektor_refill_time(fap_page);
-  else                          hektor_remaining(remaining);
+  if (fap_is_active(remaining)) hektor_show_refill_time(fap_page);
+  else                          hektor_show_remaining(remaining);
 
   return true;
 }
