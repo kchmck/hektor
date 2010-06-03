@@ -19,16 +19,27 @@
 
 #include "modem.h"
 
-// Get the bandwidth limit in bytes.
-long fap_get_limit(const page_t fap_page);
+typedef struct {
+  long limit;
+  long remaining;
+  int refill_time;
+} fap_t;
 
-// Get the remaining usage in bytes.
-long fap_get_remaining(const page_t fap_page);
-
-// Get the time until the FAP is deactivated, in seconds.
-int fap_get_refill_time(const page_t fap_page);
+void fap_init(fap_t *fap, const page_t fap_page);
 
 // Check if the FAP is active.
-bool fap_is_active(const long remaining);
+bool fap_is_active(const fap_t *fap);
+
+static inline long fap_get_limit(const fap_t *fap) {
+  return fap->limit;
+}
+
+static inline long fap_get_remaining(const fap_t *fap) {
+  return fap->remaining;
+}
+
+static inline int fap_get_refill_time(const fap_t *fap) {
+  return fap->refill_time;
+}
 
 #endif

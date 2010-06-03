@@ -35,7 +35,7 @@
 //                                       └─ value_begin
 //
 // atoi does the rest.
-static int fap_get_value(const char *value_name, const page_t fap_page) {
+static int fap_parse_value(const char *value_name, const page_t fap_page) {
   static const char SEPARATOR[] = " : ";
   enum { SEPARATOR_LENGTH = sizeof(SEPARATOR) - 1 };
 
@@ -50,22 +50,28 @@ static int fap_get_value(const char *value_name, const page_t fap_page) {
   return atoi(value_begin);
 }
 
-long fap_get_limit(const page_t fap_page) {
-  return unit_convert(fap_get_value("User FAP Limit", fap_page),
+static long fap_parse_limit(const page_t fap_page) {
+  return unit_convert(fap_parse_value("User FAP Limit", fap_page),
                       UNIT_KILOBYTE, UNIT_BYTE);
 }
 
-long fap_get_remaining(const page_t fap_page) {
-  return unit_convert(fap_get_value("Unthrottle data in current window",
-                                    fap_page),
+static long fap_parse_remaining(const page_t fap_page) {
+  return unit_convert(fap_parse_value("Unthrottle data in current window",
+                                      fap_page),
                       UNIT_KILOBYTE, UNIT_BYTE);
 }
 
-int fap_get_refill_time(const page_t fap_page) {
-  return unit_convert(fap_get_value("FAP count down timer", fap_page),
+static int fap_parse_refill_time(const page_t fap_page) {
+  return unit_convert(fap_parse_value("FAP count down timer", fap_page),
                       UNIT_MINUTE, UNIT_SECOND);
 }
 
-bool fap_is_active(const long remaining) {
-  return remaining == 0;
+void fap_init(fap_t *fap, const page_t fap_page) {
+  fap->limit = fap_parse_limit(fap_page);
+  fap->remaining = fap_parse_remaining(fap_page);
+  fap->refill_time = fap_parse_refill_time(fap_page);
+}
+
+bool fap_is_active(const fap_t *fap) {
+  return fap_get_remaining(fap) == 0;
 }
