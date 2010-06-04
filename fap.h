@@ -30,15 +30,15 @@ void fap_init(fap_t *fap, const page_t fap_page);
 // Check if the FAP is active.
 bool fap_is_active(const fap_t *fap);
 
-static inline long fap_get_limit(const fap_t *fap) {
+static inline long fap_usage_limit(const fap_t *fap) {
   return fap->limit;
 }
 
-static inline long fap_get_remaining(const fap_t *fap) {
+static inline long fap_usage_remaining(const fap_t *fap) {
   return fap->remaining;
 }
 
-static inline int fap_get_refill_time(const fap_t *fap) {
+static inline int fap_refill_time_remaining(const fap_t *fap) {
   return fap->refill_time;
 }
 

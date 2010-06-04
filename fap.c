@@ -73,5 +73,5 @@ void fap_init(fap_t *fap, const page_t fap_page) {
 }
 
 bool fap_is_active(const fap_t *fap) {
-  return fap_get_remaining(fap) == 0;
+  return fap_usage_remaining(fap) == 0;
 }

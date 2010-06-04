@@ -26,7 +26,7 @@
 static void hektor_show_refill_time(const fap_t *fap) {
   enum { REFILL_TIME_LENGTH = 32 };
 
-  const int refill_seconds = fap_get_refill_time(fap);
+  const int refill_seconds = fap_refill_time_remaining(fap);
   const time_t refill_timestamp = time(NULL) + refill_seconds;
 
   unit_t refill_time_unit;
@@ -42,7 +42,7 @@ static void hektor_show_refill_time(const fap_t *fap) {
 
 static void hektor_show_remaining(const fap_t *fap) {
   printf("%.2f megabytes are remaining.\n",
-         unit_convert(fap_get_remaining(fap), UNIT_BYTE, UNIT_MEGABYTE));
+         unit_convert(fap_usage_remaining(fap), UNIT_BYTE, UNIT_MEGABYTE));
 }
 
 static bool hektor_main(int argc, char **argv) {
