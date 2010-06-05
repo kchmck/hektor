@@ -41,8 +41,10 @@ static void hektor_show_refill_time(const fap_t *fap) {
 }
 
 static void hektor_show_remaining(const fap_t *fap) {
-  printf("%.2f megabytes are remaining.\n",
-         unit_convert(fap_usage_remaining(fap), UNIT_BYTE, UNIT_MEGABYTE));
+  unit_t remaining;
+  unit_convert_best(&remaining, fap_usage_remaining(fap), UNIT_BYTE);
+
+  printf("%s are remaining.\n", unit_string(&remaining));
 }
 
 static bool hektor_error_fetching_page(const url_t url) {
