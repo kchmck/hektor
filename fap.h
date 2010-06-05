@@ -44,7 +44,7 @@ time_t fap_exact_refill_time(const fap_t *fap);
 
 // Check if the FAP is active.
 static inline bool fap_is_active(const fap_t *fap) {
-  return fap_usage_remaining(fap) == 0;
+  return fap_usage_remaining(fap) <= 0;
 }
 
 #endif
