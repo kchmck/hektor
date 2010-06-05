@@ -21,7 +21,7 @@
 
 #include "fap.h"
 #include "modem.h"
-#include "units.h"
+#include "unit.h"
 
 static void hektor_show_refill_time(const fap_t *fap) {
   enum { MAX_REFILL_TIME_LENGTH = 32 };

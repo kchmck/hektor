@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef UNITS_H
-#define UNITS_H
+#ifndef UNIT_H
+#define UNIT_H
 
 #include <stdbool.h>
 

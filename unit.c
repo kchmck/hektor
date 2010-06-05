@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "units.h"
+#include "unit.h"
 
 double unit_convert(const double value, const unit_type_t value_type,
                     const unit_type_t to_type)
