@@ -73,10 +73,6 @@ void fap_init(fap_t *fap, const page_t fap_page) {
   fap->refill_time = fap_parse_refill_time(fap_page);
 }
 
-bool fap_is_active(const fap_t *fap) {
-  return fap_usage_remaining(fap) == 0;
-}
-
 time_t fap_exact_refill_time(const fap_t *fap) {
   const time_t refill_seconds = fap_remaining_refill_time(fap);
   const time_t now_timestamp = time(NULL);
