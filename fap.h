@@ -26,20 +26,25 @@ typedef struct {
   time_t remaining_refill_time;
 } fap_t;
 
+// Initialize a new FAP structure with information parsed from the modem.
 void fap_init(fap_t *fap, const page_t fap_page);
 
+// Get the "full" amount of the current usage plan in bytes.
 static inline long fap_usage_limit(const fap_t *fap) {
   return fap->usage_limit;
 }
 
+// Get the remaining usage before the FAP is activated in bytes.
 static inline long fap_usage_remaining(const fap_t *fap) {
   return fap->usage_remaining;
 }
 
+// Get the time remaining before the FAP is deactivated in seconds.
 static inline time_t fap_remaining_refill_time(const fap_t *fap) {
   return fap->remaining_refill_time;
 }
 
+// Get the exact time the FAP will be deactivated as a unix timestamp.
 time_t fap_exact_refill_time(const fap_t *fap);
 
 // Check if the FAP is active.

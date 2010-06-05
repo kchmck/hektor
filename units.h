@@ -36,6 +36,7 @@ typedef char unit_string_t[MAX_UNIT_STRING_LENGTH];
 
 typedef struct {
   unit_type_t unit_type;
+
   double amount;
   const char *label;
 
@@ -47,17 +48,23 @@ double unit_convert(const double from, const unit_type_t from_type,
                     const unit_type_t to_type);
 
 
+// Convert a unit to the best representation. For example, 10000 bytes will be
+// converted to 10 kilobytes, 120 seconds will be converted to 2 minutes, etc.
 bool unit_convert_smart(unit_t *unit, const double value,
                         const unit_type_t value_type);
 
+// Get a converted unit's amount: the 100 in 100 bytes.
 static inline double unit_amount(const unit_t *unit) {
   return unit->amount;
 }
 
+// Get a converted unit's label: the "bytes" in 100 bytes.
 static inline const char *unit_label(const unit_t *unit) {
   return unit->label;
 }
 
+// Get a converted unit's string: if the amount is 100 and the label is "bytes",
+// the string will resemble "100.00 bytes".
 static inline const char *unit_string(const unit_t *unit) {
   return unit->string;
 }

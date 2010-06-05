@@ -24,9 +24,8 @@
 #include "common.h"
 #include "modem.h"
 
-// Append a path to the modem's base url.
+// Strip the leading '/' off a path and append it to the modem's base url.
 static inline bool build_url(url_t url_buffer, const url_t url) {
-  // Strip off the leading '/'.
   return snprintf(url_buffer, MAX_URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
 }
 
@@ -71,7 +70,6 @@ static bool menu_find_url(url_t url_buffer, const page_t menu_page,
 
   static const char URL_ENDING[] = "\"))";
 
-  // Try to match the page title.
   const char *title_begin = strstr(menu_page, page_title);
   if (!title_begin) return false;
 

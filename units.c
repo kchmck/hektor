@@ -59,6 +59,7 @@ double unit_convert(const double value, const unit_type_t value_type,
   return 0;
 }
 
+// Find the best conversion for a unit type.
 static unit_type_t unit_find_best_type(const double value,
                                        const unit_type_t value_type)
 {
@@ -96,6 +97,7 @@ static unit_type_t unit_find_best_type(const double value,
   return value_type;
 }
 
+// Find the label of a unit type.
 static const char *unit_find_label(const unit_type_t unit_type) {
   static const char *labels[] = {
     [UNIT_BYTE]      = "byte",

@@ -51,17 +51,20 @@ static int fap_parse_value(const char *value_name, const page_t fap_page) {
   return atoi(value_begin);
 }
 
+// Parse the usage limit into bytes.
 static long fap_parse_limit(const page_t fap_page) {
   return unit_convert(fap_parse_value("User FAP Limit", fap_page),
                       UNIT_KILOBYTE, UNIT_BYTE);
 }
 
+// Parse the usage remaining into bytes.
 static long fap_parse_remaining(const page_t fap_page) {
   return unit_convert(fap_parse_value("Unthrottle data in current window",
                                       fap_page),
                       UNIT_KILOBYTE, UNIT_BYTE);
 }
 
+// Parse the refill time into seconds.
 static int fap_parse_refill_time(const page_t fap_page) {
   return unit_convert(fap_parse_value("FAP count down timer", fap_page),
                       UNIT_MINUTE, UNIT_SECOND);

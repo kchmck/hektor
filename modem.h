@@ -27,7 +27,7 @@ typedef char url_t[MAX_URL_LENGTH];
 enum { MAX_PAGE_LENGTH = 1024 * 64 };
 typedef char page_t[MAX_PAGE_LENGTH];
 
-// Get the menu page's url
+// Get the menu page's url.
 bool modem_get_menu_url(url_t buffer);
 
 // Get the fap page's url.
