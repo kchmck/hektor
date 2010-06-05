@@ -27,5 +27,5 @@ build() {
   fi
 
   make || return 1
-  make DESTDIR="$pkgdir" PREFIX=/usr install
+  make DESTDIR="$pkgdir" install
 }
