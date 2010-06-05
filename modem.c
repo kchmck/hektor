@@ -24,20 +24,12 @@
 #include "common.h"
 #include "modem.h"
 
-// Strip the leading '/' off a path and append it to the modem's base url.
-static inline bool build_url(url_t url_buffer, const url_t url) {
-  return snprintf(url_buffer, MAX_URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
-}
-
 // Request a url with a callback function.
 static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
-  url_t full_url;
-  if (!build_url(full_url, url)) return false;
-
   CURL *curl = curl_easy_init();
   if (!curl) return false;
 
-  curl_easy_setopt(curl, CURLOPT_URL, full_url);
+  curl_easy_setopt(curl, CURLOPT_URL, url);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, receive_fn);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, fn_data);
 
@@ -45,6 +37,11 @@ static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
   curl_easy_cleanup(curl);
 
   return result == CURLE_OK;
+}
+
+// Strip the leading '/' off a path and append it to the modem's base url.
+static inline bool modem_build_url(url_t url_buffer, const url_t url) {
+  return snprintf(url_buffer, MAX_URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
 }
 
 // Search through the menu page for a page title and its associated url. The
@@ -79,14 +76,14 @@ static bool menu_find_url(url_t url_buffer, const page_t menu_page,
 
   const ptrdiff_t url_length = url_end - url_begin;
 
-  // Add 1 for null termination.
-  string_copy(url_begin, url_buffer, min(url_length + 1, MAX_URL_LENGTH));
+  url_t url_path;
+  string_copy(url_begin, url_path, min(url_length + 1, MAX_URL_LENGTH));
 
-  return true;
+  return modem_build_url(url_buffer, url_path);
 }
 
 bool modem_get_menu_url(url_t buffer) {
-  return string_copy("/fs/scripts/cat_menu.js", buffer, MAX_URL_LENGTH);
+  return modem_build_url(buffer, "/fs/scripts/cat_menu.js");
 }
 
 bool modem_get_fap_url(url_t buffer, const page_t menu_page) {
