@@ -68,8 +68,8 @@ static int fap_parse_refill_time(const page_t fap_page) {
 }
 
 void fap_init(fap_t *fap, const page_t fap_page) {
-  fap->limit = fap_parse_limit(fap_page);
-  fap->remaining = fap_parse_remaining(fap_page);
+  fap->usage_limit = fap_parse_limit(fap_page);
+  fap->usage_remaining = fap_parse_remaining(fap_page);
   fap->remaining_refill_time = fap_parse_refill_time(fap_page);
 }
 

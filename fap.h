@@ -21,19 +21,19 @@
 #include "modem.h"
 
 typedef struct {
-  long limit;
-  long remaining;
+  long usage_limit;
+  long usage_remaining;
   time_t remaining_refill_time;
 } fap_t;
 
 void fap_init(fap_t *fap, const page_t fap_page);
 
 static inline long fap_usage_limit(const fap_t *fap) {
-  return fap->limit;
+  return fap->usage_limit;
 }
 
 static inline long fap_usage_remaining(const fap_t *fap) {
-  return fap->remaining;
+  return fap->usage_remaining;
 }
 
 static inline time_t fap_remaining_refill_time(const fap_t *fap) {
