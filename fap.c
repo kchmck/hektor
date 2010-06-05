@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
