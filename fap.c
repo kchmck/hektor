@@ -78,7 +78,7 @@ bool fap_is_active(const fap_t *fap) {
 }
 
 time_t fap_exact_refill_time(const fap_t *fap) {
-  const time_t refill_seconds = fap_refill_time_remaining(fap);
+  const time_t refill_seconds = fap_remaining_refill_time(fap);
   const time_t now_timestamp = time(NULL);
 
   return now_timestamp + refill_seconds;
