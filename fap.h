@@ -23,7 +23,7 @@
 typedef struct {
   long limit;
   long remaining;
-  int refill_time;
+  time_t remaining_refill_time;
 } fap_t;
 
 void fap_init(fap_t *fap, const page_t fap_page);
@@ -37,7 +37,7 @@ static inline long fap_usage_remaining(const fap_t *fap) {
 }
 
 static inline time_t fap_remaining_refill_time(const fap_t *fap) {
-  return fap->refill_time;
+  return fap->remaining_refill_time;
 }
 
 time_t fap_exact_refill_time(const fap_t *fap);
