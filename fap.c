@@ -16,6 +16,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "modem.h"
 #include "units.h"
@@ -74,4 +75,11 @@ void fap_init(fap_t *fap, const page_t fap_page) {
 
 bool fap_is_active(const fap_t *fap) {
   return fap_usage_remaining(fap) == 0;
+}
+
+time_t fap_exact_refill_time(const fap_t *fap) {
+  const time_t refill_seconds = fap_refill_time_remaining(fap);
+  const time_t now_timestamp = time(NULL);
+
+  return now_timestamp + refill_seconds;
 }

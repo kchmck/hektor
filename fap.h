@@ -17,6 +17,7 @@
 #ifndef FAP_H
 #define FAP_H
 
+#include <time.h>
 #include "modem.h"
 
 typedef struct {
@@ -38,8 +39,10 @@ static inline long fap_usage_remaining(const fap_t *fap) {
   return fap->remaining;
 }
 
-static inline int fap_refill_time_remaining(const fap_t *fap) {
+static inline time_t fap_remaining_refill_time(const fap_t *fap) {
   return fap->refill_time;
 }
+
+time_t fap_exact_refill_time(const fap_t *fap);
 
 #endif

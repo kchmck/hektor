@@ -24,17 +24,17 @@
 #include "units.h"
 
 static void hektor_show_refill_time(const fap_t *fap) {
-  enum { REFILL_TIME_LENGTH = 32 };
+  enum { MAX_REFILL_TIME_LENGTH = 32 };
 
-  const int refill_seconds = fap_refill_time_remaining(fap);
-  const time_t refill_timestamp = time(NULL) + refill_seconds;
+  const time_t remaining_time = fap_remaining_refill_time(fap);
+  const time_t exact_time = fap_exact_refill_time(fap);
 
   unit_t refill_time_unit;
-  unit_convert_smart(&refill_time_unit, refill_seconds, UNIT_SECOND);
+  unit_convert_smart(&refill_time_unit, remaining_time, UNIT_SECOND);
 
-  char refill_time_string[REFILL_TIME_LENGTH];
-  strftime(refill_time_string, REFILL_TIME_LENGTH, "%I:%M %p %A",
-           localtime(&refill_timestamp));
+  char refill_time_string[MAX_REFILL_TIME_LENGTH];
+  strftime(refill_time_string, MAX_REFILL_TIME_LENGTH, "%I:%M %p %A",
+           localtime(&exact_time));
 
   printf("The FAP will be deactivated in %s, at %s.\n",
          unit_string(&refill_time_unit), refill_time_string);
