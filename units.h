@@ -50,8 +50,8 @@ double unit_convert(const double from, const unit_type_t from_type,
 
 // Convert a unit to the best representation. For example, 10000 bytes will be
 // converted to 10 kilobytes, 120 seconds will be converted to 2 minutes, etc.
-bool unit_convert_smart(unit_t *unit, const double value,
-                        const unit_type_t value_type);
+bool unit_convert_best(unit_t *unit, const double value,
+                       const unit_type_t value_type);
 
 // Get a converted unit's amount: the 100 in 100 bytes.
 static inline double unit_amount(const unit_t *unit) {

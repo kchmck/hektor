@@ -114,8 +114,8 @@ static const char *unit_find_label(const unit_type_t unit_type) {
   return labels[unit_type];
 }
 
-bool unit_convert_smart(unit_t *unit, const double value,
-                        const unit_type_t value_type)
+bool unit_convert_best(unit_t *unit, const double value,
+                       const unit_type_t value_type)
 {
   unit->unit_type = unit_find_best_type(value, value_type);
   unit->amount = unit_convert(value, value_type, unit->unit_type);

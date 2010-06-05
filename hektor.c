@@ -30,7 +30,7 @@ static void hektor_show_refill_time(const fap_t *fap) {
   const time_t exact_time = fap_exact_refill_time(fap);
 
   unit_t refill_time_unit;
-  unit_convert_smart(&refill_time_unit, remaining_time, UNIT_SECOND);
+  unit_convert_best(&refill_time_unit, remaining_time, UNIT_SECOND);
 
   char refill_time_string[MAX_REFILL_TIME_LENGTH];
   strftime(refill_time_string, MAX_REFILL_TIME_LENGTH, "%I:%M %p %A",
