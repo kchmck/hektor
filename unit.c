@@ -101,15 +101,15 @@ static unit_type_t unit_find_best_type(const double value,
 // Find the label of a unit type.
 static const char *unit_find_label(const unit_type_t unit_type) {
   static const char *labels[] = {
-    [UNIT_BYTE]      = "byte",
-    [UNIT_KILOBYTE]  = "kilobyte",
-    [UNIT_MEGABYTE]  = "megabyte",
+    [UNIT_BYTE]     = "byte",
+    [UNIT_KILOBYTE] = "kilobyte",
+    [UNIT_MEGABYTE] = "megabyte",
 
-    [UNIT_SECOND]    = "second",
-    [UNIT_MINUTE]    = "minute",
-    [UNIT_HOUR]      = "hour",
+    [UNIT_SECOND]   = "second",
+    [UNIT_MINUTE]   = "minute",
+    [UNIT_HOUR]     = "hour",
 
-    [UNIT_INVALID]   = NULL,
+    [UNIT_INVALID]  = NULL,
   };
 
   return labels[unit_type];
