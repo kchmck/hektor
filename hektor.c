@@ -54,7 +54,7 @@ static bool hektor_error_fetching_page(const url_t url) {
 }
 
 static bool hektor_error_finding_url(const char *page_name) {
-  printf("An error occured while trying to find the %s pageʼs URL.\n",
+  printf("An error occured while trying to find the %s page’s URL.\n",
          page_name);
 
   return false;

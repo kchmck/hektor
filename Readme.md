@@ -15,14 +15,14 @@ interface:
 ## Installation
 
 On Arch Linux, hektor can be installed through the AUR as the [hektor-git]
-package. With a tool like [bauerbill], itʼs as simple as:
+package. With a tool like [bauerbill], it’s as simple as:
 
     $ sudo bauerbill --aur -S hektor-git
 
 [hektor-git]: http://aur.archlinux.org/packages.php?ID=37095
 [bauerbill]: http://xyne.archlinux.ca/info/bauerbill
 
-Bauerbill will automatically handle everything. On other Linux distros, hektorʼs
+Bauerbill will automatically handle everything. On other Linux distros, hektor’s
 only dependency, [libcurl], will need to be installed. On Ubuntu, the
 [libcurl4-openssl-dev][ubuntu-libcurl] package accomplishes that:
 
@@ -31,7 +31,7 @@ only dependency, [libcurl], will need to be installed. On Ubuntu, the
 [libcurl]: http://curl.haxx.se/libcurl/
 [ubuntu-libcurl]: http://packages.ubuntu.com/lucid/libcurl4-openssl-dev
 
-Once libcurl is installed, download and extract [hektorʼs tarball][tarball].
+Once libcurl is installed, download and extract [hektor’s tarball][tarball].
 Then, compile and install:
 
     $ wget http://github.com/kchmck/hektor/tarball/master
