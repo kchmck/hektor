@@ -39,7 +39,7 @@ static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
   return result == CURLE_OK;
 }
 
-// Strip the leading '/' off a path and append it to the modem's base url.
+// Strip the leading '/' off a path and append the rest to the modem's base url.
 static inline bool modem_build_url(url_t url_buffer, const url_t url) {
   return snprintf(url_buffer, MAX_URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
 }
