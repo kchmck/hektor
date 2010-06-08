@@ -33,7 +33,7 @@ static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, receive_fn);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, fn_data);
 
-  CURLcode result = curl_easy_perform(curl);
+  const CURLcode result = curl_easy_perform(curl);
   curl_easy_cleanup(curl);
 
   return result == CURLE_OK;
