@@ -80,8 +80,10 @@ static bool hektor_main(int argc, char **argv) {
   fap_t fap;
   fap_init(&fap, fap_page);
 
-  if (fap_is_active(&fap)) hektor_show_refill_time(&fap);
-  else                     hektor_show_remaining(&fap);
+  if (fap_is_active(&fap))
+    hektor_show_refill_time(&fap);
+  else
+    hektor_show_remaining(&fap);
 
   return true;
 }
