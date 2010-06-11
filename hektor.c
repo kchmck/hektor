@@ -24,17 +24,17 @@
 #include "unit.h"
 
 static void hektor_show_refill_time(const fap_t *fap) {
-  enum { MAX_REFILL_TIME_LENGTH = 32 };
+  enum { MAX_STRING_LENGTH = 32 };
 
-  const time_t remaining_time = fap_remaining_refill_time(fap);
-  const time_t exact_time = fap_exact_refill_time(fap);
+  const time_t refill_time = fap_refill_time(fap);
+  const time_t refill_timestamp = fap_refill_timestamp(fap);
 
   unit_t refill_time_unit;
-  unit_convert_best(&refill_time_unit, remaining_time, UNIT_SECOND);
+  unit_convert_best(&refill_time_unit, refill_time, UNIT_SECOND);
 
-  char refill_time_string[MAX_REFILL_TIME_LENGTH];
-  strftime(refill_time_string, MAX_REFILL_TIME_LENGTH, "%I:%M %p %A",
-           localtime(&exact_time));
+  char refill_time_string[MAX_STRING_LENGTH];
+  strftime(refill_time_string, MAX_STRING_LENGTH, "%I:%M %p %A",
+           localtime(&refill_timestamp));
 
   printf("The FAP will be deactivated in %s, at %s.\n",
          unit_string(&refill_time_unit), refill_time_string);
@@ -42,43 +42,29 @@ static void hektor_show_refill_time(const fap_t *fap) {
 
 static void hektor_show_remaining(const fap_t *fap) {
   unit_t remaining;
-  unit_convert_best(&remaining, fap_usage_remaining(fap), UNIT_BYTE);
+  unit_convert_best(&remaining, fap_remaining_usage(fap), UNIT_BYTE);
 
   printf("%s are remaining.\n", unit_string(&remaining));
 }
 
-static bool hektor_error_fetching_page(const url_t url) {
-  printf("An error occured while retrieving the page at ‘%s’.\n", url);
-
-  return false;
-}
-
-static bool hektor_error_finding_url(const char *page_name) {
-  printf("An error occured while trying to find the %s page’s URL.\n",
-         page_name);
+static bool hektor_error_fetching_info_page(const url_t info_url) {
+  printf("An error occured while retrieving the information page \n"
+         "at ‘%s’.\n", info_url);
 
   return false;
 }
 
 static bool hektor_main(int argc, char **argv) {
-  url_t menu_url;
-  if (!modem_get_menu_url(menu_url))
-    return hektor_error_finding_url("menu");
+  url_t info_url;
+  if (!modem_get_info_url(info_url))
+    return false;
 
-  page_t menu_page;
-  if (!modem_fetch_page(menu_page, menu_url))
-    return hektor_error_fetching_page(menu_url);
-
-  url_t fap_url;
-  if (!modem_get_fap_url(fap_url, menu_page))
-    return hektor_error_finding_url("FAP");
-
-  page_t fap_page;
-  if (!modem_fetch_page(fap_page, fap_url))
-    return hektor_error_fetching_page(fap_url);
+  page_t info_page;
+  if (!modem_fetch_info_page(info_page, info_url))
+    return hektor_error_fetching_info_page(info_url);
 
   fap_t fap;
-  fap_init(&fap, fap_page);
+  fap_init(&fap, info_page);
 
   if (fap_is_active(&fap))
     hektor_show_refill_time(&fap);

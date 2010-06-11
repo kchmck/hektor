@@ -17,42 +17,46 @@
 #ifndef FAP_H
 #define FAP_H
 
+#include <stdint.h>
 #include <time.h>
+
+#include "info.h"
 #include "modem.h"
 
 typedef struct {
-  long usage_limit;
-  long usage_remaining;
-  time_t remaining_refill_time;
-  time_t exact_refill_time;
+  int32_t allowed_usage;
+  int32_t remaining_usage;
+
+  time_t refill_time;
+  time_t refill_timestamp;
 } fap_t;
 
 // Initialize a new FAP structure with information parsed from the modem.
-void fap_init(fap_t *fap, const page_t fap_page);
+void fap_init(fap_t *fap, const page_t info_page);
 
 // Get the "full" amount of the current usage plan in bytes.
-static inline long fap_usage_limit(const fap_t *fap) {
-  return fap->usage_limit;
+static inline int32_t fap_allowed_usage(const fap_t *fap) {
+  return fap->allowed_usage;
 }
 
 // Get the remaining usage before the FAP is activated in bytes.
-static inline long fap_usage_remaining(const fap_t *fap) {
-  return fap->usage_remaining;
+static inline int32_t fap_remaining_usage(const fap_t *fap) {
+  return fap->remaining_usage;
 }
 
 // Get the time remaining before the FAP is deactivated in seconds.
-static inline time_t fap_remaining_refill_time(const fap_t *fap) {
-  return fap->remaining_refill_time;
+static inline time_t fap_refill_time(const fap_t *fap) {
+  return fap->refill_time;
 }
 
 // Get the exact time the FAP will be deactivated as a unix timestamp.
-static inline time_t fap_exact_refill_time(const fap_t *fap) {
-  return fap->exact_refill_time;
+static inline time_t fap_refill_timestamp(const fap_t *fap) {
+  return fap->refill_timestamp;
 }
 
 // Check if the FAP is active.
 static inline bool fap_is_active(const fap_t *fap) {
-  return fap_usage_remaining(fap) <= 0;
+  return fap_remaining_usage(fap) <= 0;
 }
 
 #endif

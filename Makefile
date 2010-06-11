@@ -1,5 +1,5 @@
 EXECUTABLE = hektor
-OBJS = fap.o modem.o unit.o hektor.o
+OBJS = fap.o info.o modem.o unit.o hektor.o
 LIBS = libcurl
 
 STD_CFLAGS  = -pipe -std=c99 -Wall -Wno-switch-enum -O2

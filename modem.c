@@ -39,57 +39,6 @@ static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
   return result == CURLE_OK;
 }
 
-// Strip the leading '/' off a path and append the rest to the modem's base url.
-static inline bool modem_build_url(url_t url_buffer, const url_t url) {
-  return snprintf(url_buffer, MAX_URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
-}
-
-// Search through the menu page for a page title and its associated url. The
-// menu page is laid out like:
-//
-//          ┌──────┬─ page_title                             URL_ENDING ─┬─┐
-//   [...] "FAP Info", "/cgi/execAdvCom.bin?Command=123&PrintMsg=FAP Info"))
-//       SEPARATOR ─┴──┘└─┬─────────────────────────────────────────────┘
-//                        └─ url copied into url_buffer
-//
-// The variables below end up like:
-//
-//          ┌─ title_begin
-//          │           ┌─ url_begin                            url_end ─┐
-//   [...] "FAP Info", "/cgi/execAdvCom.bin?Command=123&PrintMsg=FAP Info"))
-//          url_length ─┴───────────────────────────────────────────────┘
-//
-static bool menu_find_url(url_t url_buffer, const page_t menu_page,
-                          const char *page_title)
-{
-  static const char SEPARATOR[] = "\", \"";
-  enum { SEPARATOR_LENGTH = sizeof(SEPARATOR) - 1 };
-
-  static const char URL_ENDING[] = "\"))";
-
-  const char *title_begin = strstr(menu_page, page_title);
-  if (!title_begin) return false;
-
-  const char *url_begin = title_begin + strlen(page_title) + SEPARATOR_LENGTH;
-  const char *url_end = strstr(url_begin, URL_ENDING);
-  if (!url_end) return false;
-
-  const ptrdiff_t url_length = url_end - url_begin;
-
-  url_t url_path;
-  string_copy(url_begin, url_path, min(url_length + 1, MAX_URL_LENGTH));
-
-  return modem_build_url(url_buffer, url_path);
-}
-
-bool modem_get_menu_url(url_t buffer) {
-  return modem_build_url(buffer, "/fs/scripts/cat_menu.js");
-}
-
-bool modem_get_fap_url(url_t buffer, const page_t menu_page) {
-  return menu_find_url(buffer, menu_page, "FAP Info");
-}
-
 // Copy chunks of a page to a buffer...
 typedef struct {
   char *buffer;
@@ -112,11 +61,25 @@ static size_t download_fn(const char *chunk, const size_t item_size,
   return write_size;
 }
 
-size_t modem_fetch_page(page_t buffer, const url_t url) {
+// Download a page into a buffer.
+static size_t modem_fetch_page(page_t buffer, const url_t url) {
   download_fn_state_t state = {buffer};
   modem_fetch_url(url, download_fn, &state);
 
   buffer[state.amount_written] = '\0';
 
   return state.amount_written;
+}
+
+// Strip the leading '/' off a path and append the rest to the modem's base url.
+static inline bool modem_build_url(url_t url_buffer, const url_t url) {
+  return snprintf(url_buffer, MAX_URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
+}
+
+bool modem_get_info_url(url_t buffer) {
+  return modem_build_url(buffer, "/getdeviceinfo/info.bin");
+}
+
+bool modem_fetch_info_page(page_t buffer, const url_t info_url) {
+  return modem_fetch_page(buffer, info_url);
 }

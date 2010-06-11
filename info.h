@@ -14,23 +14,23 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef MODEM_H
-#define MODEM_H
+#ifndef INFO_H
+#define INFO_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
-// A url type
-enum { MAX_URL_LENGTH = 256 + 1};
-typedef char url_t[MAX_URL_LENGTH];
+#include "modem.h"
 
-// A page type
-enum { MAX_PAGE_LENGTH = 2048 + 1 };
-typedef char page_t[MAX_PAGE_LENGTH];
+// An info value type
+enum { MAX_INFO_VALUE_LENGTH = 32 + 1 };
+typedef char info_value_t[MAX_INFO_VALUE_LENGTH];
 
-// Get the info page's URL.
-bool modem_get_info_url(url_t buffer);
+// Get a string value from the info page.
+bool info_value_parse(info_value_t value_buffer, const page_t info_page,
+                      const char *value_name);
 
-// Download the info page into a buffer.
-bool modem_fetch_info_page(page_t buffer, const url_t info_url);
+// Get an integer value from the info page.
+int32_t info_integer_parse(const page_t info_page, const char *value_name);
 
 #endif
