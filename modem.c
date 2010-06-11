@@ -116,5 +116,7 @@ size_t modem_fetch_page(page_t buffer, const url_t url) {
   download_fn_state_t state = {buffer};
   modem_fetch_url(url, download_fn, &state);
 
+  buffer[state.amount_written] = '\0';
+
   return state.amount_written;
 }
