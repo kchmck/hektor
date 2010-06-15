@@ -60,7 +60,7 @@ static bool hektor_main(int argc, char **argv) {
     return false;
 
   page_t info_page;
-  if (!modem_fetch_info_page(info_page, info_url))
+  if (!modem_fetch_page(info_page, info_url))
     return hektor_error_fetching_info_page(info_url);
 
   fap_t fap;

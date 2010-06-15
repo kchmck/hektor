@@ -30,7 +30,7 @@ typedef char page_t[MAX_PAGE_LENGTH];
 // Get the info page's URL.
 bool modem_get_info_url(url_t buffer);
 
-// Download the info page into a buffer.
-bool modem_fetch_info_page(page_t buffer, const url_t info_url);
+// Download a page into a buffer.
+size_t modem_fetch_page(page_t buffer, const url_t info_url);
 
 #endif
