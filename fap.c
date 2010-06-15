@@ -25,7 +25,7 @@
 #include "fap.h"
 
 // Parse the usage limit into bytes.
-static int32_t fap_parse_allowed(const page_t info_page) {
+static uint32_t fap_parse_allowed(const page_t info_page) {
   return info_integer_parse(info_page, "FapAggBucketSize");
 }
 

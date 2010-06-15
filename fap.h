@@ -24,7 +24,7 @@
 #include "modem.h"
 
 typedef struct {
-  int32_t allowed_usage;
+  uint32_t allowed_usage;
   int32_t remaining_usage;
 
   time_t refill_time;
@@ -35,7 +35,7 @@ typedef struct {
 void fap_init(fap_t *fap, const page_t info_page);
 
 // Get the "full" amount of the current usage plan in bytes.
-static inline int32_t fap_allowed_usage(const fap_t *fap) {
+static inline uint32_t fap_allowed_usage(const fap_t *fap) {
   return fap->allowed_usage;
 }
 
