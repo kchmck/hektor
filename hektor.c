@@ -47,10 +47,8 @@ static void hektor_show_remaining(const fap_t *fap) {
   printf("%s are remaining.\n", unit_string(&remaining));
 }
 
-static bool hektor_error_fetching_info_page(const url_t info_url) {
-  printf("An error occured while retrieving the information page \n"
-         "at ‘%s’.\n", info_url);
-
+static bool hektor_error_fetching_page(const url_t url) {
+  printf("An error occured while fetching the page at ‘%s’.\n", url);
   return false;
 }
 
@@ -61,7 +59,7 @@ static bool hektor_main(int argc, char **argv) {
 
   page_t info_page;
   if (!modem_fetch_page(info_page, info_url))
-    return hektor_error_fetching_info_page(info_url);
+    return hektor_error_fetching_page(info_url);
 
   fap_t fap;
   fap_init(&fap, info_page);
