@@ -20,9 +20,8 @@
 #include <string.h>
 
 #include "common.h"
-#include "modem.h"
-
 #include "info.h"
+#include "modem.h"
 
 // The info page is laid out like:
 //

@@ -19,10 +19,9 @@
 #include <string.h>
 #include <time.h>
 
-#include "modem.h"
-#include "info.h"
-
 #include "fap.h"
+#include "info.h"
+#include "modem.h"
 
 // Parse the usage limit into bytes.
 static inline uint32_t fap_parse_allowed(const page_t info_page) {

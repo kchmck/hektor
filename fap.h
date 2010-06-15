@@ -20,7 +20,6 @@
 #include <stdint.h>
 #include <time.h>
 
-#include "info.h"
 #include "modem.h"
 
 typedef struct {
