@@ -27,8 +27,6 @@ typedef enum {
   UNIT_SECOND,
   UNIT_MINUTE,
   UNIT_HOUR,
-
-  UNIT_INVALID,
 } unit_type_t;
 
 enum { MAX_UNIT_STRING_LENGTH = 32 };

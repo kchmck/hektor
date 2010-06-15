@@ -107,9 +107,7 @@ static const char *unit_find_label(const unit_type_t unit_type) {
 
     [UNIT_SECOND]   = "second",
     [UNIT_MINUTE]   = "minute",
-    [UNIT_HOUR]     = "hour",
-
-    [UNIT_INVALID]  = NULL,
+    [UNIT_HOUR]     = "hour"
   };
 
   return labels[unit_type];
