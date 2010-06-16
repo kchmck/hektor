@@ -22,12 +22,19 @@
 
 #include "modem.h"
 
+typedef enum {
+  FAP_STATE_ACTIVE,
+  FAP_STATE_INACTIVE,
+} fap_state_t;
+
 typedef struct {
   uint32_t allowed_usage;
   int32_t remaining_usage;
 
   time_t refill_time;
   time_t refill_timestamp;
+
+  fap_state_t state;
 } fap_t;
 
 // Initialize a new FAP structure with information parsed from the modem.
@@ -55,7 +62,7 @@ static inline time_t fap_refill_timestamp(const fap_t *fap) {
 
 // Check if the FAP is active.
 static inline bool fap_is_active(const fap_t *fap) {
-  return fap_remaining_usage(fap) <= 0;
+  return fap->state == FAP_STATE_ACTIVE;
 }
 
 #endif
