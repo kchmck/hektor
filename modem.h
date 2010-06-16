@@ -34,4 +34,10 @@ bool modem_get_info_url(url_t buffer);
 // Download a page into a buffer.
 size_t modem_fetch_page(page_t buffer, const url_t info_url);
 
+// Initialize global modem stuff.
+void modem_global_init(void);
+
+// Free the memory allocated by @modem_global_init.
+void modem_global_destroy(void);
+
 #endif

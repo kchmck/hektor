@@ -78,3 +78,11 @@ size_t modem_fetch_page(page_t buffer, const url_t url) {
 
   return state.amount_written;
 }
+
+void modem_global_init(void) {
+  curl_global_init(CURL_GLOBAL_NOTHING);
+}
+
+void modem_global_destroy(void) {
+  curl_global_cleanup();
+}

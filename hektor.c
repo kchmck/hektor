@@ -52,7 +52,7 @@ static bool hektor_error_fetching_page(const url_t url) {
   return false;
 }
 
-static bool hektor_main(int argc, char **argv) {
+static bool hektor_ui_main(int argc, char **argv) {
   url_t info_url;
   if (!modem_get_info_url(info_url))
     return false;
@@ -70,6 +70,14 @@ static bool hektor_main(int argc, char **argv) {
     hektor_show_remaining(&fap);
 
   return true;
+}
+
+static bool hektor_main(int argc, char **argv) {
+  modem_global_init();
+  const bool result = hektor_ui_main(argc, argv);
+  modem_global_destroy();
+
+  return result;
 }
 
 int main(int argc, char **argv) {
