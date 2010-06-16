@@ -24,7 +24,7 @@
 #include "unit.h"
 
 static void hektor_show_refill_time(const fap_t *fap) {
-  enum { TIME_STRING_MAX_LENGTH = 32 };
+  enum { TIME_STRING_MAX_LENGTH = 32 + 1 };
 
   const time_t refill_time = fap_refill_time(fap);
   const time_t refill_timestamp = fap_refill_timestamp(fap);
