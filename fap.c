@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License along with
 // hektor. If not, see <http://www.gnu.org/licenses/>.
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -41,13 +42,11 @@ static inline time_t fap_parse_refill_time(const page_t info_page) {
 }
 
 // Parse the FAP state. It defaults to inactive.
-static fap_state_t fap_parse_state(const page_t info_page) {
-  switch (info_integer_parse(info_page, "FapThrottleState")) {
-  case 1: return FAP_STATE_INACTIVE;
-  case 2: return FAP_STATE_ACTIVE;
-  }
+static bool fap_parse_state(const page_t info_page) {
+  // The value when the FAP is active
+  enum { ACTIVE_VALUE = 2 };
 
-  return FAP_STATE_INACTIVE;
+  return info_integer_parse(info_page, "FapThrottleState") == ACTIVE_VALUE;
 }
 
 void fap_init(fap_t *fap, const page_t info_page) {
@@ -57,5 +56,5 @@ void fap_init(fap_t *fap, const page_t info_page) {
   fap->refill_time = fap_parse_refill_time(info_page);
   fap->refill_timestamp = time(NULL) + fap->refill_time;
 
-  fap->state = fap_parse_state(info_page);
+  fap->is_active = fap_parse_state(info_page);
 }
