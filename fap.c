@@ -31,7 +31,7 @@ static inline uint32_t fap_parse_allowed(const page_t info_page) {
 }
 
 // Parse the usage remaining into bytes.
-static inline int32_t fap_parse_remaining(const page_t info_page) {
+static inline uint32_t fap_parse_remaining(const page_t info_page) {
   return info_integer_parse(info_page, "FapAggBucketRemaining");
 }
 

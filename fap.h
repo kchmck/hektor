@@ -25,7 +25,7 @@
 
 typedef struct {
   uint32_t allowed_usage;
-  int32_t remaining_usage;
+  uint32_t remaining_usage;
 
   time_t refill_time;
   time_t refill_timestamp;
@@ -42,7 +42,7 @@ static inline uint32_t fap_allowed_usage(const fap_t *fap) {
 }
 
 // Get the remaining usage before the FAP is activated in bytes.
-static inline int32_t fap_remaining_usage(const fap_t *fap) {
+static inline uint32_t fap_remaining_usage(const fap_t *fap) {
   return fap->remaining_usage;
 }
 
