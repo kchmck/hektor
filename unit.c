@@ -122,7 +122,7 @@ bool unit_convert_best(unit_t *unit, const double value,
   unit->label = unit_find_label(unit->unit_type);
   if (!unit->label) return false;
 
-  snprintf(unit->string, MAX_UNIT_STRING_LENGTH, "%.1f %ss", unit->amount,
+  snprintf(unit->string, UNIT_STRING_MAX_LENGTH, "%.1f %ss", unit->amount,
                                                              unit->label);
 
   return true;

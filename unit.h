@@ -29,8 +29,8 @@ typedef enum {
   UNIT_HOUR,
 } unit_type_t;
 
-enum { MAX_UNIT_STRING_LENGTH = 32 };
-typedef char unit_string_t[MAX_UNIT_STRING_LENGTH];
+enum { UNIT_STRING_MAX_LENGTH = 32 };
+typedef char unit_string_t[UNIT_STRING_MAX_LENGTH];
 
 typedef struct {
   unit_type_t unit_type;

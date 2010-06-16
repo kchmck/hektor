@@ -21,12 +21,12 @@
 #include <stddef.h>
 
 // A url type
-enum { MAX_URL_LENGTH = 256 + 1};
-typedef char url_t[MAX_URL_LENGTH];
+enum { URL_MAX_LENGTH = 256 + 1};
+typedef char url_t[URL_MAX_LENGTH];
 
 // A page type
-enum { MAX_PAGE_LENGTH = 2048 + 1 };
-typedef char page_t[MAX_PAGE_LENGTH];
+enum { PAGE_MAX_LENGTH = 2048 + 1 };
+typedef char page_t[PAGE_MAX_LENGTH];
 
 // Get the info page's URL.
 bool modem_get_info_url(url_t buffer);
