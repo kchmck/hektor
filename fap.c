@@ -22,6 +22,7 @@
 #include "fap.h"
 #include "info.h"
 #include "modem.h"
+#include "unit.h"
 
 // Parse the usage limit into bytes.
 static inline uint32_t fap_parse_allowed(const page_t info_page) {
@@ -35,7 +36,8 @@ static inline int32_t fap_parse_remaining(const page_t info_page) {
 
 // Parse the refill time into seconds.
 static inline time_t fap_parse_refill_time(const page_t info_page) {
-  return info_integer_parse(info_page, "TimeLeftUntilRefill");
+  return unit_convert(info_integer_parse(info_page, "TimeLeftUntilRefill"),
+                      UNIT_MINUTE, UNIT_SECOND);
 }
 
 void fap_init(fap_t *fap, const page_t info_page) {
