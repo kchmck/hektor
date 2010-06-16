@@ -53,7 +53,9 @@ static fap_state_t fap_parse_state(const page_t info_page) {
 void fap_init(fap_t *fap, const page_t info_page) {
   fap->allowed_usage = fap_parse_allowed(info_page);
   fap->remaining_usage = fap_parse_remaining(info_page);
+
   fap->refill_time = fap_parse_refill_time(info_page);
   fap->refill_timestamp = time(NULL) + fap->refill_time;
+
   fap->state = fap_parse_state(info_page);
 }
