@@ -62,7 +62,7 @@ static inline const char *unit_label(const unit_t *unit) {
 }
 
 // Get a converted unit's string: if the amount is 100 and the label is "bytes",
-// the string will resemble "100.00 bytes".
+// the string will resemble "100.0 bytes".
 static inline const char *unit_string(const unit_t *unit) {
   return unit->string;
 }
