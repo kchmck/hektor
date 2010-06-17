@@ -58,8 +58,8 @@ bool info_value_parse(info_value_t value_buffer, const page_t info_page,
   const ptrdiff_t value_length = value_end - value_begin;
   const ptrdiff_t value_length_with_null = value_length + 1;
 
-  return string_copy(value_begin, value_buffer, min(value_length_with_null,
-                                                    INFO_VALUE_MAX_LENGTH));
+  return string_copy(value_begin, value_buffer,
+                     min(value_length_with_null, INFO_VALUE_MAX_LENGTH));
 }
 
 int32_t info_integer_parse(const page_t info_page, const char *value_name) {
