@@ -28,16 +28,16 @@ typedef char url_t[URL_MAX_LENGTH];
 enum { PAGE_MAX_LENGTH = 2048 + 1 };
 typedef char page_t[PAGE_MAX_LENGTH];
 
-// Get the info page's URL.
-bool modem_get_info_url(url_t buffer);
-
-// Download a page into a buffer.
-size_t modem_fetch_page(page_t buffer, const url_t info_url);
-
 // Initialize global modem stuff.
 void modem_global_init(void);
 
 // Free the memory allocated by @modem_global_init.
 void modem_global_destroy(void);
+
+// Get the info page's URL.
+bool modem_get_info_url(url_t buffer);
+
+// Download a page into a buffer.
+size_t modem_fetch_page(page_t buffer, const url_t info_url);
 
 #endif
