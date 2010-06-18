@@ -1,8 +1,18 @@
 EXECUTABLE = hektor
-OBJS = fap.o info.o modem.o unit.o hektor.o
-LIBS = libcurl
 
-STD_CFLAGS  = -pipe -std=c99 -Wall -Wno-switch-enum -O2
+OBJS = config.o   \
+       fap.o      \
+       hektor.o   \
+       hook.o     \
+       info.o     \
+       lua-util.o \
+       modem.o    \
+       path.o     \
+       unit.o     \
+
+LIBS = libcurl lua libxdg-basedir
+
+STD_CFLAGS  = -pipe -std=c99 -Wall -Wno-switch-enum -Wno-parentheses -O2
 STD_CFLAGS += $(shell pkg-config --cflags $(LIBS))
 
 STD_LDFLAGS = $(shell pkg-config --libs $(LIBS))

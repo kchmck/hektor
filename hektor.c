@@ -19,40 +19,63 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "config.h"
 #include "fap.h"
+#include "hook.h"
+#include "lua-util.h"
 #include "modem.h"
 #include "unit.h"
 
-static void hektor_show_refill_time(const fap_t *fap) {
-  enum { TIME_STRING_MAX_LENGTH = 32 + 1 };
+typedef struct {
+  fap_t fap;
 
-  const time_t refill_time = fap_refill_time(fap);
-  const time_t refill_timestamp = fap_refill_timestamp(fap);
+  lua_t lua;
+  config_t config;
+
+  hook_t remaining_hook;
+  hook_t refill_hook;
+} hektor_t;
+
+static void hektor_handle_refill(hektor_t *hektor) {
+  const time_t refill_time = fap_refill_time(&hektor->fap);
+  const time_t refill_timestamp = fap_refill_timestamp(&hektor->fap);
 
   unit_t refill_time_unit;
   unit_convert_best(&refill_time_unit, refill_time, UNIT_SECOND);
 
-  char refill_time_string[TIME_STRING_MAX_LENGTH];
-  strftime(refill_time_string, TIME_STRING_MAX_LENGTH, "%I:%M %p %A",
-           localtime(&refill_timestamp));
-
-  printf("The FAP will be deactivated in %s, at %s.\n",
-         unit_string(&refill_time_unit), refill_time_string);
+  hook_call(&hektor->refill_hook, "lls", refill_time, refill_timestamp,
+                                         unit_string(&refill_time_unit));
 }
 
-static void hektor_show_remaining(const fap_t *fap) {
-  unit_t remaining;
-  unit_convert_best(&remaining, fap_remaining_usage(fap), UNIT_BYTE);
+static void hektor_handle_remaining(hektor_t *hektor) {
+  const double remaining_mb = unit_convert(fap_remaining_usage(&hektor->fap),
+                                           UNIT_BYTE, UNIT_MEGABYTE);
 
-  printf("%s are remaining.\n", unit_string(&remaining));
+  unit_t remaining_unit;
+  unit_convert_best(&remaining_unit, fap_remaining_usage(&hektor->fap),
+                    UNIT_BYTE);
+
+  hook_call(&hektor->remaining_hook, "fs", remaining_mb,
+                                           unit_string(&remaining_unit));
 }
 
 static bool hektor_error_fetching_page(const url_t url) {
   printf("An error occured while fetching the page at ‘%s’.\n", url);
+
   return false;
 }
 
-static bool hektor_ui_main(int argc, char **argv) {
+static bool hektor_error_loading_config(hektor_t *hektor) {
+  printf("An error occured while load the configuration file \n"
+         "at ‘%s’: %s.\n",
+         
+         config_file_path(&hektor->config),
+         lua_tostring(lua_state(&hektor->lua), -1));
+
+  return false;
+}
+
+static bool hektor_main(hektor_t *hektor) {
   url_t info_url;
   if (!modem_get_info_url(info_url))
     return false;
@@ -61,25 +84,46 @@ static bool hektor_ui_main(int argc, char **argv) {
   if (!modem_fetch_page(info_page, info_url))
     return hektor_error_fetching_page(info_url);
 
-  fap_t fap;
-  fap_init(&fap, info_page);
+  fap_init(&hektor->fap, info_page);
 
-  if (fap_is_active(&fap))
-    hektor_show_refill_time(&fap);
+  if (!config_init(&hektor->config, &hektor->lua))
+    return false;
+
+  // Set up the remaining hook.
+  hook_init(&hektor->remaining_hook, &hektor->lua);
+  hook_register(&hektor->remaining_hook, "hook_remaining");
+
+  // Set up the refill hook.
+  hook_init(&hektor->refill_hook, &hektor->lua);
+  hook_register(&hektor->refill_hook, "hook_refill");
+
+  if (!config_load(&hektor->config))
+    return hektor_error_loading_config(hektor);
+
+  if (fap_is_active(&hektor->fap))
+    hektor_handle_refill(hektor);
   else
-    hektor_show_remaining(&fap);
+    hektor_handle_remaining(hektor);
 
   return true;
 }
 
-static bool hektor_main(int argc, char **argv) {
+static bool hektor_main_wrapper(int argc, char **argv) {
+  hektor_t hektor;
+
+  if (!lua_init(&hektor.lua))
+    return false;
+
   modem_global_init();
-  const bool result = hektor_ui_main(argc, argv);
+
+  const bool result = hektor_main(&hektor);
+
   modem_global_destroy();
+  lua_destroy(&hektor.lua);
 
   return result;
 }
 
 int main(int argc, char **argv) {
-  return hektor_main(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return hektor_main_wrapper(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
