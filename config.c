@@ -29,7 +29,7 @@ static bool config_create_default(config_t *config) {
   "\n"
   "  if mb_remaining < 5 then\n"
   "    -- Do something useful when the remaining usage goes below 5 megabytes,\n"
-  "    -- like restarting the modem.
+  "    -- like restarting the modem.\n"
   "  end\n"
   "\n"
   "end)\n"
