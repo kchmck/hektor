@@ -27,7 +27,11 @@ void lua_closure_register(lua_State *lua, const char *fn_name,
                           lua_CFunction fn, const int num_userdata, ...);
 
 // Get the userdata assigned to a closure at @userdata_idx.
-void *lua_closure_get_userdata(lua_State *lua, const int userdata_idx);
+static inline void *lua_closure_get_userdata(lua_State *lua,
+                                             const int userdata_idx) 
+{
+  return lua_touserdata(lua, lua_upvalueindex(userdata_idx));
+}
 
 static inline const char *lua_get_error(lua_State *lua) {
   return lua_tostring(lua, -1);

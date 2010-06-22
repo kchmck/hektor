@@ -36,10 +36,6 @@ void lua_closure_register(lua_State *lua, const char *fn_name,
   lua_setglobal(lua, fn_name);
 }
 
-void *lua_closure_get_userdata(lua_State *lua, const int userdata_idx) {
-  return lua_touserdata(lua, lua_upvalueindex(userdata_idx));
-}
-
 int lua_push_args(lua_State *lua, const char *arg_format, va_list args) {
   int arg_index = 0;
   char arg = 0;
