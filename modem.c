@@ -63,7 +63,8 @@ static size_t download_fn(const char *chunk, const size_t item_size,
 
 // Strip the leading '/' off a path and append the rest to the modem's base url.
 static inline bool modem_build_url(url_t url_buffer, const url_t url) {
-  return snprintf(url_buffer, URL_MAX_LENGTH, "http://192.168.0.1/%s", &url[1]);
+  return snprintf(url_buffer, URL_MAX_LENGTH,
+                  "http://systemcontrolcenter.com/%s", &url[1]);
 }
 
 bool modem_get_info_url(url_t buffer) {
