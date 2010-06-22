@@ -32,6 +32,9 @@ void hook_register(hook_t *hook, const char *fn_name) {
 }
 
 bool hook_call(hook_t *hook, const char *arg_format, ...) {
+  if (!hook->lua_fn)
+    return false;
+
   lua_State *lua = lua_state(hook->lua);
   lua_rawgeti(lua, LUA_REGISTRYINDEX, hook->lua_fn);
 
