@@ -24,19 +24,24 @@ static bool config_create_default(config_t *config) {
   "-- function recieves the megabytes remaining and a formatted string\n"
   "-- like '10.3 megabytes'.\n"
   "hook_remaining(function (mb_remaining, remaining_string)\n"
+  "\n"
   "  print(string.format('%s are remaining.', remaining_string))\n"
   "\n"
   "  if mb_remaining < 5 then\n"
-  "    -- Do something useful when the remaining usage goes below 5 megabytes.\n"
+  "    -- Do something useful when the remaining usage goes below 5 megabytes,\n"
+  "    -- like restarting the modem.
   "  end\n"
+  "\n"
   "end)\n"
   "\n"
   "-- The refill hook is called when the FAP is active. The hooked function\n"
   "-- recieves the seconds until refill, the time of refill as a unix\n"
   "-- timestamp, and a formatted string like '30.0 minutes'.\n"
   "hook_refill(function (refill_secs, refill_timestamp, refill_string)\n"
+  "\n"
   "  print(string.format('The FAP will be deactivated in %s, at %s.',\n"
   "                      refill_string, os.date('%I:%M %p %A', timestamp)))\n"
+  "\n"
   "end)\n";
 
   enum { DEFAULT_CONFIG_LENGTH = sizeof(DEFAULT_CONFIG) - 1 };
