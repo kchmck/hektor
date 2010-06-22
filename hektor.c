@@ -70,7 +70,7 @@ static bool hektor_error_loading_config(hektor_t *hektor) {
          "at ‘%s’: %s.\n",
          
          config_file_path(&hektor->config),
-         lua_tostring(lua_state(&hektor->lua), -1));
+         lua_get_error(lua_state(&hektor->lua)));
 
   return false;
 }

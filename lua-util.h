@@ -29,6 +29,10 @@ void lua_closure_register(lua_State *lua, const char *fn_name,
 // Get the userdata assigned to a closure at @userdata_idx.
 void *lua_closure_get_userdata(lua_State *lua, const int userdata_idx);
 
+static inline const char *lua_get_error(lua_State *lua) {
+  return lua_tostring(lua, -1);
+}
+
 // Push a variable number of @args onto the lua stack. @arg_format is a string
 // that describes each argument's type. Each of its characters can be one of:
 //
