@@ -25,10 +25,6 @@
 
 // The info page is laid out like:
 //
-//   VALUE_NAME=VALUE\n
-//
-// For example:
-//
 //    ┌───────────────────┬─ value_name
 //    FapAggBucketRemaining=118914707\n
 //              SEPARATOR ─┘└───────┴─ string copied into value_buffer
