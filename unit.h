@@ -21,50 +21,90 @@
 
 typedef enum {
   UNIT_BYTE,
+
+  UNIT_KIBIBYTE,
+  UNIT_MEBIBYTE,
+
   UNIT_KILOBYTE,
   UNIT_MEGABYTE,
 
   UNIT_SECOND,
   UNIT_MINUTE,
   UNIT_HOUR,
+
+  UNIT_INVALID,
 } unit_type_t;
+
+typedef enum {
+  UNIT_CLASS_INFO,
+  UNIT_CLASS_TIME,
+
+  UNIT_CLASS_INVALID,
+} unit_class_t;
+
+typedef enum {
+  UNIT_BASE_BINARY,
+  UNIT_BASE_SI,
+
+  UNIT_BASE_INVALID,
+} unit_base_t;
+
+// Simply convert from one unit to another.
+double unit_convert(const double amount, const unit_type_t orig_type,
+                                         const unit_type_t conv_type);
 
 enum { UNIT_STRING_MAX_LENGTH = 32 + 1 };
 typedef char unit_string_t[UNIT_STRING_MAX_LENGTH];
 
 typedef struct {
-  unit_type_t unit_type;
+  unit_class_t unit_class;
+  unit_base_t unit_base;
 
-  double amount;
+  unit_type_t orig_type;
+  double orig_amount;
+
+  unit_type_t conv_type;
+  double conv_amount;
+
   const char *label;
-
   unit_string_t string;
-} unit_t;
+} unit_conv_t;
 
-// Convert from one unit to another.
-double unit_convert(const double from, const unit_type_t from_type,
-                    const unit_type_t to_type);
+// Set the @base of a unit conversion.
+static inline void unit_conv_set_base(unit_conv_t *conv, const unit_base_t base)
+{
+  conv->unit_base = base;
+}
 
+// Set the @type of the original unit.
+static inline void unit_conv_set_type(unit_conv_t *conv, const unit_type_t type)
+{
+  conv->orig_type = type;
+}
 
-// Convert a unit to the best representation. For example, 10000 bytes will be
-// converted to 10 kilobytes, 120 seconds will be converted to 2 minutes, etc.
-bool unit_convert_best(unit_t *unit, const double value,
-                       const unit_type_t value_type);
+// Set the @amount of the original unit.
+static inline void unit_conv_set_amount(unit_conv_t *conv, const double amount)
+{
+  conv->orig_amount = amount;
+}
+
+// Perform the unit conversion.
+bool unit_conv_calculate(unit_conv_t *conv);
 
 // Get a converted unit's amount: the 100 in 100 bytes.
-static inline double unit_amount(const unit_t *unit) {
-  return unit->amount;
+static inline double unit_conv_amount(const unit_conv_t *conv) {
+  return conv->conv_amount;
 }
 
 // Get a converted unit's label: the "bytes" in 100 bytes.
-static inline const char *unit_label(const unit_t *unit) {
-  return unit->label;
+static inline const char *unit_conv_label(const unit_conv_t *conv) {
+  return conv->label;
 }
 
 // Get a converted unit's string: if the amount is 100 and the label is "bytes",
 // the string will resemble "100.0 bytes".
-static inline const char *unit_string(const unit_t *unit) {
-  return unit->string;
+static inline const char *unit_conv_string(const unit_conv_t *conv) {
+  return conv->string;
 }
 
 #endif

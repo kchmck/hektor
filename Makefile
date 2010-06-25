@@ -1,14 +1,14 @@
 EXECUTABLE = hektor
 
-OBJS = config.o   \
-       fap.o      \
-       hektor.o   \
-       hook.o     \
-       info.o     \
-       lua-util.o \
-       modem.o    \
-       path.o     \
-       unit.o     \
+OBJS = config.o     \
+       hektor.o     \
+       hook.o       \
+       info.o       \
+       info-page.o  \
+       lua-util.o   \
+       modem.o      \
+       path.o       \
+       unit.o       \
 
 LIBS = libcurl lua libxdg-basedir
 

@@ -24,8 +24,16 @@
 #include "common.h"
 #include "modem.h"
 
+void modem_global_init(void) {
+  curl_global_init(CURL_GLOBAL_NOTHING);
+}
+
+void modem_global_destroy(void) {
+  curl_global_cleanup();
+}
+
 // Request a url with a callback function.
-static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
+static bool modem_fetch(const url_t url, void *receive_fn, void *fn_data) {
   CURL *curl = curl_easy_init();
   if (!curl) return false;
 
@@ -37,6 +45,18 @@ static bool modem_fetch_url(const url_t url, void *receive_fn, void *fn_data) {
   curl_easy_cleanup(curl);
 
   return result == CURLE_OK;
+}
+
+// Discard any downloaded data.
+static size_t discard_fn(const char *chunk, const size_t item_size,
+                         const size_t items, void *state)
+{
+  return items * item_size;
+}
+
+// Simply fetch a @url and discard any downloaded data.
+static bool modem_fetch_simple(const url_t url) {
+  return modem_fetch(url, discard_fn, NULL);
 }
 
 // Copy chunks of a page to a buffer...
@@ -61,29 +81,29 @@ static size_t download_fn(const char *chunk, const size_t item_size,
   return write_size;
 }
 
-// Strip the leading '/' off a path and append the rest to the modem's base url.
+// Strip the leading slash off a path and append the rest to the modem's base
+// url.
 static inline bool modem_build_url(url_t url_buffer, const url_t url) {
-  return snprintf(url_buffer, URL_MAX_LENGTH,
-                  "http://www.systemcontrolcenter.com/%s", &url[1]);
+  return snprintf(url_buffer, URL_MAX_LENGTH, "http://192.168.0.1/%s", &url[1]);
 }
 
 bool modem_get_info_url(url_t buffer) {
   return modem_build_url(buffer, "/getdeviceinfo/info.bin");
 }
 
+bool modem_get_restart_url(url_t buffer) {
+  return modem_build_url(buffer, "/com/gatewayreset/");
+}
+
 size_t modem_fetch_page(page_t buffer, const url_t url) {
   download_fn_state_t state = {buffer};
-  modem_fetch_url(url, download_fn, &state);
+  modem_fetch(url, download_fn, &state);
 
   buffer[state.amount_written] = '\0';
 
   return state.amount_written;
 }
 
-void modem_global_init(void) {
-  curl_global_init(CURL_GLOBAL_NOTHING);
-}
-
-void modem_global_destroy(void) {
-  curl_global_cleanup();
+bool modem_restart(const url_t restart_url) {
+  return modem_fetch_simple(restart_url);
 }

@@ -1,3 +1,19 @@
+// Copyright 2010 Mick Koch <kchmck@gmail.com>
+//
+// This file is part of hektor.
+//
+// Hektor is free software: you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// Hektor is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with
+// hektor. If not, see <http://www.gnu.org/licenses/>.
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -20,27 +36,24 @@ bool config_init(config_t *config, lua_t *lua) {
 // Write a default config file.
 static bool config_create_default(config_t *config) {
   static const char DEFAULT_CONFIG[] =
-  "-- The remaining hook is called when the FAP is not active. The hooked\n"
-  "-- function recieves the megabytes remaining and a formatted string\n"
-  "-- like '10.3 megabytes'.\n"
-  "hook_remaining(function (mb_remaining, remaining_string)\n"
+  "-- This hook is called when the FAP is inactive. When usage gets uncomfortably\n"
+  "-- low, steps can be taken to prevent FAP activation. One step could be\n"
+  "-- repeatedly restarting the modem.\n"
+  "when_fap_is_inactive(function (hektor)\n"
   "\n"
-  "  print(string.format('%s are remaining.', remaining_string))\n"
+  "  print(hektor.remaining_string .. \" are remaining\")\n"
   "\n"
-  "  if mb_remaining < 5 then\n"
-  "    -- Do something useful when the remaining usage goes below 5 megabytes,\n"
-  "    -- like restarting the modem.\n"
-  "  end\n"
+  "  -- if hektor.remaining_mb < 5 then\n"
+  "  --   hektor.restart_modem()\n"
+  "  -- end\n"
   "\n"
   "end)\n"
   "\n"
-  "-- The refill hook is called when the FAP is active. The hooked function\n"
-  "-- recieves the seconds until refill, the time of refill as a unix\n"
-  "-- timestamp, and a formatted string like '30.0 minutes'.\n"
-  "hook_refill(function (refill_secs, refill_timestamp, refill_string)\n"
+  "-- This hook is called when the FAP is active.\n"
+  "when_fap_is_active(function (hektor)\n"
   "\n"
-  "  print(string.format('The FAP will be deactivated in %s, at %s.',\n"
-  "                      refill_string, os.date('%I:%M %p %A', timestamp)))\n"
+  "  print(hektor.refill_string .. \" until FAP deactivation (at \" ..\n"
+  "        os.date(\"%I:%M %p %A\", hektor.refill_timestamp) ..  \")\")\n"
   "\n"
   "end)\n";
 
@@ -63,14 +76,14 @@ static inline bool config_load_default(config_t *config) {
 
 bool config_load(config_t *config) {
   switch (luaL_loadfile(lua_state(config->lua), config->config_file)) {
-  // No error
-  case 0:           break;
+    // No error
+    case 0:           break;
 
-  // The file doesn't exist; write a default config and reload the file.
-  case LUA_ERRFILE: return config_load_default(config);
+    // The file doesn't exist; write a default config and reload the file.
+    case LUA_ERRFILE: return config_load_default(config);
 
-  // Any other error
-  default:          return false;
+    // Any other error
+    default:          return false;
   }
 
   // Interpret its contents.

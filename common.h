@@ -28,7 +28,7 @@ static inline int min(const int a, const int b) { return a < b ? a : b; }
 // Find the maximum of two numbers.
 static inline int max(const int a, const int b) { return a > b ? a : b; }
 
-// Check if two strings are the same.
+// Check if two strings are equal.
 static inline bool strings_are_equal(const char *a, const char *b) {
   return strcmp(a, b) == 0;
 }

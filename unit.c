@@ -17,113 +17,235 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "unit.h"
 
-double unit_convert(const double value, const unit_type_t value_type,
-                    const unit_type_t to_type)
+// Find the class of a @unit_type.
+static unit_class_t find_class(const unit_type_t unit_type) {
+  switch (unit_type) {
+    case UNIT_BYTE:
+    case UNIT_KIBIBYTE:
+    case UNIT_MEBIBYTE:
+    case UNIT_KILOBYTE:
+    case UNIT_MEGABYTE:
+      return UNIT_CLASS_INFO;
+
+    case UNIT_SECOND:
+    case UNIT_MINUTE:
+    case UNIT_HOUR:
+      return UNIT_CLASS_TIME;
+  }
+
+  return UNIT_CLASS_INVALID;
+}
+
+// Convert between information units.
+static double convert_info(const double amount, const unit_type_t orig_type,
+                                                const unit_type_t conv_type)
 {
-  if (value_type == to_type) return value;
+  switch (orig_type) {
+    case UNIT_BYTE:
+      if (conv_type == UNIT_KIBIBYTE) return amount / 1024;
+      if (conv_type == UNIT_MEBIBYTE) return amount / 1024 / 1024;
+      if (conv_type == UNIT_KILOBYTE) return amount / 1000;
+      if (conv_type == UNIT_MEGABYTE) return amount / 1000 / 1000;
+      break;
 
-  switch (value_type) {
-  case UNIT_BYTE:
-    if (to_type == UNIT_KILOBYTE) return value / 1000;
-    if (to_type == UNIT_MEGABYTE) return value / 1000 / 1000;
-    break;
+    case UNIT_KIBIBYTE:
+      if (conv_type == UNIT_BYTE)     return amount * 1024;
+      if (conv_type == UNIT_MEBIBYTE) return amount / 1024;
+      break;
 
-  case UNIT_KILOBYTE:
-    if (to_type == UNIT_BYTE)     return value * 1000;
-    if (to_type == UNIT_MEGABYTE) return value / 1000;
-    break;
+    case UNIT_MEBIBYTE:
+      if (conv_type == UNIT_BYTE)     return amount * 1024 * 1024;
+      if (conv_type == UNIT_KIBIBYTE) return amount * 1024;
+      break;
 
-  case UNIT_MEGABYTE:
-    if (to_type == UNIT_KILOBYTE) return value * 1000;
-    if (to_type == UNIT_BYTE)     return value * 1000 * 1000;
-    break;
+    case UNIT_KILOBYTE:
+      if (conv_type == UNIT_BYTE)     return amount * 1000;
+      if (conv_type == UNIT_MEGABYTE) return amount / 1000;
+      break;
 
-  case UNIT_SECOND:
-    if (to_type == UNIT_MINUTE)   return value / 60;
-    if (to_type == UNIT_HOUR)     return value / 60 / 60;
-    break;
-
-  case UNIT_MINUTE:
-    if (to_type == UNIT_SECOND)   return value * 60;
-    if (to_type == UNIT_HOUR)     return value / 60;
-    break;
-
-  case UNIT_HOUR:
-    if (to_type == UNIT_SECOND)   return value * 60 * 60;
-    if (to_type == UNIT_MINUTE)   return value * 60;
+    case UNIT_MEGABYTE:
+      if (conv_type == UNIT_KILOBYTE) return amount * 1000;
+      if (conv_type == UNIT_BYTE)     return amount * 1000 * 1000;
   }
 
   return 0;
 }
 
-// Find the best conversion for a unit type.
-static unit_type_t unit_find_best_type(const double value,
-                                       const unit_type_t value_type)
+// Convert between time units.
+static double convert_time(const double amount, const unit_type_t orig_type,
+                                                const unit_type_t conv_type)
 {
-  switch (value_type) {
-  case UNIT_BYTE:
-    if (value >= 1000 * 1000) return UNIT_MEGABYTE;
-    if (value >= 1000)        return UNIT_KILOBYTE;
-    break;
+  switch (orig_type) {
+    case UNIT_SECOND:
+      if (conv_type == UNIT_MINUTE)   return amount / 60;
+      if (conv_type == UNIT_HOUR)     return amount / 60 / 60;
+      break;
 
-  case UNIT_KILOBYTE:
-    if (value >= 1000)        return UNIT_MEGABYTE;
-    if (value < 1)            return UNIT_BYTE;
-    break;
+    case UNIT_MINUTE:
+      if (conv_type == UNIT_SECOND)   return amount * 60;
+      if (conv_type == UNIT_HOUR)     return amount / 60;
+      break;
 
-  case UNIT_MEGABYTE:
-    if (value * 1000 < 1)     return UNIT_BYTE;
-    if (value < 1)            return UNIT_KILOBYTE;
-    break;
-
-  case UNIT_SECOND:
-    if (value >= 60 * 60)     return UNIT_HOUR;
-    if (value >= 60)          return UNIT_MINUTE;
-    break;
-
-  case UNIT_MINUTE:
-    if (value >= 60)          return UNIT_HOUR;
-    if (value < 1)            return UNIT_SECOND;
-    break;
-
-  case UNIT_HOUR:
-    if (value * 60 < 1)       return UNIT_SECOND;
-    if (value < 1)            return UNIT_MINUTE;
+    case UNIT_HOUR:
+      if (conv_type == UNIT_SECOND)   return amount * 60 * 60;
+      if (conv_type == UNIT_MINUTE)   return amount * 60;
   }
 
-  return value_type;
+  return 0;
 }
 
-// Find the label of a unit type.
-static const char *unit_find_label(const unit_type_t unit_type) {
+double unit_convert(const double amount, const unit_type_t orig_type,
+                                         const unit_type_t conv_type)
+{
+  if (orig_type == conv_type)
+    return amount;
+
+  switch (find_class(orig_type)) {
+    case UNIT_CLASS_INFO:
+      return convert_info(amount, orig_type, conv_type);
+
+    case UNIT_CLASS_TIME:
+      return convert_time(amount, orig_type, conv_type);
+  }
+
+  return 0;
+}
+
+// Find the best time unit for an amount.
+static unit_type_t find_best_time_type(const unit_conv_t *conv) {
+  const double amount = conv->orig_amount;
+
+  switch (conv->orig_type) {
+    case UNIT_SECOND:
+      if (amount >= 60 * 60) return UNIT_HOUR;
+      if (amount >= 60)      return UNIT_MINUTE;
+      break;
+
+    case UNIT_MINUTE:
+      if (amount >= 60)      return UNIT_HOUR;
+      if (amount < 1)        return UNIT_SECOND;
+      break;
+
+    case UNIT_HOUR:
+      if (amount * 60 < 1)   return UNIT_SECOND;
+      if (amount < 1)        return UNIT_MINUTE;
+  }
+
+  return conv->orig_type;
+}
+
+// Find the best binary unit for an amount.
+static unit_type_t find_best_binary_type(const unit_conv_t *conv) {
+  const double amount = conv->orig_amount;
+
+  switch (conv->orig_type) {
+    case UNIT_BYTE:
+      if (amount >= 1024 * 1024) return UNIT_MEBIBYTE;
+      if (amount >= 1024)        return UNIT_KIBIBYTE;
+      break;
+
+    case UNIT_KIBIBYTE:
+      if (amount >= 1024)        return UNIT_MEBIBYTE;
+      if (amount < 1)            return UNIT_BYTE;
+      break;
+
+    case UNIT_MEBIBYTE:
+      if (amount * 1024 < 1)     return UNIT_BYTE;
+      if (amount < 1)            return UNIT_KIBIBYTE;
+  }
+
+  return conv->orig_type;
+}
+
+// Find the best SI unit for an amount.
+static unit_type_t find_best_si_type(const unit_conv_t *conv) {
+  const double amount = conv->orig_amount;
+
+  switch (conv->orig_type) {
+    case UNIT_BYTE:
+      if (amount >= 1000 * 1000) return UNIT_MEGABYTE;
+      if (amount >= 1000)        return UNIT_KILOBYTE;
+      break;
+
+    case UNIT_KILOBYTE:
+      if (amount >= 1000)        return UNIT_MEGABYTE;
+      if (amount < 1)            return UNIT_BYTE;
+      break;
+
+    case UNIT_MEGABYTE:
+      if (amount * 1000 < 1)     return UNIT_BYTE;
+      if (amount < 1)            return UNIT_KILOBYTE;
+  }
+
+  return conv->orig_type;
+}
+
+// Find the best info unit for an amount and a base.
+static unit_type_t find_best_info_type(const unit_conv_t *conv) {
+  switch (conv->unit_base) {
+    case UNIT_BASE_BINARY:
+      return find_best_binary_type(conv);
+
+    case UNIT_BASE_SI:
+      return find_best_si_type(conv);
+  }
+
+  return UNIT_BASE_INVALID;
+}
+
+// Find the best conversion for a unit type.
+static unit_type_t find_best_type(const unit_conv_t *conv)
+{
+  switch (conv->unit_class) {
+    case UNIT_CLASS_TIME:
+      return find_best_time_type(conv);
+
+    case UNIT_CLASS_INFO:
+      return find_best_info_type(conv);
+  }
+
+  return UNIT_CLASS_INVALID;
+}
+
+// Find the label for a @unit_type.
+static const char *find_label(const unit_type_t unit_type) {
   static const char *labels[] = {
     [UNIT_BYTE]     = "byte",
+
+    [UNIT_KIBIBYTE] = "kibibyte",
+    [UNIT_MEBIBYTE] = "mebibyte",
+
     [UNIT_KILOBYTE] = "kilobyte",
     [UNIT_MEGABYTE] = "megabyte",
 
     [UNIT_SECOND]   = "second",
     [UNIT_MINUTE]   = "minute",
-    [UNIT_HOUR]     = "hour"
+    [UNIT_HOUR]     = "hour",
+
+    [UNIT_INVALID]  = NULL,
   };
 
   return labels[unit_type];
 }
 
-bool unit_convert_best(unit_t *unit, const double value,
-                       const unit_type_t value_type)
-{
-  unit->unit_type = unit_find_best_type(value, value_type);
-  unit->amount = unit_convert(value, value_type, unit->unit_type);
+bool unit_conv_calculate(unit_conv_t *conv) {
+  conv->unit_class = find_class(conv->orig_type);
+  if (conv->unit_class == UNIT_CLASS_INVALID) return false;
 
-  unit->label = unit_find_label(unit->unit_type);
-  if (!unit->label) return false;
+  conv->conv_type = find_best_type(conv);
+  if (conv->conv_type == UNIT_INVALID) return false;
 
-  snprintf(unit->string, UNIT_STRING_MAX_LENGTH, "%.1f %ss", unit->amount,
-                                                             unit->label);
+  conv->conv_amount = unit_convert(conv->orig_amount, conv->orig_type,
+                                                      conv->conv_type);
+
+  conv->label = find_label(conv->conv_type);
+  if (!conv->label) return false;
+
+  snprintf(conv->string, UNIT_STRING_MAX_LENGTH, "%.1f %ss", conv->conv_amount,
+                                                             conv->label);
 
   return true;
 }

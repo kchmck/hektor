@@ -19,44 +19,33 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <lua.h>
+
 #include "config.h"
-#include "fap.h"
 #include "hook.h"
+#include "info.h"
 #include "lua-util.h"
 #include "modem.h"
 #include "unit.h"
 
 typedef struct {
-  fap_t fap;
+  info_t info;
 
   lua_t lua;
   config_t config;
 
-  hook_t remaining_hook;
-  hook_t refill_hook;
+  hook_t fap_is_active_hook;
+  hook_t fap_is_inactive_hook;
 } hektor_t;
 
-static void hektor_handle_refill(hektor_t *hektor) {
-  const time_t refill_time = fap_refill_time(&hektor->fap);
-  const time_t refill_timestamp = fap_refill_timestamp(&hektor->fap);
+// Called by lua to restart the modem.
+static int hektor_restart_modem_fn(lua_State *lua) {
+  url_t restart_url;
 
-  unit_t refill_time_unit;
-  unit_convert_best(&refill_time_unit, refill_time, UNIT_SECOND);
+  if (modem_get_restart_url(restart_url))
+    modem_restart(restart_url);
 
-  hook_call(&hektor->refill_hook, "lls", refill_time, refill_timestamp,
-                                         unit_string(&refill_time_unit));
-}
-
-static void hektor_handle_remaining(hektor_t *hektor) {
-  const double remaining_mb = unit_convert(fap_remaining_usage(&hektor->fap),
-                                           UNIT_BYTE, UNIT_MEGABYTE);
-
-  unit_t remaining_unit;
-  unit_convert_best(&remaining_unit, fap_remaining_usage(&hektor->fap),
-                    UNIT_BYTE);
-
-  hook_call(&hektor->remaining_hook, "fs", remaining_mb,
-                                           unit_string(&remaining_unit));
+  return 0;
 }
 
 static bool hektor_error_fetching_page(const url_t url) {
@@ -66,13 +55,85 @@ static bool hektor_error_fetching_page(const url_t url) {
 }
 
 static bool hektor_error_loading_config(hektor_t *hektor) {
-  printf("An error occured while load the configuration file \n"
-         "at ‘%s’: %s.\n",
-         
-         config_file_path(&hektor->config),
-         lua_get_error(lua_state(&hektor->lua)));
+  printf("An error occured while loading the configuration file: %s.\n",
+         lua_get_error(&hektor->lua));
 
   return false;
+}
+
+static bool hektor_error_running_hook(hektor_t *hektor) {
+  printf("An error occured while running configured hooks: %s\n",
+         lua_get_error(&hektor->lua));
+
+  return false;
+}
+
+static bool hektor_call_hook(hektor_t *hektor) {
+  const info_t *info = &hektor->info;
+
+  unit_conv_t allowed_unit;
+  unit_conv_set_amount(&allowed_unit, info_allowed_usage(info));
+  unit_conv_set_type(&allowed_unit, UNIT_BYTE);
+  unit_conv_set_base(&allowed_unit, UNIT_BASE_SI);
+  unit_conv_calculate(&allowed_unit);
+
+  unit_conv_t remaining_unit;
+  unit_conv_set_amount(&remaining_unit, info_remaining_usage(info));
+  unit_conv_set_type(&remaining_unit, UNIT_BYTE);
+  unit_conv_set_base(&remaining_unit, UNIT_BASE_SI);
+  unit_conv_calculate(&remaining_unit);
+
+  unit_conv_t refill_unit;
+  unit_conv_set_amount(&refill_unit, info_refill_time(info));
+  unit_conv_set_type(&refill_unit, UNIT_SECOND);
+  unit_conv_calculate(&refill_unit);
+
+  lua_table_elem_t elems[] = {
+    {"allowed_mb", LUA_TNUMBER, {
+      .number = unit_convert(info_allowed_usage(info), UNIT_BYTE,
+                             UNIT_MEGABYTE)
+    }},
+
+    {"allowed_string", LUA_TSTRING, {
+      .string = unit_conv_string(&allowed_unit)
+    }},
+
+    {"remaining_mb", LUA_TNUMBER, {
+      .number = unit_convert(info_remaining_usage(info), UNIT_BYTE,
+                             UNIT_MEGABYTE)
+    }},
+
+    {"remaining_string", LUA_TSTRING, {
+      .string = unit_conv_string(&remaining_unit)
+    }},
+
+    {"remaining_pct", LUA_TNUMBER, {
+      .number = (double)info_remaining_usage(info) / info_allowed_usage(info)
+    }},
+
+    {"refill_seconds", LUA_TNUMBER, {
+      .number = info_refill_time(info)
+    }},
+
+    {"refill_timestamp", LUA_TNUMBER, {
+      .number = info_refill_timestamp(info)
+    }},
+
+    {"refill_string", LUA_TSTRING, {
+      .string = unit_conv_string(&refill_unit)
+    }},
+
+    {"restart_modem", LUA_TFUNCTION, {
+      .function = hektor_restart_modem_fn
+    }},
+
+    {0}
+  };
+
+  if (info_fap_state(&hektor->info) == FAP_STATE_ACTIVE)
+    return hook_call(&hektor->fap_is_active_hook, "t", &elems);
+  else
+    return hook_call(&hektor->fap_is_inactive_hook, "t", &elems);
 }
 
 static bool hektor_main(hektor_t *hektor) {
@@ -84,26 +145,23 @@ static bool hektor_main(hektor_t *hektor) {
   if (!modem_fetch_page(info_page, info_url))
     return hektor_error_fetching_page(info_url);
 
-  fap_init(&hektor->fap, info_page);
+  if (!info_init(&hektor->info, info_page))
+    return false;
 
   if (!config_init(&hektor->config, &hektor->lua))
     return false;
 
-  // Set up the remaining hook.
-  hook_init(&hektor->remaining_hook, &hektor->lua);
-  hook_register(&hektor->remaining_hook, "hook_remaining");
+  hook_init(&hektor->fap_is_inactive_hook, &hektor->lua);
+  hook_register(&hektor->fap_is_inactive_hook, "when_fap_is_inactive");
 
-  // Set up the refill hook.
-  hook_init(&hektor->refill_hook, &hektor->lua);
-  hook_register(&hektor->refill_hook, "hook_refill");
+  hook_init(&hektor->fap_is_active_hook, &hektor->lua);
+  hook_register(&hektor->fap_is_active_hook, "when_fap_is_active");
 
   if (!config_load(&hektor->config))
     return hektor_error_loading_config(hektor);
 
-  if (fap_is_active(&hektor->fap))
-    hektor_handle_refill(hektor);
-  else
-    hektor_handle_remaining(hektor);
+  if (!hektor_call_hook(hektor))
+    return hektor_error_running_hook(hektor);
 
   return true;
 }

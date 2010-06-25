@@ -1,3 +1,19 @@
+// Copyright 2010 Mick Koch <kchmck@gmail.com>
+//
+// This file is part of hektor.
+//
+// Hektor is free software: you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// Hektor is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with
+// hektor. If not, see <http://www.gnu.org/licenses/>.
+
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -23,7 +39,7 @@ bool make_dir(const path_t dir) {
   if (strings_are_equal(dir, parent_dir))
     return true;
 
-  // ...else recursively make any parents.
+  // ...else recursively make any parents...
   if (!make_dir(parent_dir))
     return false;
 
@@ -50,6 +66,11 @@ static bool build_config_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
   return build_hektor_dir(path_buffer, xdgConfigHome(xdg_dirs));
 }
 
+// Get the path to the config file.
+static bool build_config_file(path_t path_buffer, const path_t config_dir) {
+  return build_path(path_buffer, config_dir, "config.lua");
+}
+
 bool get_config_paths(path_t dir_buffer, path_t file_buffer) {
   xdgHandle xdg_dirs;
   if (!xdgInitHandle(&xdg_dirs))
@@ -60,5 +81,5 @@ bool get_config_paths(path_t dir_buffer, path_t file_buffer) {
 
   xdgWipeHandle(&xdg_dirs);
 
-  return build_path(file_buffer, dir_buffer, "config.lua");
+  return build_config_file(file_buffer, dir_buffer);
 }

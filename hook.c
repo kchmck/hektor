@@ -1,6 +1,21 @@
+// Copyright 2010 Mick Koch <kchmck@gmail.com>
+//
+// This file is part of hektor.
+//
+// Hektor is free software: you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// Hektor is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with
+// hektor. If not, see <http://www.gnu.org/licenses/>.
+
 #include <stdarg.h>
 #include <stdbool.h>
-#include <stdlib.h>
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -31,19 +46,19 @@ void hook_register(hook_t *hook, const char *fn_name) {
   lua_closure_register(lua_state(hook->lua), fn_name, hook_fn, 1, hook);
 }
 
-bool hook_call(hook_t *hook, const char *arg_format, ...) {
+bool hook_call(hook_t *hook, const char *arg_spec, ...) {
   if (!hook->lua_fn)
     return false;
 
-  lua_State *lua = lua_state(hook->lua);
-  lua_rawgeti(lua, LUA_REGISTRYINDEX, hook->lua_fn);
+  lua_State *lua_s = lua_state(hook->lua);
+  lua_rawgeti(lua_s, LUA_REGISTRYINDEX, hook->lua_fn);
 
   va_list args;
-  va_start(args, arg_format);
+  va_start(args, arg_spec);
 
-  const int num_args = lua_push_args(lua, arg_format, args);
+  const int num_args = lua_push_args(lua_s, arg_spec, args);
 
   va_end(args);
 
-  return lua_pcall(lua, num_args, 0, 0) == 0;
+  return lua_pcall(lua_s, num_args, 0, 0) == 0;
 }

@@ -19,18 +19,67 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <time.h>
 
 #include "modem.h"
 
-// An info value type
-enum { INFO_VALUE_MAX_LENGTH = 32 + 1 };
-typedef char info_value_t[INFO_VALUE_MAX_LENGTH];
+typedef enum {
+  MODEM_TYPE_7000,
+  MODEM_TYPE_9000,
 
-// Get a string value from the info page.
-bool info_value_parse(info_value_t value_buffer, const page_t info_page,
-                      const char *value_name);
+  MODEM_TYPE_INVALID,
+} modem_type_t;
 
-// Get an integer value from the info page.
-int32_t info_integer_parse(const page_t info_page, const char *value_name);
+typedef enum {
+  FAP_STATE_ACTIVE,
+  FAP_STATE_INACTIVE,
+
+  FAP_STATE_INVALID,
+} fap_state_t;
+
+typedef struct {
+  modem_type_t modem_type;
+
+  uint32_t allowed_usage;
+  uint32_t remaining_usage;
+
+  time_t refill_time;
+  time_t refill_timestamp;
+
+  fap_state_t fap_state;
+} info_t;
+
+// Initialize a new @info structure with information parsed from the modem.
+bool info_init(info_t *info, const page_t info_page);
+
+// Get the modem type.
+static inline modem_type_t info_modem_type(const info_t *info) {
+  return info->modem_type;
+}
+
+// Get the "full" amount of the current usage plan in bytes.
+static inline uint32_t info_allowed_usage(const info_t *info) {
+  return info->allowed_usage;
+}
+
+// Get the remaining usage in bytes.
+static inline uint32_t info_remaining_usage(const info_t *info) {
+  return info->remaining_usage;
+}
+
+// Get the time remaining before the FAP is deactivated in seconds.
+static inline time_t info_refill_time(const info_t *info) {
+  return info->refill_time;
+}
+
+// Get the exact time the FAP will be deactivated as a unix timestamp.
+static inline time_t info_refill_timestamp(const info_t *info) {
+  return info->refill_timestamp;
+}
+
+// Get the FAP state.
+static inline fap_state_t info_fap_state(const info_t *info) {
+  return info->fap_state;
+}
 
 #endif
