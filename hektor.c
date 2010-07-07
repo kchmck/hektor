@@ -171,7 +171,7 @@ static bool hektor_main(hektor_t *hektor) {
   return true;
 }
 
-static bool hektor_main_wrapper(int argc, char **argv) {
+static bool hektor_main_execute(int argc, char **argv) {
   hektor_t hektor;
 
   if (!lua_init(&hektor.lua))
