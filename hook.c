@@ -25,9 +25,12 @@
 #include "hook.h"
 #include "lua-util.h"
 
+// Initial function reference value
+enum { HOOK_LUA_FN_INVALID = 0 };
+
 void hook_init(hook_t *hook, lua_t *lua) {
   hook->lua = lua;
-  hook->lua_fn = 0;
+  hook->lua_fn = HOOK_LUA_FN_INVALID;
 }
 
 // Called by lua to assign a function to a hook.
@@ -47,7 +50,7 @@ void hook_register(hook_t *hook, const char *fn_name) {
 }
 
 bool hook_call(hook_t *hook, const char *arg_spec, ...) {
-  if (!hook->lua_fn)
+  if (hook->lua_fn == HOOK_LUA_FN_INVALID)
     return false;
 
   lua_State *lua_s = lua_state(hook->lua);
