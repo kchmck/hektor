@@ -70,6 +70,10 @@ typedef struct {
   unit_string_t string;
 } unit_conv_t;
 
+// Initialize a unit conversion with a type and an amount.
+void unit_conv_init(unit_conv_t *conv, const unit_type_t type,
+                    const double amount);
+
 // Set the @base of a unit conversion.
 static inline void unit_conv_set_base(unit_conv_t *conv, const unit_base_t base)
 {

@@ -72,15 +72,11 @@ static bool hektor_call_hook(hektor_t *hektor) {
   const info_t *info = &hektor->info;
 
   unit_conv_t allowed_unit;
-  unit_conv_set_amount(&allowed_unit, info_allowed_usage(info));
-  unit_conv_set_type(&allowed_unit, UNIT_BYTE);
-  unit_conv_set_base(&allowed_unit, UNIT_BASE_SI);
+  unit_conv_init(&allowed_unit, UNIT_BYTE, info_allowed_usage(info));
   unit_conv_calculate(&allowed_unit);
 
   unit_conv_t remaining_unit;
-  unit_conv_set_amount(&remaining_unit, info_remaining_usage(info));
-  unit_conv_set_type(&remaining_unit, UNIT_BYTE);
-  unit_conv_set_base(&remaining_unit, UNIT_BASE_SI);
+  unit_conv_init(&remaining_unit, UNIT_BYTE, info_remaining_usage(info));
   unit_conv_calculate(&remaining_unit);
 
   unit_conv_t refill_unit;

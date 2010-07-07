@@ -231,6 +231,14 @@ static const char *find_label(const unit_type_t unit_type) {
   return labels[unit_type];
 }
 
+void unit_conv_init(unit_conv_t *conv, const unit_type_t type,
+                    const double amount)
+{
+  unit_conv_set_amount(conv, amount);
+  unit_conv_set_type(conv, type);
+  unit_conv_set_base(conv, UNIT_BASE_SI);
+}
+
 bool unit_conv_calculate(unit_conv_t *conv) {
   conv->unit_class = find_class(conv->orig_type);
   if (conv->unit_class == UNIT_CLASS_INVALID) return false;
