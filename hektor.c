@@ -88,8 +88,7 @@ static bool hektor_call_hook(hektor_t *hektor) {
   unit_conv_calculate(&remaining_unit);
 
   unit_conv_t refill_unit;
-  unit_conv_set_amount(&refill_unit, info_refill_time(info));
-  unit_conv_set_type(&refill_unit, UNIT_SECOND);
+  unit_conv_init(&refill_unit, UNIT_SECOND, info_refill_time(info));
   unit_conv_calculate(&refill_unit);
 
   lua_table_elem_t elems[] = {
