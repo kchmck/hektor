@@ -188,5 +188,5 @@ static bool hektor_main_execute(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) {
-  return hektor_main_wrapper(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE;
+  return hektor_main_execute(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
