@@ -26,9 +26,13 @@
 #include "common.h"
 #include "path.h"
 
-bool make_dir(const path_t dir) {
-  enum { MODE_BITS = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH };
+// Make a single dir. Return true on success and false otherwise.
+static bool make_dir(const path_t dir) {
+  return mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != -1 ||
+         errno == EEXIST;
+}
 
+bool make_dir_and_parents(const path_t dir) {
   // This is required because dirname discards the constness of its argument.
   path_t dir_copy;
   string_copy(dir, dir_copy, PATH_MAX_LENGTH);
@@ -40,13 +44,7 @@ bool make_dir(const path_t dir) {
     return true;
 
   // ...else recursively make any parents...
-  if (!make_dir(parent_dir))
-    return false;
-
-  if (mkdir(dir, MODE_BITS) == -1 && errno != EEXIST)
-    return false;
-
-  return true;
+  return make_dir_and_parents(parent_dir) && make_dir(dir);
 }
 
 // Build a path by appending @suffix onto @prefix.

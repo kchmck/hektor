@@ -23,7 +23,7 @@ enum { PATH_MAX_LENGTH = 256 + 1 };
 typedef char path_t[PATH_MAX_LENGTH];
 
 // Make a @directory and all of its parents.
-bool make_dir(const path_t dir);
+bool make_dir_and_parents(const path_t dir);
 
 // Get the paths to the config dir and the config file.
 bool get_config_paths(path_t dir_buffer, path_t file_buffer);

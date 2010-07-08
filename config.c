@@ -30,7 +30,7 @@ bool config_init(config_t *config, lua_t *lua) {
   config->lua = lua;
 
   return get_config_paths(config->config_dir, config->config_file) &&
-         make_dir(config->config_dir);
+         make_dir_and_parents(config->config_dir);
 }
 
 // Write a default config file.
