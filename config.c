@@ -43,7 +43,7 @@ static bool config_create_default(config_t *config) {
   "\n"
   "  print(hektor.remaining_string .. \" are remaining\")\n"
   "\n"
-  "  -- if hektor.remaining_mb < 5 then\n"
+  "  -- if hektor.remaining_usage < 5 then\n"
   "  --   hektor.restart_modem()\n"
   "  -- end\n"
   "\n"

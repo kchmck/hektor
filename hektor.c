@@ -99,7 +99,7 @@ static bool hektor_call_hook(hektor_t *hektor) {
   unit_conv_calculate(&refill_unit);
 
   lua_table_elem_t elems[] = {
-    {"allowed_mb", LUA_TNUMBER, {
+    {"allowed_usage", LUA_TNUMBER, {
       .number = unit_convert(info_allowed_usage(info), UNIT_BYTE,
                                                        UNIT_MEGABYTE)
     }},
@@ -108,7 +108,7 @@ static bool hektor_call_hook(hektor_t *hektor) {
       .string = unit_conv_string(&allowed_unit)
     }},
 
-    {"remaining_mb", LUA_TNUMBER, {
+    {"remaining_usage", LUA_TNUMBER, {
       .number = unit_convert(info_remaining_usage(info), UNIT_BYTE,
                                                          UNIT_MEGABYTE)
     }},
