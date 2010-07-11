@@ -68,6 +68,13 @@ static bool hektor_error_running_hook(hektor_t *hektor) {
   return false;
 }
 
+static hook_t *hektor_get_hook(hektor_t *hektor) {
+  if (info_fap_state(&hektor->info) == FAP_STATE_ACTIVE)
+    return &hektor->fap_is_active_hook;
+  else
+    return &hektor->fap_is_inactive_hook;
+}
+
 static bool hektor_call_hook(hektor_t *hektor) {
   const info_t *info = &hektor->info;
 
@@ -134,10 +141,7 @@ static bool hektor_call_hook(hektor_t *hektor) {
     {0}
   };
 
-  if (info_fap_state(&hektor->info) == FAP_STATE_ACTIVE)
-    return hook_call(&hektor->fap_is_active_hook, "t", &elems);
-  else
-    return hook_call(&hektor->fap_is_inactive_hook, "t", &elems);
+  return hook_call(hektor_get_hook(hektor), "t", &elems);
 }
 
 static bool hektor_main(hektor_t *hektor) {
