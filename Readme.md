@@ -123,7 +123,7 @@ information:
     end)
 
 to popping up a notification (with the help of [lua's `os.execute`
-funcion][os.execute]:
+funcion][os.execute]):
 
     when_fap_is_inactive(function (hektor)
       if hektor.remaining_usage < 10 then
@@ -136,7 +136,7 @@ funcion][os.execute]:
 [os.execute]: http://lua.org/manual/5.1/manual.html#pdf-os.execute
 
 to restarting the modem (this works especially well when hektor is run every 15
-seconds or so, as it effectively prevents any internet activity):
+seconds or so, as it effectively prevents any kind of internet activity):
 
     when_fap_is_inactive(function (hektor)
       if hektor.remaining_usage < 5 then
@@ -173,7 +173,7 @@ modems it is represented in [mebibytes].
 
 [mebibytes]: http://en.wikipedia.org/wiki/Mebibyte
 
-For examples, with an HN7000S and a home plan:
+For example, with an HN7000S and a home plan:
 
     hektor.allowed_usage == 200
 
@@ -231,9 +231,9 @@ on HN9000 modems, the number of seconds remaining before the daily refill time.
 
 #### refill_timestamp (unix timestamp)
 
-This is a [Unix timestamp] of the exact time of FAP deactivation or the daily
-refill. It can be used with [lua's `os.date` function][os.date] to create a
-human-readable date:
+This is a [Unix timestamp] of the (almost) exact time of FAP deactivation or the
+daily refill. It can be used with [lua's `os.date` function][os.date] to create
+a human-readable date:
 
     print(os.date("%c", hektor.refill_timestamp))
 
