@@ -1,5 +1,5 @@
-Hektor is a simple and fast 'fair access policy' tool for Hughesnet users.
-Through [lua] hooks, it can be setup to prevent FAP activation, to pop up
+Hektor is a fast and simple 'fair access policy' tool for Hughesnet users.
+Through [lua] hooks, hektor can be setup to prevent FAP activation, to pop up
 notifications, or to perform an unlimited number of other actions.
 
     $ hektor
@@ -108,7 +108,7 @@ Hektor uses two hooks, depending on the FAP status:
 
 #### when_fap_is_active(hook)
 
-This hook is ran when the FAP is active, obviously.
+This hook is ran when the FAP is active.
 
 #### when_fap_is_inactive(hook)
 
@@ -119,10 +119,11 @@ and can use it to perform all kinds of logic, from simply printing out the
 information:
 
     when_fap_is_inactive(function (hektor)
-      print(hektor.remaining_string .. " are remaining)
+      print(hektor.remaining_string .. " are remaining")
     end)
 
-to popping up a notification:
+to popping up a notification (with the help of [lua's `os.execute`
+funcion][os.execute]:
 
     when_fap_is_inactive(function (hektor)
       if hektor.remaining_usage < 10 then
@@ -131,6 +132,8 @@ to popping up a notification:
                    "'Only " .. hektor.remaining_string .. " are remaining'")
       end
     end)
+
+[os.execute]: http://lua.org/manual/5.1/manual.html#pdf-os.execute
 
 to restarting the modem (this works especially well when hektor is run every 15
 seconds or so, as it effectively prevents any internet activity):
@@ -144,7 +147,7 @@ seconds or so, as it effectively prevents any internet activity):
 The above methods could all be combined, as well:
 
     when_fap_is_inactive(function (hektor)
-      print(hektor.remaining_string .. " are remaining)
+      print(hektor.remaining_string .. " are remaining")
 
       if hektor.remaining_usage < 10 then
         os.execute("notify-send -u critical " ..
