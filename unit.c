@@ -138,10 +138,10 @@ static unit_type_t find_best_time_type(const unit_conv_t *conv) {
 }
 
 // Find the best binary unit for an amount.
-static unit_type_t find_best_binary_type(const unit_conv_t *conv) {
-  const double amount = conv->orig_amount;
-
-  switch (conv->orig_type) {
+static unit_type_t find_best_binary_type(const double amount,
+                                         const unit_type_t orig_type)
+{
+  switch (orig_type) {
     case UNIT_BYTE:
       if (amount >= 1024 * 1024) return UNIT_MEBIBYTE;
       if (amount >= 1024)        return UNIT_KIBIBYTE;
@@ -157,14 +157,14 @@ static unit_type_t find_best_binary_type(const unit_conv_t *conv) {
       if (amount < 1)            return UNIT_KIBIBYTE;
   }
 
-  return conv->orig_type;
+  return orig_type;
 }
 
 // Find the best SI unit for an amount.
-static unit_type_t find_best_si_type(const unit_conv_t *conv) {
-  const double amount = conv->orig_amount;
-
-  switch (conv->orig_type) {
+static unit_type_t find_best_si_type(const double amount,
+                                     const unit_type_t orig_type)
+{
+  switch (orig_type) {
     case UNIT_BYTE:
       if (amount >= 1000 * 1000) return UNIT_MEGABYTE;
       if (amount >= 1000)        return UNIT_KILOBYTE;
@@ -180,17 +180,17 @@ static unit_type_t find_best_si_type(const unit_conv_t *conv) {
       if (amount < 1)            return UNIT_KILOBYTE;
   }
 
-  return conv->orig_type;
+  return orig_type;
 }
 
 // Find the best info unit for an amount and a base.
 static unit_type_t find_best_info_type(const unit_conv_t *conv) {
   switch (conv->unit_base) {
     case UNIT_BASE_BINARY:
-      return find_best_binary_type(conv);
+      return find_best_binary_type(conv->orig_amount, conv->orig_type);
 
     case UNIT_BASE_SI:
-      return find_best_si_type(conv);
+      return find_best_si_type(conv->orig_amount, conv->orig_type);
   }
 
   return UNIT_BASE_INVALID;
