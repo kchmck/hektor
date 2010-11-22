@@ -59,7 +59,9 @@ void lua_build_table(lua_State *lua, const lua_table_elem_t elems[]) {
 
   while (true) {
     const lua_table_elem_t *elem = &elems[elem_index];
-    if (!elem->key) break;
+
+    if (elem->key == LUA_TABLE_END)
+      break;
 
     elem_index += 1;
 

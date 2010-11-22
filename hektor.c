@@ -138,7 +138,7 @@ static bool hektor_call_hook(hektor_t *hektor) {
       .function = hektor_restart_modem_fn
     }},
 
-    {0}
+    {LUA_TABLE_END},
   };
 
   return hook_call(hektor_get_hook(hektor), "t", &elems);
