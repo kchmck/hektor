@@ -35,7 +35,7 @@ void hook_init(hook_t *hook, lua_t *lua) {
 
 // Called by lua to assign a function to a hook.
 static int hook_fn(lua_State *lua) {
-  hook_t *hook = (hook_t *)lua_closure_get_userdata(lua, 1);
+  hook_t *hook = lua_closure_get_userdata(lua, 1);
 
   if (!hook || !lua_isfunction(lua, 1))
     return 0;
