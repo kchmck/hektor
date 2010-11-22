@@ -41,7 +41,7 @@ bool info_page_value_parse(info_page_value_t value_buffer,
                            const char *value_name)
 {
   static const char SEPARATOR[] = "=";
-  enum { SEPARATOR_LENGTH = sizeof(SEPARATOR) - 1 };
+  enum { SEPARATOR_LENGTH = string_length(SEPARATOR) };
 
   const char *value_name_begin = strstr(info_page, value_name);
   if (!value_name_begin) return false;

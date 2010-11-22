@@ -40,4 +40,11 @@ static inline int string_copy(const char *source, char *dest,
   return snprintf(dest, max_length, "%s", source);
 }
 
+// Get the length of @string.
+//
+//   char abc[] = "abc";
+//   string_length(abc) -> 3
+//
+#define string_length(string) (sizeof(string) - 1)
+
 #endif

@@ -24,6 +24,7 @@
 
 #include "config.h"
 #include "lua-util.h"
+#include "common.h"
 #include "path.h"
 
 bool config_init(config_t *config, lua_t *lua) {
@@ -57,7 +58,7 @@ static bool config_create_default(config_t *config) {
   "\n"
   "end)\n";
 
-  enum { DEFAULT_CONFIG_LENGTH = sizeof(DEFAULT_CONFIG) - 1 };
+  enum { DEFAULT_CONFIG_LENGTH = string_length(DEFAULT_CONFIG) };
 
   FILE *config_file = fopen(config->config_file, "w");
   if (!config_file) return false;
