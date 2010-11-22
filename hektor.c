@@ -21,7 +21,6 @@
 
 #include <lua.h>
 
-#include "common.h"
 #include "config.h"
 #include "hook.h"
 #include "info.h"
@@ -99,7 +98,7 @@ static bool hektor_call_hook(hektor_t *hektor) {
   unit_conv_init(&refill_unit, UNIT_SECOND, info_refill_time(info));
   unit_conv_calculate(&refill_unit);
 
-  lua_table_elem_t elems[] = {
+  const lua_table_elem_t elems[] = {
     {"allowed_usage", LUA_TNUMBER, {
       .number = unit_convert(info_allowed_usage(info), UNIT_BYTE,
                                                        UNIT_MEGABYTE)
