@@ -53,8 +53,8 @@ typedef enum {
 double unit_convert(const double amount, const unit_type_t orig_type,
                                          const unit_type_t conv_type);
 
-enum { UNIT_STRING_MAX_LENGTH = 32 + 1 };
-typedef char unit_string_t[UNIT_STRING_MAX_LENGTH];
+enum { UNIT_STRING_LENGTH = 32 + 1 };
+typedef char unit_string_t[UNIT_STRING_LENGTH];
 
 typedef struct {
   unit_class_t unit_class;

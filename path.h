@@ -19,8 +19,8 @@
 
 #include <stdbool.h>
 
-enum { PATH_MAX_LENGTH = 256 + 1 };
-typedef char path_t[PATH_MAX_LENGTH];
+enum { PATH_LENGTH = 256 };
+typedef char path_t[PATH_LENGTH];
 
 // Make a @directory and all of its parents.
 bool make_dir_and_parents(const path_t dir);

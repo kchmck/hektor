@@ -252,8 +252,8 @@ bool unit_conv_calculate(unit_conv_t *conv) {
   conv->label = find_label(conv->conv_type);
   if (!conv->label) return false;
 
-  snprintf(conv->string, UNIT_STRING_MAX_LENGTH, "%.1f %ss", conv->conv_amount,
-                                                             conv->label);
+  snprintf(conv->string, UNIT_STRING_LENGTH, "%.1f %ss", conv->conv_amount,
+                                                         conv->label);
 
   return true;
 }

@@ -35,7 +35,7 @@ static bool make_dir(const path_t dir) {
 bool make_dir_and_parents(const path_t dir) {
   // This is required because dirname discards the constness of its argument.
   path_t dir_copy;
-  string_copy(dir, dir_copy, PATH_MAX_LENGTH);
+  string_copy(dir, dir_copy, PATH_LENGTH);
 
   const char *parent_dir = dirname(dir_copy);
 
@@ -51,7 +51,7 @@ bool make_dir_and_parents(const path_t dir) {
 static inline bool build_path(path_t path_buffer, const path_t prefix,
                               const path_t suffix)
 {
-  return snprintf(path_buffer, PATH_MAX_LENGTH, "%s/%s", prefix, suffix);
+  return snprintf(path_buffer, PATH_LENGTH, "%s/%s", prefix, suffix);
 }
 
 // Append the hektor subdirectory onto @dir.

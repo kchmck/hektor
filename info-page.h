@@ -22,8 +22,8 @@
 
 #include "modem.h"
 
-enum { INFO_PAGE_VALUE_MAX_LENGTH = 32 + 1 };
-typedef char info_page_value_t[INFO_PAGE_VALUE_MAX_LENGTH];
+enum { INFO_PAGE_VALUE_LENGTH = 32 };
+typedef char info_page_value_t[INFO_PAGE_VALUE_LENGTH];
 
 // Get a string value from the info page.
 bool info_page_value_parse(info_page_value_t value_buffer,

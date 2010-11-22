@@ -69,7 +69,7 @@ static size_t download_fn(const char *chunk, const size_t item_size,
                           const size_t items, download_fn_state_t *state)
 {
   const size_t chunk_size = item_size * items;
-  const size_t buffer_remaining = max(PAGE_MAX_LENGTH - state->amount_written, 0);
+  const size_t buffer_remaining = max(PAGE_LENGTH - state->amount_written, 0);
 
   if (!buffer_remaining) return 0;
 
@@ -84,7 +84,7 @@ static size_t download_fn(const char *chunk, const size_t item_size,
 // Strip the leading slash off a path and append the rest to the modem's base
 // url.
 static inline bool modem_build_url(url_t url_buffer, const url_t url) {
-  return snprintf(url_buffer, URL_MAX_LENGTH, "http://192.168.0.1/%s", &url[1]);
+  return snprintf(url_buffer, URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
 }
 
 bool modem_get_info_url(url_t buffer) {

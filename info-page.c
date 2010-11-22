@@ -57,7 +57,7 @@ bool info_page_value_parse(info_page_value_t value_buffer,
   const ptrdiff_t value_length_with_null = value_length + 1;
 
   return string_copy(value_begin, value_buffer,
-                     min(value_length_with_null, INFO_PAGE_VALUE_MAX_LENGTH));
+                     min(value_length_with_null, INFO_PAGE_VALUE_LENGTH));
 }
 
 uint32_t info_page_number_parse(const page_t info_page, const char *value_name)

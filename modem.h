@@ -20,11 +20,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-enum { URL_MAX_LENGTH = 256 + 1};
-typedef char url_t[URL_MAX_LENGTH];
+enum { URL_LENGTH = 256 };
+typedef char url_t[URL_LENGTH];
 
-enum { PAGE_MAX_LENGTH = 2048 + 1 };
-typedef char page_t[PAGE_MAX_LENGTH];
+enum { PAGE_LENGTH = 2048 };
+typedef char page_t[PAGE_LENGTH];
 
 // Initialize global modem stuff.
 void modem_global_init(void);
