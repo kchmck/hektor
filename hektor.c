@@ -21,6 +21,7 @@
 
 #include <lua.h>
 
+#include "common.h"
 #include "config.h"
 #include "hook.h"
 #include "info.h"
@@ -145,6 +146,30 @@ static bool hektor_call_hook(hektor_t *hektor) {
 }
 
 static bool hektor_main(hektor_t *hektor) {
+  static const char DEFAULT_CONFIG[] =
+  "-- This hook is called when the FAP is inactive. When usage gets uncomfortably\n"
+  "-- low, steps can be taken to prevent FAP activation. One step could be\n"
+  "-- repeatedly restarting the modem.\n"
+  "when_fap_is_inactive(function (hektor)\n"
+  "\n"
+  "  print(hektor.remaining_string .. \" are remaining\")\n"
+  "\n"
+  "  -- if hektor.remaining_usage < 5 then\n"
+  "  --   hektor.restart_modem()\n"
+  "  -- end\n"
+  "\n"
+  "end)\n"
+  "\n"
+  "-- This hook is called when the FAP is active.\n"
+  "when_fap_is_active(function (hektor)\n"
+  "\n"
+  "  print(hektor.refill_string .. \" until FAP deactivation (at \" ..\n"
+  "        os.date(\"%I:%M %p %A\", hektor.refill_timestamp) ..  \")\")\n"
+  "\n"
+  "end)\n";
+
+  enum { DEFAULT_CONFIG_LENGTH = string_length(DEFAULT_CONFIG) };
+
   url_t info_url;
   if (!modem_get_info_url(info_url))
     return false;
@@ -156,7 +181,8 @@ static bool hektor_main(hektor_t *hektor) {
   if (!info_init(&hektor->info, info_page))
     return false;
 
-  if (!config_init(&hektor->config, &hektor->lua))
+  if (!config_init(&hektor->config, &hektor->lua, DEFAULT_CONFIG,
+                                                  DEFAULT_CONFIG_LENGTH))
     return false;
 
   hook_init(&hektor->fap_is_inactive_hook, &hektor->lua);

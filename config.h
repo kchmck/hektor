@@ -27,10 +27,14 @@ typedef struct {
 
   path_t config_dir;
   path_t config_file;
+
+  const char *def_config;
+  size_t def_config_length;
 } config_t;
 
-// Initialize @config with a @lua session.
-bool config_init(config_t *config, lua_t *lua);
+// Initialize @config with a @lua session and a @def_config string.
+bool config_init(config_t *config, lua_t *lua, const char *def_config,
+                                               const size_t def_config_length);
 
 // Load @config from the disk.
 bool config_load(config_t *config);

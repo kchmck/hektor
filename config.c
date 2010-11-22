@@ -27,47 +27,29 @@
 #include "common.h"
 #include "path.h"
 
-bool config_init(config_t *config, lua_t *lua) {
+bool config_init(config_t *config, lua_t *lua, const char *def_config,
+                                               const size_t def_config_length)
+{
   config->lua = lua;
+
+  config->def_config = def_config;
+  config->def_config_length = def_config_length;
 
   return get_config_paths(config->config_dir, config->config_file) &&
          make_dir_and_parents(config->config_dir);
 }
 
 // Write a default config file.
-static bool config_create_default(config_t *config) {
-  static const char DEFAULT_CONFIG[] =
-  "-- This hook is called when the FAP is inactive. When usage gets uncomfortably\n"
-  "-- low, steps can be taken to prevent FAP activation. One step could be\n"
-  "-- repeatedly restarting the modem.\n"
-  "when_fap_is_inactive(function (hektor)\n"
-  "\n"
-  "  print(hektor.remaining_string .. \" are remaining\")\n"
-  "\n"
-  "  -- if hektor.remaining_usage < 5 then\n"
-  "  --   hektor.restart_modem()\n"
-  "  -- end\n"
-  "\n"
-  "end)\n"
-  "\n"
-  "-- This hook is called when the FAP is active.\n"
-  "when_fap_is_active(function (hektor)\n"
-  "\n"
-  "  print(hektor.refill_string .. \" until FAP deactivation (at \" ..\n"
-  "        os.date(\"%I:%M %p %A\", hektor.refill_timestamp) ..  \")\")\n"
-  "\n"
-  "end)\n";
-
-  enum { DEFAULT_CONFIG_LENGTH = string_length(DEFAULT_CONFIG) };
-
+static bool config_create_default(config_t *config)
+{
   FILE *config_file = fopen(config->config_file, "w");
   if (!config_file) return false;
 
-  const size_t written = fwrite(DEFAULT_CONFIG, sizeof(char),
-                                DEFAULT_CONFIG_LENGTH, config_file);
+  const size_t written = fwrite(config->def_config, sizeof(char),
+                                config->def_config_length, config_file);
   fclose(config_file);
 
-  return written == DEFAULT_CONFIG_LENGTH;
+  return written == config->def_config_length;
 }
 
 // Load a default config file.
