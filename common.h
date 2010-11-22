@@ -22,18 +22,19 @@
 #include <stdio.h>
 #include <string.h>
 
-// Find the minimum of two numbers.
+// Find the minimum of @a and @b.
 static inline int min(const int a, const int b) { return a < b ? a : b; }
 
-// Find the maximum of two numbers.
+// Find the maximum of @a and @b.
 static inline int max(const int a, const int b) { return a > b ? a : b; }
 
-// Check if two strings are equal.
+// Check if @a equals @b.
 static inline bool strings_are_equal(const char *a, const char *b) {
   return strcmp(a, b) == 0;
 }
 
-// Copy source to dest and ensure null termination.
+// Copy @max_length characters from @source to @dest and ensure null
+// termination.
 static inline int string_copy(const char *source, char *dest,
                               const size_t max_length)
 {

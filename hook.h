@@ -28,10 +28,10 @@ typedef struct {
   int lua_fn;
 } hook_t;
 
-// Initialize a @hook with a @lua session.
+// Initialize @hook with a @lua session.
 void hook_init(hook_t *hook, lua_t *lua);
 
-// Register a @hook as a lua function called @fn_name.
+// Register @hook as a lua function called @fn_name.
 void hook_register(hook_t *hook, const char *fn_name);
 
 // Call the function assigned to @hook.

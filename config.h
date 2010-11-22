@@ -29,10 +29,10 @@ typedef struct {
   path_t config_file;
 } config_t;
 
-// Initialize a new @config structure with a @lua session.
+// Initialize @config with a @lua session.
 bool config_init(config_t *config, lua_t *lua);
 
-// Load config from the disk.
+// Load @config from the disk.
 bool config_load(config_t *config);
 
 #endif

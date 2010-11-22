@@ -54,6 +54,8 @@ bool hook_call(hook_t *hook, const char *arg_spec, ...) {
     return false;
 
   lua_State *lua_s = lua_state(hook->lua);
+
+  // Push the stored hook function onto the stack.
   lua_rawgeti(lua_s, LUA_REGISTRYINDEX, hook->lua_fn);
 
   va_list args;

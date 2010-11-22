@@ -27,15 +27,15 @@ typedef struct {
   lua_State *state;
 } lua_t;
 
-// Get the raw lua state from a @lua session.
+// Get the raw lua state of @lua.
 static inline lua_State *lua_state(lua_t *lua) {
   return lua->state;
 }
 
-// Initialize a new @lua session.
+// Initialize @lua.
 bool lua_init(lua_t *lua);
 
-// Destroy a @lua session.
+// Destroy @lua.
 void lua_destroy(lua_t *lua);
 
 // Register @fn as a closure called @fn_name with userdata that can be retrieved
@@ -50,7 +50,7 @@ static inline void *lua_closure_get_userdata(lua_State *lua,
   return lua_touserdata(lua, lua_upvalueindex(userdata_idx));
 }
 
-// Get the most recent error from a @lua session.
+// Get the most recent error from @lua.
 static inline const char *lua_get_error(lua_t *lua) {
   return lua_tostring(lua_state(lua), -1);
 }

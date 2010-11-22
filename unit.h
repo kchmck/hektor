@@ -49,7 +49,7 @@ typedef enum {
   UNIT_BASE_INVALID,
 } unit_base_t;
 
-// Simply convert from one unit to another.
+// Convert @amount from @orig_type to @conv_type.
 double unit_convert(const double amount, const unit_type_t orig_type,
                                          const unit_type_t conv_type);
 
@@ -70,7 +70,7 @@ typedef struct {
   unit_string_t string;
 } unit_conv_t;
 
-// Initialize a unit conversion with a type and an amount.
+// Initialize @conv with @amount of @type.
 void unit_conv_init(unit_conv_t *conv, const unit_type_t type,
                     const double amount);
 

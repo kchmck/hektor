@@ -49,7 +49,7 @@ typedef struct {
   fap_state_t fap_state;
 } info_t;
 
-// Initialize a new @info structure with information parsed from the modem.
+// Initialize @info with information parsed from the modem.
 bool info_init(info_t *info, const page_t info_page);
 
 // Get the modem type.

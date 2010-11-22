@@ -41,7 +41,7 @@ bool modem_get_restart_url(url_t buffer);
 // Restart the modem.
 bool modem_restart(const url_t restart_url);
 
-// Download the page at @url into a @buffer.
+// Download the page at @url into @buffer.
 size_t modem_fetch_page(page_t buffer, const url_t url);
 
 #endif

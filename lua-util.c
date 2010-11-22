@@ -52,6 +52,7 @@ void lua_closure_register(lua_State *lua, const char *fn_name, lua_CFunction fn,
 }
 
 void lua_build_table(lua_State *lua, const lua_table_elem_t elems[]) {
+  // Push a new table onto the stack and store its index.
   lua_newtable(lua);
   const int table_index = lua_gettop(lua);
 

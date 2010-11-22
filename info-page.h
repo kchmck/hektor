@@ -25,12 +25,12 @@
 enum { INFO_PAGE_VALUE_LENGTH = 32 };
 typedef char info_page_value_t[INFO_PAGE_VALUE_LENGTH];
 
-// Get a string value from the info page.
+// Get @value_name from @info_page as a string copied into @value_buffer.
 bool info_page_value_parse(info_page_value_t value_buffer,
                            const page_t info_page,
                            const char *value_name);
 
-// Get an integer value from the info page.
+// Get @value_name from @info_page as an integer.
 uint32_t info_page_number_parse(const page_t info_page, const char *value_name);
 
 #endif
