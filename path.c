@@ -26,58 +26,70 @@
 #include "common.h"
 #include "path.h"
 
-// Make a single dir. Return true on success and false otherwise.
-static bool make_dir(const path_t dir) {
+bool path_dirname(const path_t path, path_t dirname_buffer) {
+  // Required for libgen
+  path_t path_copy;
+
+  return string_copy(path, path_copy, PATH_LENGTH) &&
+         string_copy(dirname(path_copy), dirname_buffer, PATH_LENGTH);
+}
+
+// Make a single @dir.
+static bool path_make_single_dir(const path_t dir) {
   return mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != -1 ||
          errno == EEXIST;
 }
 
-bool make_dir_and_parents(const path_t dir) {
-  // This is required because dirname discards the constness of its argument.
-  path_t dir_copy;
-  string_copy(dir, dir_copy, PATH_LENGTH);
-
-  const char *parent_dir = dirname(dir_copy);
+bool path_make_dir(const path_t dir) {
+  path_t parent_dirs;
+  
+  if (!path_dirname(dir, parent_dirs))
+    return false;
 
   // If there are no more parents to create, then finish up...
-  if (strings_are_equal(dir, parent_dir))
+  if (strings_are_equal(dir, parent_dirs))
     return true;
 
   // ...else recursively make any parents...
-  return make_dir_and_parents(parent_dir) && make_dir(dir);
+  return path_make_dir(parent_dirs) && path_make_single_dir(dir);
 }
 
 // Build a path by appending @suffix onto @prefix.
-static inline bool build_path(path_t path_buffer, const path_t prefix,
-                              const path_t suffix)
+static inline bool path_build(path_t path_buffer, const path_t prefix,
+                                                  const path_t suffix)
 {
   return snprintf(path_buffer, PATH_LENGTH, "%s/%s", prefix, suffix);
 }
 
 // Append the hektor subdirectory onto @dir.
-static bool build_hektor_dir(path_t path_buffer, const path_t dir) {
-  return build_path(path_buffer, dir, "hektor");
+static bool path_build_hektor_dir(path_t path_buffer, const path_t dir) {
+  return path_build(path_buffer, dir, "hektor");
 }
 
 // Get the path to the config dir.
-static bool build_config_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
-  return build_hektor_dir(path_buffer, xdgConfigHome(xdg_dirs));
+static bool path_build_config_dir(path_t path_buffer, xdgHandle *xdg_dirs) {
+  return path_build_hektor_dir(path_buffer, xdgConfigHome(xdg_dirs));
 }
 
 // Get the path to the config file.
-static bool build_config_file(path_t path_buffer, const path_t config_dir) {
-  return build_path(path_buffer, config_dir, "config.lua");
+static bool path_build_config_file(path_t path_buffer, const path_t config_dir)
+{
+  return path_build(path_buffer, config_dir, "config.lua");
 }
 
-bool get_config_paths(path_t dir_buffer, path_t file_buffer) {
+bool path_build_config(path_t dir_buffer, path_t file_buffer) {
   xdgHandle xdg_dirs;
+
   if (!xdgInitHandle(&xdg_dirs))
     return false;
 
-  if (!build_config_dir(dir_buffer, &xdg_dirs))
+  if (!path_build_config_dir(dir_buffer, &xdg_dirs)) {
+    xdgWipeHandle(&xdg_dirs);
+
     return false;
+  }
 
   xdgWipeHandle(&xdg_dirs);
 
-  return build_config_file(file_buffer, dir_buffer);
+  return path_build_config_file(file_buffer, dir_buffer);
 }

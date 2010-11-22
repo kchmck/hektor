@@ -22,10 +22,13 @@
 enum { PATH_LENGTH = 256 };
 typedef char path_t[PATH_LENGTH];
 
-// Make a @directory and all of its parents.
-bool make_dir_and_parents(const path_t dir);
+// Copy the parent directories of @path into @dirname_buffer.
+bool path_dirname(const path_t path, path_t dirname_buffer);
+
+// Make @dir and any of its parents.
+bool path_make_dir(const path_t dir);
 
 // Get the paths to the config dir and the config file.
-bool get_config_paths(path_t dir_buffer, path_t file_buffer);
+bool path_build_config(path_t dir_buffer, path_t file_buffer);
 
 #endif
