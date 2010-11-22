@@ -57,15 +57,9 @@ void lua_build_table(lua_State *lua, const lua_table_elem_t elems[]) {
   const int table_index = lua_gettop(lua);
 
   int elem_index = 0;
+  const lua_table_elem_t *elem;
 
-  while (true) {
-    const lua_table_elem_t *elem = &elems[elem_index];
-
-    if (elem->key == LUA_TABLE_END)
-      break;
-
-    elem_index += 1;
-
+  while ((elem = &elems[elem_index])->key != LUA_TABLE_END) {
     switch (elem->value_type) {
       case LUA_TNUMBER:
         lua_pushnumber(lua, elem->value.number);
@@ -80,6 +74,7 @@ void lua_build_table(lua_State *lua, const lua_table_elem_t elems[]) {
     }
 
     lua_setfield(lua, table_index, elem->key);
+    elem_index += 1;
   }
 }
 
