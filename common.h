@@ -34,8 +34,8 @@ static inline bool strings_are_equal(const char *a, const char *b) {
 }
 
 // Copy source to dest and ensure null termination.
-static inline bool string_copy(const char *source, char *dest,
-                               const size_t max_length)
+static inline int string_copy(const char *source, char *dest,
+                              const size_t max_length)
 {
   return snprintf(dest, max_length, "%s", source);
 }
