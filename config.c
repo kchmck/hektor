@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -27,13 +28,11 @@
 #include "common.h"
 #include "path.h"
 
-bool config_init(config_t *config, lua_t *lua, const char *def_config,
-                                               const size_t def_config_length)
-{
+bool config_init(config_t *config, lua_t *lua, const char *def_config) {
   config->lua = lua;
 
   config->def_config = def_config;
-  config->def_config_length = def_config_length;
+  config->def_config_length = strlen(def_config);
 
   return path_build_config(config->config_dir, config->config_file) &&
          path_make_dir(config->config_dir);

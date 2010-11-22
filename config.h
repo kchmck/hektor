@@ -33,8 +33,7 @@ typedef struct {
 } config_t;
 
 // Initialize @config with a @lua session and a @def_config string.
-bool config_init(config_t *config, lua_t *lua, const char *def_config,
-                                               const size_t def_config_length);
+bool config_init(config_t *config, lua_t *lua, const char *def_config);
 
 // Load @config from the disk.
 bool config_load(config_t *config);

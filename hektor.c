@@ -168,8 +168,6 @@ static bool hektor_main(hektor_t *hektor) {
   "\n"
   "end)\n";
 
-  enum { DEFAULT_CONFIG_LENGTH = string_length(DEFAULT_CONFIG) };
-
   url_t info_url;
   if (!modem_get_info_url(info_url))
     return false;
@@ -181,8 +179,7 @@ static bool hektor_main(hektor_t *hektor) {
   if (!info_init(&hektor->info, info_page))
     return false;
 
-  if (!config_init(&hektor->config, &hektor->lua, DEFAULT_CONFIG,
-                                                  DEFAULT_CONFIG_LENGTH))
+  if (!config_init(&hektor->config, &hektor->lua, DEFAULT_CONFIG))
     return false;
 
   hook_init(&hektor->fap_is_inactive_hook, &hektor->lua);
