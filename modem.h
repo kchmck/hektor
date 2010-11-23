@@ -33,10 +33,10 @@ void modem_global_init(void);
 void modem_global_destroy(void);
 
 // Get the info page URL.
-bool modem_get_info_url(url_t buffer);
+bool modem_build_info_url(url_t buffer);
 
 // Get the restart URL.
-bool modem_get_restart_url(url_t buffer);
+bool modem_build_restart_url(url_t buffer);
 
 // Restart the modem.
 bool modem_restart(const url_t restart_url);

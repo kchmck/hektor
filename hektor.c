@@ -42,7 +42,7 @@ typedef struct {
 static int hektor_restart_modem_fn(lua_State *lua) {
   url_t restart_url;
 
-  if (modem_get_restart_url(restart_url))
+  if (modem_build_restart_url(restart_url))
     modem_restart(restart_url);
 
   return 0;
@@ -164,7 +164,7 @@ static bool hektor_main(hektor_t *hektor) {
     "end)\n";
 
   url_t info_url;
-  if (!modem_get_info_url(info_url))
+  if (!modem_build_info_url(info_url))
     return false;
 
   page_t info_page;

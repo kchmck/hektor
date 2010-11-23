@@ -87,11 +87,11 @@ static inline bool modem_build_url(url_t url_buffer, const url_t url) {
   return snprintf(url_buffer, URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
 }
 
-bool modem_get_info_url(url_t buffer) {
+bool modem_build_info_url(url_t buffer) {
   return modem_build_url(buffer, "/getdeviceinfo/info.bin");
 }
 
-bool modem_get_restart_url(url_t buffer) {
+bool modem_build_restart_url(url_t buffer) {
   return modem_build_url(buffer, "/com/gatewayreset/");
 }
 
