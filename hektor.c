@@ -146,22 +146,22 @@ static bool hektor_call_hook(hektor_t *hektor) {
 
 static bool hektor_main(hektor_t *hektor) {
   static const char DEFAULT_CONFIG[] =
-  "when_fap_is_inactive(function (hektor)\n"
-  "\n"
-  "  print(hektor.remaining_string .. \" are remaining\")\n"
-  "\n"
-  "  -- if hektor.remaining_usage < 5 then\n"
-  "  --   hektor.restart_modem()\n"
-  "  -- end\n"
-  "\n"
-  "end)\n"
-  "\n"
-  "when_fap_is_active(function (hektor)\n"
-  "\n"
-  "  print(hektor.refill_string .. \" until FAP deactivation (at \" ..\n"
-  "        os.date(\"%I:%M %p %A\", hektor.refill_timestamp) ..  \")\")\n"
-  "\n"
-  "end)\n";
+    "when_fap_is_inactive(function (hektor)\n"
+    "\n"
+    "  print(hektor.remaining_string .. \" are remaining\")\n"
+    "\n"
+    "  -- if hektor.remaining_usage < 5 then\n"
+    "  --   hektor.restart_modem()\n"
+    "  -- end\n"
+    "\n"
+    "end)\n"
+    "\n"
+    "when_fap_is_active(function (hektor)\n"
+    "\n"
+    "  print(hektor.refill_string .. \" until FAP deactivation (at \" ..\n"
+    "        os.date(\"%I:%M %p %A\", hektor.refill_timestamp) ..  \")\")\n"
+    "\n"
+    "end)\n";
 
   url_t info_url;
   if (!modem_get_info_url(info_url))
