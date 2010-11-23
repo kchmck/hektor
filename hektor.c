@@ -49,7 +49,7 @@ static int hektor_restart_modem_fn(lua_State *lua) {
 }
 
 static bool hektor_error_fetching_page(const url_t url) {
-  printf("An error occured while fetching the page at ‘%s’.\n", url);
+  printf("An error occured while fetching the page at '%s'.\n", url);
 
   return false;
 }
