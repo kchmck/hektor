@@ -146,9 +146,6 @@ static bool hektor_call_hook(hektor_t *hektor) {
 
 static bool hektor_main(hektor_t *hektor) {
   static const char DEFAULT_CONFIG[] =
-  "-- This hook is called when the FAP is inactive. When usage gets uncomfortably\n"
-  "-- low, steps can be taken to prevent FAP activation. One step could be\n"
-  "-- repeatedly restarting the modem.\n"
   "when_fap_is_inactive(function (hektor)\n"
   "\n"
   "  print(hektor.remaining_string .. \" are remaining\")\n"
@@ -159,7 +156,6 @@ static bool hektor_main(hektor_t *hektor) {
   "\n"
   "end)\n"
   "\n"
-  "-- This hook is called when the FAP is active.\n"
   "when_fap_is_active(function (hektor)\n"
   "\n"
   "  print(hektor.refill_string .. \" until FAP deactivation (at \" ..\n"
