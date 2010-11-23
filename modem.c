@@ -62,21 +62,31 @@ static bool modem_fetch_simple(const url_t url) {
 // Copy chunks of a page to a buffer...
 typedef struct {
   char *buffer;
-  size_t amount_written;
-} download_fn_state_t;
+  size_t written;
+} response_t;
 
-static size_t download_fn(const char *chunk, const size_t item_size,
-                          const size_t items, download_fn_state_t *state)
+void response_init(response_t *response, char buffer[]) {
+  response->buffer = buffer;
+  response->written = 0;
+}
+
+size_t response_finish(response_t *response) {
+  response->buffer[response->written] = '\0';
+  return response->written;
+}
+
+static size_t request_fn(const char *chunk, const size_t item_size,
+                         const size_t items, response_t *response)
 {
   const size_t chunk_size = item_size * items;
-  const size_t buffer_remaining = max(PAGE_LENGTH - state->amount_written, 0);
+  const size_t buffer_remaining = max(PAGE_LENGTH - response->written, 0);
 
   if (!buffer_remaining) return 0;
 
   const size_t write_size = min(chunk_size, buffer_remaining);
 
-  memcpy(&state->buffer[state->amount_written], chunk, write_size);
-  state->amount_written += write_size;
+  memcpy(&response->buffer[response->written], chunk, write_size);
+  response->written += write_size;
 
   return write_size;
 }
@@ -96,12 +106,12 @@ bool modem_build_restart_url(url_t buffer) {
 }
 
 size_t modem_fetch_page(page_t buffer, const url_t url) {
-  download_fn_state_t state = {buffer};
-  modem_fetch(url, download_fn, &state);
+  response_t response;
+  response_init(&response, buffer);
 
-  buffer[state.amount_written] = '\0';
+  modem_fetch(url, request_fn, &response);
 
-  return state.amount_written;
+  return response_finish(&response);
 }
 
 bool modem_restart(const url_t restart_url) {
