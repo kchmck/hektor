@@ -83,9 +83,6 @@ one's favorite text editor. After hektor's first run, the file should contain:
 
 [lua script]: http://lua.org/pil/index.html
 
-    -- This hook is called when the FAP is inactive. When usage gets uncomfortably
-    -- low, steps can be taken to prevent FAP activation. One step could be
-    -- repeatedly restarting the modem.
     when_fap_is_inactive(function (hektor)
 
       print(hektor.remaining_string .. " are remaining")
@@ -96,7 +93,6 @@ one's favorite text editor. After hektor's first run, the file should contain:
 
     end)
 
-    -- This hook is called when the FAP is active.
     when_fap_is_active(function (hektor)
 
       print(hektor.refill_string .. " until FAP deactivation (at " ..
@@ -123,7 +119,7 @@ information:
     end)
 
 to popping up a notification (with the help of [lua's `os.execute`
-funcion][os.execute]):
+function][os.execute]):
 
     when_fap_is_inactive(function (hektor)
       if hektor.remaining_usage < 10 then
