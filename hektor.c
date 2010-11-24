@@ -118,8 +118,8 @@ static bool hektor_call_hook(hektor_t *hektor) {
     }},
 
     {"remaining_pct", LUA_TNUMBER, {
-      .number = 100 * ((double)info_remaining_usage(info) /
-                               info_allowed_usage(info))
+      .number = 100 * (double)(info_remaining_usage(info)) /
+                               info_allowed_usage(info)
     }},
 
     {"refill_seconds", LUA_TNUMBER, {
