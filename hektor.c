@@ -199,10 +199,9 @@ static bool hektor_main_execute(int argc, char **argv) {
     return false;
 
   modem_global_init();
-
   const bool result = hektor_main(&hektor);
-
   modem_global_destroy();
+
   lua_destroy(&hektor.lua);
 
   return result;
