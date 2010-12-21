@@ -48,10 +48,8 @@ static bool modem_fetch(const url_t url, void *receive_fn, void *fn_data) {
 }
 
 // Discard any downloaded data.
-static size_t discard_fn(const char *chunk, const size_t item_size,
-                         const size_t items, void *state)
-{
-  return items * item_size;
+static size_t discard_fn(void *chunk, size_t size, size_t num, void *data) {
+  return size * num;
 }
 
 // Simply fetch a @url and discard any downloaded data.
@@ -75,10 +73,10 @@ size_t response_finish(response_t *response) {
   return response->written;
 }
 
-static size_t request_fn(const char *chunk, const size_t item_size,
-                         const size_t items, response_t *response)
-{
-  const size_t chunk_size = item_size * items;
+static size_t request_fn(void *chunk, size_t size, size_t num, void *data) {
+  response_t *response = data;
+
+  const size_t chunk_size = size * num;
   const size_t buffer_remaining = max(PAGE_LENGTH - response->written, 0);
 
   if (!buffer_remaining) return 0;
