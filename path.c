@@ -35,12 +35,12 @@ bool path_dirname(const path_t path, path_t dirname_buffer) {
 }
 
 // Make a single @dir.
-static bool path_make_single_dir(const path_t dir) {
+static bool path_make_dir(const path_t dir) {
   return mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != -1 ||
          errno == EEXIST;
 }
 
-bool path_make_dir(const path_t dir) {
+bool path_make_dirs(const path_t dir) {
   path_t parent_dirs;
   
   if (!path_dirname(dir, parent_dirs))
@@ -51,7 +51,7 @@ bool path_make_dir(const path_t dir) {
     return true;
 
   // ...else recursively make any parents...
-  return path_make_dir(parent_dirs) && path_make_single_dir(dir);
+  return path_make_dirs(parent_dirs) && path_make_dir(dir);
 }
 
 // Build a path by appending @suffix onto @prefix.

@@ -25,8 +25,8 @@ typedef char path_t[PATH_LENGTH];
 // Copy the parent directories of @path into @dirname_buffer.
 bool path_dirname(const path_t path, path_t dirname_buffer);
 
-// Make @dir and any of its parents.
-bool path_make_dir(const path_t dir);
+// Make @dir and its parents.
+bool path_make_dirs(const path_t dir);
 
 // Get the paths to the config dir and the config file.
 bool path_build_config(path_t dir_buffer, path_t file_buffer);

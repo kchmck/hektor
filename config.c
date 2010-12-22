@@ -35,7 +35,7 @@ bool config_init(config_t *config, lua_t *lua, const char *def_config) {
   config->def_config_length = strlen(def_config);
 
   return path_build_config(config->config_dir, config->config_file) &&
-         path_make_dir(config->config_dir);
+         path_make_dirs(config->config_dir);
 }
 
 // Write a default config file.
