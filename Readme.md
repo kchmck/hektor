@@ -1,13 +1,17 @@
 Hektor is a fast and simple 'fair access policy' tool for Hughesnet users.
-Through [lua] hooks, hektor can be setup to prevent FAP activation, to pop up
-notifications, or to perform an unlimited number of other actions.
+Hektor parses the usage data off the modem, cleans it up, then passes it to
+configurable [lua] hooks for handling. By default, output is just printed to the
+console:
 
     $ hektor
     30.0 megabytes are remaining
 
-The following sections detail how to install and configure hektor.
+### Compatibility
 
-### Installing
+Hektor should work with all **HN7000\*** and **HN9000\*** modems, but has only
+been tested on an HN7000.
+
+### Install
 
 On [arch linux], hektor can be installed through the AUR as the [hektor-git]
 package. With a tool like [bauerbill], it's as simple as:
@@ -20,41 +24,39 @@ package. With a tool like [bauerbill], it's as simple as:
 
 Bauerbill will automatically install all of hektor's dependencies. On other
 Linux distros, three libraries must be installed before hektor can be built.
-Instructions for doing so are below.
 
-### Installing Dependencies
+### Install Dependencies
 
-- [cURL] is used to fetch pages and usage information from the modem. **Ubuntu
-  users** can install the `libcurl4-openssl-dev` package: `sudo apt-get install
-  libcurl4-openssl-dev`. For **Others**, the library should be available from
-  one's package manager of choice with a name resembling `curl` or `libcurl`.
-  Otherwise, download and compile [the latest release][curl-dl].
+- [cURL] is used to fetch pages and usage data from the modem. **Ubuntu users**
+  can install the `libcurl4-openssl-dev` package: `sudo apt-get install
+  libcurl4-openssl-dev`. **Others** can try to install a `curl` or `libcurl`
+  package. If all else fails, download and compile [the latest
+  release][curl-dl].
 
 [cURL]: http://curl.haxx.se/
 [curl-dl]: http://curl.haxx.se/download.html
 
-- The xdg-basedir library is used to store configuration in a predictable and
-  [standardized] location. **Users of Ubuntu** can install the
-  `libxdg-basedir-dev` package: `sudo apt-get install libxdg-basedir-dev`.
-  **Others** can download and compile [the source][basedir-dl].
+- The xdg-basedir library is used to store configuration in a predictable place.
+  **Users of Ubuntu** can install the `libxdg-basedir-dev` package: `sudo
+  apt-get install libxdg-basedir-dev`. **Others** can download and compile [the
+  source][basedir-dl].
 
-[standardized]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 [basedir-dl]: http://n.ethz.ch/student/nevillm/download/libxdg-basedir/
 
 - [lua] is used for hektor's configuration file. **Users of Ubuntu** can install
   the `liblua5.1-0-dev` package: `sudo apt-get install liblua5.1-0-dev`.
-  **Others** can install it from their respective package manager or by manually
-  compiling [the latest release][lua-dl].
+  **Others** can try to install a `lua` package, or manually compile [the latest
+  release][lua-dl].
 
 [lua]: http://lua.org/
 [lua-dl]: http://www.lua.org/ftp/lua-5.1.4.tar.gz
 
-### Building and Installing
+### Install from Source
 
-After installing all of hektor's dependencies, download and extract [the
+After installing hektor's dependencies, download and extract [the
 tarball][hektor-dl]. Then, change into the extracted folder, build, and install:
 
-    $ wget http://github.com/kchmck/hektor/tarball/master
+    $ wget https://github.com/kchmck/hektor/tarball/master
     [...]
     $ tar -vxzf kchmck-hektor-*.tar.gz
     [...]
@@ -66,20 +68,18 @@ tarball][hektor-dl]. Then, change into the extracted folder, build, and install:
 
 [hektor-dl]: http://github.com/kchmck/hektor/tarball/master
 
-Once installed, the `hektor` command should be available to use:
+Once installed, the `hektor` command should be available:
 
     $ hektor
     200.0 megabytes are remaining
 
-### Configuring Hooks
+### Configure Hooks
 
-Hektor's default configuration is pretty bare bones: it simply prints out the
-important information and exits. Through its configuration file, though, hektor
-can be setup with virtually unlimited flexibility.
-
-The configuration file is usually located at `~/.config/hektor/config.lua`. As
-noted by the extension, the file is simply a [lua script] and can be edited with
-one's favorite text editor. After hektor's first run, the file should contain:
+Hektor's default configuration is bare bones -- it prints out the important
+information and exits. The configuration file is usually located at
+`~/.config/hektor/config.lua`. As noted by the extension, the file is a [lua
+script]. After hektor's first run, the file should contain the default
+configuration:
 
 [lua script]: http://lua.org/pil/index.html
 
@@ -102,59 +102,18 @@ one's favorite text editor. After hektor's first run, the file should contain:
 
 Hektor uses two hooks, depending on the FAP status:
 
-#### when_fap_is_active(hook)
+<table>
+  <tr>
+    <td>when_fap_is_active</td>
+    <td>This hook is ran when the FAP is active.</td>
+  </tr>
+  <tr>
+    <td>when_fap_is_inactive(hook)</td>
+    <td>This hook is ran when the FAP is not active.</td>
+  </tr>
+</table>
 
-This hook is ran when the FAP is active.
-
-#### when_fap_is_inactive(hook)
-
-This hook is ran when the FAP is not active.
-
-Both hooks receive the "hektor table", detailed below, as their only argument,
-and can use it to perform all kinds of logic, from simply printing out the
-information:
-
-    when_fap_is_inactive(function (hektor)
-      print(hektor.remaining_string .. " are remaining")
-    end)
-
-to popping up a notification (with the help of [lua's `os.execute`
-function][os.execute]):
-
-    when_fap_is_inactive(function (hektor)
-      if hektor.remaining_usage < 10 then
-        os.execute("notify-send -u critical " ..
-                   "'Remaining usage is dangerously low' " ..
-                   "'Only " .. hektor.remaining_string .. " are remaining'")
-      end
-    end)
-
-[os.execute]: http://lua.org/manual/5.1/manual.html#pdf-os.execute
-
-to restarting the modem (this works especially well when hektor is run every 15
-seconds or so, as it effectively prevents any kind of internet activity):
-
-    when_fap_is_inactive(function (hektor)
-      if hektor.remaining_usage < 5 then
-        hektor.restart_modem()
-      end
-    end)
-
-The above methods could all be combined, as well:
-
-    when_fap_is_inactive(function (hektor)
-      print(hektor.remaining_string .. " are remaining")
-
-      if hektor.remaining_usage < 10 then
-        os.execute("notify-send -u critical " ..
-                   "'Remaining usage is dangerously low' " ..
-                   "'Only " .. hektor.remaining_string .. " are remaining'")
-      end
-
-      if hektor.remaining_usage < 5 then
-        hektor.restart_modem()
-      end
-    end)
+Both hooks receive the "hektor table" as their only argument.
 
 ### The Hektor Table
 
