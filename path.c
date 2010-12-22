@@ -42,7 +42,7 @@ static bool path_make_dir(const path_t dir) {
 
 bool path_make_dirs(const path_t dir) {
   path_t parent_dirs;
-  
+
   if (!path_dirname(dir, parent_dirs))
     return false;
 

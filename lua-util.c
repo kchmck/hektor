@@ -88,7 +88,7 @@ int lua_push_args(lua_State *lua, const char *arg_spec, va_list args) {
         lua_pushboolean(lua, va_arg(args, int));
         break;
 
-      case 'i': 
+      case 'i':
         lua_pushinteger(lua, va_arg(args, int));
         break;
 

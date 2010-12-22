@@ -164,10 +164,12 @@ static bool hektor_main(hektor_t *hektor) {
     "end)\n";
 
   url_t info_url;
+
   if (!modem_build_info_url(info_url))
     return false;
 
   page_t info_page;
+
   if (!modem_fetch_page(info_page, info_url))
     return hektor_error_fetching_page(info_url);
 
