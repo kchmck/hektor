@@ -38,16 +38,6 @@ typedef struct {
   hook_t fap_is_inactive_hook;
 } hektor_t;
 
-// Called by lua to restart the modem.
-static int hektor_restart_modem_fn(lua_State *lua) {
-  url_t restart_url;
-
-  if (modem_build_restart_url(restart_url))
-    modem_restart(restart_url);
-
-  return 0;
-}
-
 static bool hektor_error_fetching_page(const url_t url) {
   printf("An error occured while fetching the page at '%s'.\n", url);
 
@@ -66,6 +56,16 @@ static bool hektor_error_running_hook(hektor_t *hektor) {
          lua_last_error(&hektor->lua));
 
   return false;
+}
+
+// Called by lua to restart the modem.
+static int hektor_restart_modem_fn(lua_State *lua) {
+  url_t restart_url;
+
+  if (modem_build_restart_url(restart_url))
+    modem_restart(restart_url);
+
+  return 0;
 }
 
 static hook_t *hektor_get_hook(hektor_t *hektor) {
