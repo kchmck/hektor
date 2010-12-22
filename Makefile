@@ -12,7 +12,7 @@ OBJS = config.o     \
 
 LIBS = libcurl lua libxdg-basedir
 
-STD_CFLAGS  = -pipe -std=c99 -Wall -Wno-switch-enum -Wno-parentheses -O2
+STD_CFLAGS  = -pipe -std=c99 -Wall -Wno-switch -O2
 STD_CFLAGS += $(shell pkg-config --cflags $(LIBS))
 
 STD_LDFLAGS = $(shell pkg-config --libs $(LIBS))
