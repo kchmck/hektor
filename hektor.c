@@ -56,14 +56,14 @@ static bool hektor_error_fetching_page(const url_t url) {
 
 static bool hektor_error_loading_config(hektor_t *hektor) {
   printf("An error occured while loading the configuration file: %s.\n",
-         lua_get_error(&hektor->lua));
+         lua_last_error(&hektor->lua));
 
   return false;
 }
 
 static bool hektor_error_running_hook(hektor_t *hektor) {
   printf("An error occured while running configured hooks: %s\n",
-         lua_get_error(&hektor->lua));
+         lua_last_error(&hektor->lua));
 
   return false;
 }

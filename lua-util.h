@@ -51,7 +51,7 @@ static inline void *lua_closure_get_userdata(lua_State *lua,
 }
 
 // Get the most recent error from @lua.
-static inline const char *lua_get_error(lua_t *lua) {
+static inline const char *lua_last_error(lua_t *lua) {
   return lua_tostring(lua_state(lua), -1);
 }
 
