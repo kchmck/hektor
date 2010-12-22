@@ -59,31 +59,30 @@ static bool modem_fetch_simple(const url_t url) {
 
 typedef struct {
   char *buffer;
-  size_t written;
+  size_t offset;
 } response_t;
 
 void response_init(response_t *response, char buffer[]) {
   response->buffer = buffer;
-  response->written = 0;
+  response->offset = 0;
 }
 
 size_t response_finish(response_t *response) {
-  response->buffer[response->written] = '\0';
-  return response->written;
+  response->buffer[response->offset] = '\0';
+  return response->offset;
 }
 
 static size_t request_fn(void *chunk, size_t size, size_t num, void *data) {
   response_t *response = data;
 
-  const size_t chunk_size = size * num;
-  const size_t buffer_remaining = max(PAGE_LENGTH - response->written, 0);
-
+  const size_t buffer_remaining = max(PAGE_LENGTH - response->offset, 0);
   if (!buffer_remaining) return 0;
 
+  const size_t chunk_size = size * num;
   const size_t write_size = min(chunk_size, buffer_remaining);
 
-  memcpy(&response->buffer[response->written], chunk, write_size);
-  response->written += write_size;
+  memcpy(&response->buffer[response->offset], chunk, write_size);
+  response->offset += write_size;
 
   return write_size;
 }
