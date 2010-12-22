@@ -70,10 +70,39 @@ typedef lua_table_elem_t lua_table_t[];
 
 enum { LUA_TABLE_END = 0 };
 
-// Build a new lua table and fill it with @elems.
+// Build a new lua table on top of the stack and fill it with the elements in
+// @table.
+//
+// The following example would build a table with two keys: "a" -- a number with
+// the value 42, and "b" -- a string with the value "wut".
+//
+//   const lua_table_t table = {
+//     {"a", LUA_TNUMBER, {
+//       .number = 42
+//     }},
+//     {"b", LUA_TSTRING, {
+//       .string = "wut"
+//     }}
+//   };
+//
+//   lua_build_table(a_lua_State, table);
+//
 void lua_build_table(lua_State *lua, const lua_table_t table);
 
-// Push a variable number of @args based on @arg_spec.
+// Push a variable number of @args based on @arg_spec. @arg_spec is a string of
+// characters that describes the type of each argument:
+//
+//   b  int or bool
+//   i  int
+//   l  long
+//   f  double
+//   s  char *
+//   t  lua_table_t
+//
+//   @return: the number of arguments pushed.
+//
+//   lua_push_args(a_lua_State, "bits", true, 42, table, "hallo") -> 4
+//
 int lua_push_args(lua_State *lua, const char *arg_spec, va_list args);
 
 #endif

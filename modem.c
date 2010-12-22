@@ -32,7 +32,7 @@ void modem_global_destroy(void) {
   curl_global_cleanup();
 }
 
-// Request a url with a callback function.
+// Request @url with a callback function @receive_fn and userdata @fn_data.
 static bool modem_fetch(const url_t url, void *receive_fn, void *fn_data) {
   CURL *curl = curl_easy_init();
   if (!curl) return false;
@@ -52,12 +52,11 @@ static size_t discard_fn(void *chunk, size_t size, size_t num, void *data) {
   return size * num;
 }
 
-// Simply fetch a @url and discard any downloaded data.
+// Fetch @url and discard any downloaded data.
 static bool modem_fetch_simple(const url_t url) {
   return modem_fetch(url, discard_fn, NULL);
 }
 
-// Copy chunks of a page to a buffer...
 typedef struct {
   char *buffer;
   size_t written;
@@ -89,8 +88,8 @@ static size_t request_fn(void *chunk, size_t size, size_t num, void *data) {
   return write_size;
 }
 
-// Strip the leading slash off a path and append the rest to the modem's base
-// url.
+// Strip the leading slash off @url, append the rest to the modem's base url,
+// and copy the result into @url_buffer.
 static inline bool modem_build_url(url_t url_buffer, const url_t url) {
   return snprintf(url_buffer, URL_LENGTH, "http://192.168.0.1/%s", &url[1]) > 0;
 }
