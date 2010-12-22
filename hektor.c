@@ -145,7 +145,7 @@ static bool hektor_call_hook(hektor_t *hektor) {
 }
 
 static bool hektor_main(hektor_t *hektor) {
-  static const char DEFAULT_CONFIG[] =
+  static const char *DEFAULT_CONFIG =
     "when_fap_is_inactive(function (hektor)\n"
     "\n"
     "  print(hektor.remaining_string .. \" are remaining\")\n"
