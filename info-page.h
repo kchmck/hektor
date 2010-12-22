@@ -18,7 +18,6 @@
 #define INFO_PAGE_H
 
 #include <stdbool.h>
-#include <stdint.h>
 
 #include "modem.h"
 
@@ -31,6 +30,6 @@ bool info_page_value_parse(info_page_value_t value_buffer,
                            const char *value_name);
 
 // Get @value_name from @info_page as an integer.
-uint32_t info_page_number_parse(const page_t info_page, const char *value_name);
+int info_page_number_parse(const page_t info_page, const char *value_name);
 
 #endif

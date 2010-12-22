@@ -16,7 +16,6 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -59,8 +58,7 @@ bool info_page_value_parse(info_page_value_t value_buffer,
                      min(value_length + 1, INFO_PAGE_VALUE_LENGTH));
 }
 
-uint32_t info_page_number_parse(const page_t info_page, const char *value_name)
-{
+int info_page_number_parse(const page_t info_page, const char *value_name) {
   info_page_value_t value;
   info_page_value_parse(value, info_page, value_name);
 
