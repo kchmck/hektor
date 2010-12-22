@@ -33,7 +33,7 @@ typedef enum {
   UNIT_HOUR,
 
   UNIT_INVALID,
-} unit_type_t;
+} unit_t;
 
 typedef enum {
   UNIT_CLASS_INFO,
@@ -49,64 +49,77 @@ typedef enum {
   UNIT_BASE_INVALID,
 } unit_base_t;
 
-// Convert @amount from @orig_type to @conv_type.
-double unit_convert(const double amount, const unit_type_t orig_type,
-                                         const unit_type_t conv_type);
+// Convert @amount of @orig_type to @conv_type.
+//
+//   @return: a converted amount or 0.0 on error.
+//
+//   unit_convert(1, UNIT_BYTE, UNIT_KILOBYTE)    -> 1000.0
+//   unit_convert(1, UNIT_BYTE, UNIT_KIBIBYTE)    -> 1024.0
+//   unit_convert(1000, UNIT_KILOBYTE, UNIT_BYTE) -> 1.0
+//   unit_convert(1, UNIT_HOUR, UNIT_SECOND)      -> 3600.0
+//
+double unit_convert(const double amount, const unit_t orig_unit,
+                                         const unit_t conv_unit);
 
-enum { UNIT_STRING_LENGTH = 32 + 1 };
+enum { UNIT_STRING_LENGTH = 32 };
 typedef char unit_string_t[UNIT_STRING_LENGTH];
 
 typedef struct {
-  unit_class_t unit_class;
-  unit_base_t unit_base;
-
-  unit_type_t orig_type;
+  unit_t orig_unit;
+  unit_class_t orig_class;
+  unit_base_t orig_base;
   double orig_amount;
 
-  unit_type_t conv_type;
+  unit_t conv_unit;
   double conv_amount;
 
   const char *label;
   unit_string_t string;
 } unit_conv_t;
 
-// Initialize @conv with @amount of @type.
-void unit_conv_init(unit_conv_t *conv, const unit_type_t type,
-                    const double amount);
+// Initialize @conv with @amount of @unit. The conversion base is initialized to
+// UNIT_BASE_SI, but can be changed with @unit_conv_set_base.
+//
+//   unit_conv_t conv;
+//   unit_conv_init(&conv, UNIT_BYTE, 1200);
+//
+void unit_conv_init(unit_conv_t *conv, const unit_t unit,
+                                       const double amount);
 
-// Set the @base of a unit conversion.
+// Set the conversion base of @conv.
 static inline void unit_conv_set_base(unit_conv_t *conv, const unit_base_t base)
 {
-  conv->unit_base = base;
+  conv->orig_base = base;
 }
 
-// Set the @type of the original unit.
-static inline void unit_conv_set_type(unit_conv_t *conv, const unit_type_t type)
-{
-  conv->orig_type = type;
-}
-
-// Set the @amount of the original unit.
-static inline void unit_conv_set_amount(unit_conv_t *conv, const double amount)
-{
-  conv->orig_amount = amount;
-}
-
-// Perform the unit conversion.
+// Convert @conv to the "best" unit.
+//
+//   @return: true on success and false otherwise.
+//
+//   unit_conv_calculate(&conv) -> true
+//
 bool unit_conv_calculate(unit_conv_t *conv);
 
-// Get a converted unit's amount: the 100 in 100 bytes.
+// Get a converted unit's amount.
+//
+//   unit_conv_amount(&conv) -> 1.2
+//
 static inline double unit_conv_amount(const unit_conv_t *conv) {
   return conv->conv_amount;
 }
 
-// Get a converted unit's label: the "bytes" in 100 bytes.
+// Get a converted unit's label.
+//
+//   unit_conv_label(&conv) -> "kilobytes"
+//
 static inline const char *unit_conv_label(const unit_conv_t *conv) {
   return conv->label;
 }
 
-// Get a converted unit's string: if the amount is 100 and the label is "bytes",
-// the string will resemble "100.0 bytes".
+// Get a converted unit's string.
+//
+//   unit_conv_string(&conv) -> "1.20 kilobytes"
+//
 static inline const char *unit_conv_string(const unit_conv_t *conv) {
   return conv->string;
 }
