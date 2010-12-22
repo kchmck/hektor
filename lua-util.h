@@ -66,10 +66,12 @@ typedef struct {
   } value;
 } lua_table_elem_t;
 
+typedef lua_table_elem_t lua_table_t[];
+
 enum { LUA_TABLE_END = 0 };
 
 // Build a new lua table and fill it with @elems.
-void lua_build_table(lua_State *lua, const lua_table_elem_t elems[]);
+void lua_build_table(lua_State *lua, const lua_table_t table);
 
 // Push a variable number of @args based on @arg_spec.
 int lua_push_args(lua_State *lua, const char *arg_spec, va_list args);

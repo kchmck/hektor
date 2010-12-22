@@ -51,15 +51,15 @@ void lua_closure_register(lua_State *lua, const char *fn_name, lua_CFunction fn,
   lua_setglobal(lua, fn_name);
 }
 
-void lua_build_table(lua_State *lua, const lua_table_elem_t elems[]) {
+void lua_build_table(lua_State *lua, const lua_table_t table) {
   // Push a new table onto the stack and store its index.
   lua_newtable(lua);
   const int table_index = lua_gettop(lua);
 
-  int elem_index = 0;
+  int table_idx = 0;
   const lua_table_elem_t *elem;
 
-  while ((elem = &elems[elem_index])->key != LUA_TABLE_END) {
+  while ((elem = &table[table_idx])->key != LUA_TABLE_END) {
     switch (elem->value_type) {
       case LUA_TNUMBER:
         lua_pushnumber(lua, elem->value.number);
@@ -74,7 +74,7 @@ void lua_build_table(lua_State *lua, const lua_table_elem_t elems[]) {
     }
 
     lua_setfield(lua, table_index, elem->key);
-    elem_index += 1;
+    table_idx += 1;
   }
 }
 
