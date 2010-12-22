@@ -38,7 +38,7 @@ static inline bool strings_are_equal(const char *a, const char *b) {
 static inline int string_copy(const char *source, char *dest,
                               const size_t max_length)
 {
-  return snprintf(dest, max_length, "%s", source);
+  return min(snprintf(dest, max_length, "%s", source), max_length);
 }
 
 // Get the length of @string.

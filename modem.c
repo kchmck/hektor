@@ -92,7 +92,7 @@ static size_t request_fn(void *chunk, size_t size, size_t num, void *data) {
 // Strip the leading slash off a path and append the rest to the modem's base
 // url.
 static inline bool modem_build_url(url_t url_buffer, const url_t url) {
-  return snprintf(url_buffer, URL_LENGTH, "http://192.168.0.1/%s", &url[1]);
+  return snprintf(url_buffer, URL_LENGTH, "http://192.168.0.1/%s", &url[1]) > 0;
 }
 
 bool modem_build_info_url(url_t buffer) {

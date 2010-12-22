@@ -58,7 +58,7 @@ bool path_make_dir(const path_t dir) {
 static inline bool path_build(path_t path_buffer, const path_t prefix,
                                                   const path_t suffix)
 {
-  return snprintf(path_buffer, PATH_LENGTH, "%s/%s", prefix, suffix);
+  return snprintf(path_buffer, PATH_LENGTH, "%s/%s", prefix, suffix) > 0;
 }
 
 // Append the hektor subdirectory onto @dir.
