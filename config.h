@@ -29,7 +29,6 @@ typedef struct {
   path_t config_file;
 
   const char *def_config;
-  size_t def_config_length;
 } config_t;
 
 // Initialize @config with a @lua session and a @def_config string.

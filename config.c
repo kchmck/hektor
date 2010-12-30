@@ -30,9 +30,7 @@
 
 bool config_init(config_t *config, lua_t *lua, const char *def_config) {
   config->lua = lua;
-
   config->def_config = def_config;
-  config->def_config_length = strlen(def_config);
 
   return path_build_config(config->config_dir, config->config_file) &&
          path_make_dirs(config->config_dir);
@@ -44,11 +42,10 @@ static bool config_create_default(config_t *config)
   FILE *config_file = fopen(config->config_file, "w");
   if (!config_file) return false;
 
-  const size_t written = fwrite(config->def_config, sizeof(char),
-                                config->def_config_length, config_file);
+  const size_t written = fputs(config->def_config, config_file);
   fclose(config_file);
 
-  return written == config->def_config_length;
+  return written > 0;
 }
 
 // Load a default config file.
