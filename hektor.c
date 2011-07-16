@@ -38,23 +38,20 @@ typedef struct {
   hook_t fap_is_inactive_hook;
 } hektor_t;
 
-static bool hektor_error_fetching_page(const url_t url) {
-  printf("An error occured while fetching the page at '%s'.\n", url);
-
+static bool hektor_err_net(const url_t url) {
+  printf("Error: Unable to fetch '%s'.\n", url);
   return false;
 }
 
-static bool hektor_error_loading_config(hektor_t *hektor) {
-  printf("An error occured while loading the configuration file: %s.\n",
+static bool hektor_err_loading_config(hektor_t *hektor) {
+  printf("Error: Unable to load configuration: %s.\n",
          lua_last_error(&hektor->lua));
-
   return false;
 }
 
-static bool hektor_error_running_hook(hektor_t *hektor) {
-  printf("An error occured while running configured hooks: %s\n",
+static bool hektor_err_running_hook(hektor_t *hektor) {
+  printf("Error: Unable to run hooks: %s\n",
          lua_last_error(&hektor->lua));
-
   return false;
 }
 
@@ -171,7 +168,7 @@ static bool hektor_main(hektor_t *hektor) {
   page_t info_page;
 
   if (!modem_fetch_page(info_page, info_url))
-    return hektor_error_fetching_page(info_url);
+    return hektor_err_net(info_url);
 
   if (!info_init(&hektor->info, info_page))
     return false;
@@ -186,10 +183,10 @@ static bool hektor_main(hektor_t *hektor) {
   hook_register(&hektor->fap_is_active_hook, "when_fap_is_active");
 
   if (!config_load(&hektor->config))
-    return hektor_error_loading_config(hektor);
+    return hektor_err_loading_config(hektor);
 
   if (!hektor_call_hook(hektor))
-    return hektor_error_running_hook(hektor);
+    return hektor_err_running_hook(hektor);
 
   return true;
 }
