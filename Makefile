@@ -27,11 +27,8 @@ $(BINARY): $(OBJS)
 %.o: %.c
 	$(CC) $(ALL_CFLAGS) -o $@ -c $<
 
-install: all
+install: $(BINARY)
 	install -D $(BINARY) $(BINDIR)/$(BINARY)
-
-uninstall:
-	rm -f $(BINDIR)/$(BINARY)
 
 clean:
 	-rm $(OBJS)
@@ -39,4 +36,4 @@ clean:
 distclean: clean
 	-rm $(BINARY)
 
-.PHONY: install uninstall clean distclean
+.PHONY: install clean distclean
