@@ -1,85 +1,52 @@
-// Copyright 2010 Mick Koch <kchmck@gmail.com>
-//
-// This file is part of hektor.
-//
-// Hektor is free software: you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the Free Software
-// Foundation, either version 3 of the License, or (at your option) any later
-// version.
-//
-// Hektor is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License along with
-// hektor. If not, see <http://www.gnu.org/licenses/>.
+// This program is free software. It comes without any warranty, to the extent
+// permitted by applicable law. You can redistribute it and/or modify it under
+// the terms of the Do What The Fuck You Want To Public License, Version 2, as
+// published by Sam Hocevar. See http://sam.zoy.org/wtfpl/COPYING for more
+// details.
 
 #ifndef INFO_H
 #define INFO_H
 
-#include <stdbool.h>
 #include <stdint.h>
 #include <time.h>
 
-#include "modem.h"
+#include "bstrlib.h"
 
 typedef enum {
-  MODEM_TYPE_7000,
-  MODEM_TYPE_9000,
+  MODEM_7000,
+  MODEM_9000,
 
-  MODEM_TYPE_INVALID,
-} modem_type_t;
+  MODEM_INVALID
+} modem_t;
 
 typedef enum {
-  FAP_STATE_ACTIVE,
-  FAP_STATE_INACTIVE,
+  FAP_ACTIVE,
+  FAP_INACTIVE,
 
-  FAP_STATE_INVALID,
-} fap_state_t;
+  FAP_INVALID
+} fap_t;
 
 typedef struct {
-  modem_type_t modem_type;
+  // Modem type
+  modem_t modem;
 
-  uint32_t allowed_usage;
-  uint32_t remaining_usage;
+  // Allowed usage in bytes
+  uintmax_t usage_allowed;
+  // Remaining usage in bytes
+  uintmax_t usage_remain;
 
-  time_t refill_time;
-  time_t refill_timestamp;
+  // If the modem is connected to the internet
+  uintmax_t conn;
 
-  fap_state_t fap_state;
+  // Seconds until refilled
+  uintmax_t refill_secs;
+  // Timestamp when refilled
+  time_t refill_ts;
+
+  // Status of the FAP
+  fap_t fap;
 } info_t;
 
-// Initialize @info with information parsed from the modem.
-bool info_init(info_t *info, const page_t info_page);
-
-// Get the modem type.
-static inline modem_type_t info_modem_type(const info_t *info) {
-  return info->modem_type;
-}
-
-// Get the "full" amount of the current usage plan in bytes.
-static inline uint32_t info_allowed_usage(const info_t *info) {
-  return info->allowed_usage;
-}
-
-// Get the remaining usage in bytes.
-static inline uint32_t info_remaining_usage(const info_t *info) {
-  return info->remaining_usage;
-}
-
-// Get the time remaining before the FAP is deactivated in seconds.
-static inline time_t info_refill_time(const info_t *info) {
-  return info->refill_time;
-}
-
-// Get the exact time the FAP will be deactivated as a unix timestamp.
-static inline time_t info_refill_timestamp(const info_t *info) {
-  return info->refill_timestamp;
-}
-
-// Get the FAP state.
-static inline fap_state_t info_fap_state(const info_t *info) {
-  return info->fap_state;
-}
+void info_init(info_t *info, const bstring page);
 
 #endif

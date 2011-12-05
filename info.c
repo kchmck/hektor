@@ -1,88 +1,114 @@
-// Copyright 2010 Mick Koch <kchmck@gmail.com>
-//
-// This file is part of hektor.
-//
-// Hektor is free software: you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the Free Software
-// Foundation, either version 3 of the License, or (at your option) any later
-// version.
-//
-// Hektor is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License along with
-// hektor. If not, see <http://www.gnu.org/licenses/>.
+// This program is free software. It comes without any warranty, to the extent
+// permitted by applicable law. You can redistribute it and/or modify it under
+// the terms of the Do What The Fuck You Want To Public License, Version 2, as
+// published by Sam Hocevar. See http://sam.zoy.org/wtfpl/COPYING for more
+// details.
 
+#include <assert.h>
+#include <inttypes.h>
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
-#include "common.h"
+#include "bstrlib.h"
 #include "info.h"
-#include "info-page.h"
-#include "modem.h"
-#include "unit.h"
 
-// Parse the modem type.
-static modem_type_t parse_modem_type(const page_t info_page) {
-  info_page_value_t modem_type;
-  info_page_value_parse(modem_type, info_page, "AdapterType");
+static bstring parse_val(const bstring page, const char *info_key) {
+  const char *start = page->data;
+  const char *end = page->data + page->slen;
 
-  if (strings_are_equal(modem_type, "HN7000S"))
-    return MODEM_TYPE_7000;
+  const char *key, *sep, *val, *nl;
+  ptrdiff_t len;
 
-  if (strings_are_equal(modem_type, "HN9000"))
-    return MODEM_TYPE_9000;
+  key = strstr(start, info_key);
 
-  return MODEM_TYPE_INVALID;
+  if (!key)
+    return NULL;
+
+  sep = memchr(key, '=', end - key);
+  assert(sep);
+
+  val = sep + 1;
+  nl = memchr(val, '\n', end - val);
+  assert(nl);
+
+  len = nl - val;
+
+  return blk2bstr(val, len);
 }
 
-// Parse the allowed usage limit into bytes.
-static uint32_t parse_allowed(const page_t info_page,
-                              const modem_type_t modem_type)
-{
-  if (modem_type == MODEM_TYPE_7000)
-    return info_page_number_parse(info_page, "FapAggBucketSize");
-  else
-    return info_page_number_parse(info_page, "FapPbp2BucketSize");
+static bool parse_num(uintmax_t *n, const bstring page, const char *info_key) {
+  bstring val = parse_val(page, info_key);
+
+  if (!val)
+    return false;
+
+  char *start = val->data;
+  char *end;
+
+  *n = strtoumax(start, &end, 10);
+
+  bdestroy(val);
+
+  return end != start;
 }
 
-// Parse the remaining usage into bytes.
-static uint32_t parse_remaining(const page_t info_page) {
-  return min(info_page_number_parse(info_page, "FapAggBucketRemaining"),
-             info_page_number_parse(info_page, "FapPbp2BucketRemaining"));
+static modem_t parse_modem(const bstring modem) {
+  if (biseqcstr(modem, "HN7000S"))
+    return MODEM_7000;
+
+  if (biseqcstr(modem, "HN9000"))
+    return MODEM_9000;
+
+  return MODEM_INVALID;
 }
 
-// Parse the refill time into seconds.
-static time_t parse_refill_time(const page_t info_page) {
-  return unit_convert(info_page_number_parse(info_page, "TimeLeftUntilRefill"),
-                      UNIT_MINUTE, UNIT_SECOND);
-}
+static inline uintmax_t min(uintmax_t a, uintmax_t b) { return a < b ? a : b; }
 
-// Parse the FAP state.
-static fap_state_t parse_fap_state(const page_t info_page) {
-  switch (info_page_number_parse(info_page, "FapThrottleState")) {
-    case 1: return FAP_STATE_INACTIVE;
-    case 2: return FAP_STATE_ACTIVE;
+void info_init(info_t *info, const bstring page) {
+  bstring modem;
+  uintmax_t remain[2];
+  uintmax_t refill_mins;
+  uintmax_t fap;
+
+  modem = parse_val(page, "AdapterType");
+  assert(modem);
+
+  info->modem = parse_modem(modem);
+  assert(info->modem != MODEM_INVALID);
+
+  switch (info->modem) {
+  case MODEM_7000:
+    assert(parse_num(&info->usage_allowed, page, "FapAggBucketSize"));
+  break;
+  case MODEM_9000:
+    assert(parse_num(&info->usage_allowed, page, "FapPbp2BucketSize"));
+  break;
   }
 
-  return FAP_STATE_INVALID;
-}
+  assert(parse_num(&remain[0], page, "FapAggBucketRemaining"));
+  assert(parse_num(&remain[1], page, "FapPbp2BucketRemaining"));
 
-bool info_init(info_t *info, const page_t info_page) {
-  info->modem_type = parse_modem_type(info_page);
-  if (info->modem_type == MODEM_TYPE_INVALID) return false;
+  info->usage_remain = min(remain[0], remain[1]);
 
-  info->allowed_usage = parse_allowed(info_page, info->modem_type);
-  info->remaining_usage = parse_remaining(info_page);
+  assert(parse_num(&info->conn, page, "SDLPercentComplete"));
 
-  info->refill_time = parse_refill_time(info_page);
-  info->refill_timestamp = time(NULL) + info->refill_time;
+  assert(parse_num(&refill_mins, page, "TimeLeftUntilRefill"));
 
-  info->fap_state = parse_fap_state(info_page);
-  if (info->fap_state == FAP_STATE_INVALID) return false;
+  info->refill_secs = refill_mins * 60;
+  info->refill_ts = time(NULL) + info->refill_secs;
 
-  return true;
+  assert(parse_num(&fap, page, "FapThrottleState"));
+
+  switch (fap) {
+    case 1:  info->fap = FAP_INACTIVE; break;
+    case 2:  info->fap = FAP_ACTIVE; break;
+    default: info->fap = FAP_INVALID; break;
+  }
+
+  assert(info->fap != FAP_INVALID);
+
+  bdestroy(modem);
 }

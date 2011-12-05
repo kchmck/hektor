@@ -1,115 +1,64 @@
-// Copyright 2010 Mick Koch <kchmck@gmail.com>
-//
-// This file is part of hektor.
-//
-// Hektor is free software: you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the Free Software
-// Foundation, either version 3 of the License, or (at your option) any later
-// version.
-//
-// Hektor is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License along with
-// hektor. If not, see <http://www.gnu.org/licenses/>.
+// This program is free software. It comes without any warranty, to the extent
+// permitted by applicable law. You can redistribute it and/or modify it under
+// the terms of the Do What The Fuck You Want To Public License, Version 2, as
+// published by Sam Hocevar. See http://sam.zoy.org/wtfpl/COPYING for more
+// details.
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdio.h>
-#include <string.h>
 
 #include <curl/curl.h>
 
-#include "common.h"
+#include "bstrlib.h"
 #include "modem.h"
 
-void modem_global_init(void) {
-  curl_global_init(CURL_GLOBAL_NOTHING);
-}
-
-void modem_global_destroy(void) {
-  curl_global_cleanup();
-}
-
-// Request @url with a callback function @receive_fn and userdata @fn_data.
-static bool modem_fetch(const url_t url, void *receive_fn, void *fn_data) {
-  CURL *curl = curl_easy_init();
-  if (!curl) return false;
-
-  curl_easy_setopt(curl, CURLOPT_URL, url);
-  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, receive_fn);
-  curl_easy_setopt(curl, CURLOPT_WRITEDATA, fn_data);
-
-  const CURLcode result = curl_easy_perform(curl);
-  curl_easy_cleanup(curl);
-
-  return result == CURLE_OK;
-}
-
-// Discard any downloaded data.
 static size_t discard_fn(void *chunk, size_t size, size_t num, void *data) {
   return size * num;
 }
 
-// Fetch @url and discard any downloaded data.
-static bool modem_fetch_simple(const url_t url) {
-  return modem_fetch(url, discard_fn, NULL);
+bool modem_touch(const char *url) {
+  CURL *curl = curl_easy_init();
+  assert(curl);
+
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
+  curl_easy_setopt(curl, CURLOPT_URL, url);
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, discard_fn);
+
+  CURLcode ret = curl_easy_perform(curl);
+  curl_easy_cleanup(curl);
+
+  return ret == CURLE_OK;
 }
 
-typedef struct {
-  char *buffer;
-  size_t offset;
-} response_t;
+static size_t write_fn(void *chunk, size_t size, size_t num, void *data) {
+  bstring buf = data;
+  size_t len = size * num;
 
-void response_init(response_t *response, char buffer[]) {
-  response->buffer = buffer;
-  response->offset = 0;
+  assert(bcatblk(buf, chunk, len) == BSTR_OK);
+
+  return len;
 }
 
-size_t response_finish(response_t *response) {
-  response->buffer[response->offset] = '\0';
-  return response->offset;
-}
+bstring modem_fetch(const char *url) {
+  bstring buf = bfromcstralloc(512, "");
+  assert(buf);
 
-static size_t request_fn(void *chunk, size_t size, size_t num, void *data) {
-  response_t *response = data;
+  CURL *curl = curl_easy_init();
+  assert(curl);
 
-  const size_t buffer_remaining = max(PAGE_LENGTH - response->offset, 0);
-  if (!buffer_remaining) return 0;
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
+  curl_easy_setopt(curl, CURLOPT_URL, url);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, buf);
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_fn);
 
-  const size_t chunk_size = size * num;
-  const size_t write_size = min(chunk_size, buffer_remaining);
+  CURLcode ret = curl_easy_perform(curl);
+  curl_easy_cleanup(curl);
 
-  memcpy(&response->buffer[response->offset], chunk, write_size);
-  response->offset += write_size;
+  if (ret == CURLE_OK)
+    return buf;
 
-  return write_size;
-}
+  bdestroy(buf);
 
-// Strip the leading slash off @url, append the rest to the modem's base url,
-// and copy the result into @url_buffer.
-static inline bool modem_build_url(url_t url_buffer, const url_t url) {
-  return snprintf(url_buffer, URL_LENGTH, "http://192.168.0.1/%s", &url[1]) > 0;
-}
-
-bool modem_build_info_url(url_t buffer) {
-  return modem_build_url(buffer, "/getdeviceinfo/info.bin");
-}
-
-bool modem_build_restart_url(url_t buffer) {
-  return modem_build_url(buffer, "/com/gatewayreset/");
-}
-
-size_t modem_fetch_page(page_t buffer, const url_t url) {
-  response_t response;
-  response_init(&response, buffer);
-
-  modem_fetch(url, request_fn, &response);
-
-  return response_finish(&response);
-}
-
-bool modem_restart(const url_t restart_url) {
-  return modem_fetch_simple(restart_url);
+  return NULL;
 }

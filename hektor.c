@@ -1,211 +1,81 @@
-// Copyright 2010 Mick Koch <kchmck@gmail.com>
-//
-// This file is part of hektor.
-//
-// Hektor is free software: you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the Free Software
-// Foundation, either version 3 of the License, or (at your option) any later
-// version.
-//
-// Hektor is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License along with
-// hektor. If not, see <http://www.gnu.org/licenses/>.
+// This program is free software. It comes without any warranty, to the extent
+// permitted by applicable law. You can redistribute it and/or modify it under
+// the terms of the Do What The Fuck You Want To Public License, Version 2, as
+// published by Sam Hocevar. See http://sam.zoy.org/wtfpl/COPYING for more
+// details.
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <string.h>
 
-#include <lua.h>
+#include <curl/curl.h>
+#include <yajl/yajl_gen.h>
 
-#include "config.h"
-#include "hook.h"
 #include "info.h"
-#include "lua-util.h"
 #include "modem.h"
-#include "unit.h"
-
-typedef struct {
-  info_t info;
-
-  lua_t lua;
-  config_t config;
-
-  hook_t fap_is_active_hook;
-  hook_t fap_is_inactive_hook;
-} hektor_t;
-
-static bool hektor_err_net(const url_t url) {
-  printf("Error: Unable to fetch '%s'.\n", url);
-  return false;
-}
-
-static bool hektor_err_loading_config(hektor_t *hektor) {
-  printf("Error: Unable to load configuration: %s.\n",
-         lua_last_error(&hektor->lua));
-  return false;
-}
-
-static bool hektor_err_running_hook(hektor_t *hektor) {
-  printf("Error: Unable to run hooks: %s\n",
-         lua_last_error(&hektor->lua));
-  return false;
-}
-
-// Called by lua to restart the modem.
-static int hektor_restart_modem_fn(lua_State *lua) {
-  url_t restart_url;
-
-  if (modem_build_restart_url(restart_url))
-    modem_restart(restart_url);
-
-  return 0;
-}
-
-static hook_t *hektor_get_hook(hektor_t *hektor) {
-  if (info_fap_state(&hektor->info) == FAP_STATE_ACTIVE)
-    return &hektor->fap_is_active_hook;
-  else
-    return &hektor->fap_is_inactive_hook;
-}
-
-static bool hektor_call_hook(hektor_t *hektor) {
-  const info_t *info = &hektor->info;
-
-  unit_conv_t allowed_unit;
-  unit_conv_init(&allowed_unit, UNIT_BYTE, info_allowed_usage(info));
-
-  if (info_modem_type(info) == MODEM_TYPE_9000)
-    unit_conv_set_base(&allowed_unit, UNIT_BASE_BINARY);
-
-  unit_conv_calculate(&allowed_unit);
-
-  unit_conv_t remaining_unit;
-  unit_conv_init(&remaining_unit, UNIT_BYTE, info_remaining_usage(info));
-
-  if (info_modem_type(info) == MODEM_TYPE_9000)
-    unit_conv_set_base(&remaining_unit, UNIT_BASE_BINARY);
-
-  unit_conv_calculate(&remaining_unit);
-
-  unit_conv_t refill_unit;
-  unit_conv_init(&refill_unit, UNIT_SECOND, info_refill_time(info));
-  unit_conv_calculate(&refill_unit);
-
-  const lua_table_t hektor_table = {
-    {"allowed_usage", LUA_TNUMBER, {
-      .number = unit_convert(info_allowed_usage(info), UNIT_BYTE,
-                                                       UNIT_MEGABYTE)
-    }},
-
-    {"allowed_string", LUA_TSTRING, {
-      .string = unit_conv_string(&allowed_unit)
-    }},
-
-    {"remaining_usage", LUA_TNUMBER, {
-      .number = unit_convert(info_remaining_usage(info), UNIT_BYTE,
-                                                         UNIT_MEGABYTE)
-    }},
-
-    {"remaining_string", LUA_TSTRING, {
-      .string = unit_conv_string(&remaining_unit)
-    }},
-
-    {"remaining_pct", LUA_TNUMBER, {
-      .number = 100 * (double)(info_remaining_usage(info)) /
-                               info_allowed_usage(info)
-    }},
-
-    {"refill_seconds", LUA_TNUMBER, {
-      .number = info_refill_time(info)
-    }},
-
-    {"refill_timestamp", LUA_TNUMBER, {
-      .number = info_refill_timestamp(info)
-    }},
-
-    {"refill_string", LUA_TSTRING, {
-      .string = unit_conv_string(&refill_unit)
-    }},
-
-    {"restart_modem", LUA_TFUNCTION, {
-      .function = hektor_restart_modem_fn
-    }},
-
-    {LUA_TABLE_END},
-  };
-
-  return hook_call(hektor_get_hook(hektor), "t", hektor_table);
-}
-
-static bool hektor_main(hektor_t *hektor) {
-  static const char *DEFAULT_CONFIG =
-    "when_fap_is_inactive(function (hektor)\n"
-    "\n"
-    "  print(hektor.remaining_string .. \" are remaining\")\n"
-    "\n"
-    "  -- if hektor.remaining_usage < 5 then\n"
-    "  --   hektor.restart_modem()\n"
-    "  -- end\n"
-    "\n"
-    "end)\n"
-    "\n"
-    "when_fap_is_active(function (hektor)\n"
-    "\n"
-    "  print(hektor.refill_string .. \" until FAP deactivation (at \" ..\n"
-    "        os.date(\"%I:%M %p %A\", hektor.refill_timestamp) ..  \")\")\n"
-    "\n"
-    "end)\n";
-
-  url_t info_url;
-
-  if (!modem_build_info_url(info_url))
-    return false;
-
-  page_t info_page;
-
-  if (!modem_fetch_page(info_page, info_url))
-    return hektor_err_net(info_url);
-
-  if (!info_init(&hektor->info, info_page))
-    return false;
-
-  if (!config_init(&hektor->config, &hektor->lua, DEFAULT_CONFIG))
-    return false;
-
-  hook_init(&hektor->fap_is_inactive_hook, &hektor->lua);
-  hook_register(&hektor->fap_is_inactive_hook, "when_fap_is_inactive");
-
-  hook_init(&hektor->fap_is_active_hook, &hektor->lua);
-  hook_register(&hektor->fap_is_active_hook, "when_fap_is_active");
-
-  if (!config_load(&hektor->config))
-    return hektor_err_loading_config(hektor);
-
-  if (!hektor_call_hook(hektor))
-    return hektor_err_running_hook(hektor);
-
-  return true;
-}
-
-static bool hektor_main_execute(int argc, char **argv) {
-  hektor_t hektor;
-
-  if (!lua_init(&hektor.lua))
-    return false;
-
-  modem_global_init();
-  const bool result = hektor_main(&hektor);
-  modem_global_destroy();
-
-  lua_destroy(&hektor.lua);
-
-  return result;
-}
 
 int main(int argc, char **argv) {
-  return hektor_main_execute(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE;
+  bstring info_page;
+  info_t info;
+  yajl_gen yajl;
+  const unsigned char *json;
+  size_t json_len;
+
+  curl_global_init(CURL_GLOBAL_NOTHING);
+
+  for (size_t i = 0; argv[i]; i += 1) {
+    if (strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "--restart") == 0) {
+      modem_touch(MODEM_RESTART_URL);
+      return EXIT_SUCCESS;
+    }
+  }
+
+  info_page = modem_fetch(MODEM_INFO_URL);
+
+  if (!info_page) {
+    fprintf(stderr, "Error: Unable to fetch '%s'\n", MODEM_INFO_URL);
+    return EXIT_FAILURE;
+  }
+
+  info_init(&info, info_page);
+
+  yajl = yajl_gen_alloc(NULL);
+  assert(yajl);
+
+  yajl_gen_config(yajl, yajl_gen_beautify, true);
+
+#define yajl_gen_strst(y, s) yajl_gen_string((y), (s), sizeof(s) - 1)
+
+  yajl_gen_map_open(yajl);
+    yajl_gen_strst(yajl, "connection");
+    yajl_gen_integer(yajl, info.conn);
+
+    yajl_gen_strst(yajl, "fapped");
+    yajl_gen_bool(yajl, info.fap == FAP_ACTIVE);
+
+    yajl_gen_strst(yajl, "refill_secs");
+    yajl_gen_integer(yajl, info.refill_secs);
+
+    yajl_gen_strst(yajl, "refill_ts");
+    yajl_gen_integer(yajl, info.refill_ts);
+
+    yajl_gen_strst(yajl, "usage_allowed");
+    yajl_gen_integer(yajl, info.usage_allowed);
+
+    yajl_gen_strst(yajl, "usage_remain");
+    yajl_gen_integer(yajl, info.usage_remain);
+  yajl_gen_map_close(yajl);
+
+#undef yajl_gen_strst
+
+  yajl_gen_get_buf(yajl, &json, &json_len);
+  printf("%s", json);
+
+  bdestroy(info_page);
+  yajl_gen_free(yajl);
+  curl_global_cleanup();
+
+  return EXIT_SUCCESS;
 }
