@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
   info_page = modem_fetch(MODEM_INFO_URL);
 
   if (!info_page) {
-    fprintf(stderr, "Error: Unable to fetch '%s'\n", MODEM_INFO_URL);
+    fprintf(stderr, "hektor: Couldn't fetch '%s'\n", MODEM_INFO_URL);
     return EXIT_FAILURE;
   }
 
