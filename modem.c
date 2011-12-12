@@ -18,14 +18,18 @@ static size_t discard_fn(void *chunk, size_t size, size_t num, void *data) {
 }
 
 bool modem_touch(const char *url) {
-  CURL *curl = curl_easy_init();
+  CURL *curl;
+  CURLcode ret;
+
+  curl = curl_easy_init();
   assert(curl);
 
   curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
   curl_easy_setopt(curl, CURLOPT_URL, url);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, discard_fn);
 
-  CURLcode ret = curl_easy_perform(curl);
+  ret = curl_easy_perform(curl);
+
   curl_easy_cleanup(curl);
 
   return ret == CURLE_OK;
@@ -41,10 +45,14 @@ static size_t write_fn(void *chunk, size_t size, size_t num, void *data) {
 }
 
 bstring modem_fetch(const char *url) {
-  bstring buf = bfromcstralloc(512, "");
+  bstring buf;
+  CURL *curl;
+  CURLcode ret;
+
+  buf = bfromcstralloc(512, "");
   assert(buf);
 
-  CURL *curl = curl_easy_init();
+  curl = curl_easy_init();
   assert(curl);
 
   curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
@@ -52,7 +60,8 @@ bstring modem_fetch(const char *url) {
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, buf);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_fn);
 
-  CURLcode ret = curl_easy_perform(curl);
+  ret = curl_easy_perform(curl);
+
   curl_easy_cleanup(curl);
 
   if (ret == CURLE_OK)
