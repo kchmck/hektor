@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   curl_global_init(CURL_GLOBAL_NOTHING);
 
   for (size_t i = 0; argv[i]; i += 1) {
-    if (strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "--restart") == 0) {
+    if (strcmp(argv[i], "-r") == 0) {
       modem_touch(MODEM_RESTART_URL);
       return EXIT_SUCCESS;
     }
